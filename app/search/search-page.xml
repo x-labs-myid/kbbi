@@ -1,0 +1,91 @@
+<Page actionBarHidden="false"
+	navigatingTo="onNavigatingTo" 
+	xmlns="http://schemas.nativescript.org/tns.xsd">
+	
+	<ActionBar flat="true">
+		<GridLayout columns="*, 10, auto, 15" width="100%">
+			<Label class="text-bold text-black text-[24px]" col="0">
+				<FormattedString>
+					<Span text="&#xf002;" class="fas" />
+					<Span text="&nbsp;" />
+					<Span text="Pencarian Terkini" class="popin-l" />
+				</FormattedString>
+			</Label>
+			<Label text="&#xf057;" class="fas text-black text-[24px]" tap="goBack" col="2" />
+		</GridLayout>
+	</ActionBar>
+	<GridLayout rows="*, 5, auto, 30, auto, 10, auto, 0" class="p-5">
+		<ListView items="{{ recentSearches }}" row="0">
+			<ListView.itemTemplate>
+				<!-- The item template can only have a single root element -->
+				<GridLayout columns="*">
+					<Label col="1" textWrap="true" class="text-[16px] my-2">
+						<FormattedString>
+							<Span text="&#xf1da;" class="fas" />
+							<Span text="&nbsp;&nbsp;&nbsp;" />
+							<Span text="{{ word }}" class="popin-r" />
+						</FormattedString>
+					</Label>
+				</GridLayout>
+			</ListView.itemTemplate>
+		</ListView>
+
+		<!-- Trending Word Today -->
+		<StackLayout 
+			class="bg-blue-200 py-4 px-1 rounded"
+			row="2">
+			<Label class="text-center text-blue-700 text-[14px]">
+				<FormattedString>
+					<Span text="&#xf783;" class="fas" />
+					<Span text="&nbsp;&nbsp;" />
+					<Span text="Kata Hari Ini" class="popin-l" />
+				</FormattedString>
+			</Label>
+			<Label class="text-center italic text-black text-[16px]">
+				<FormattedString>
+					<Span text="Bagaimana" class="popin-r" />
+				</FormattedString>
+			</Label>
+		</StackLayout>
+
+		<!-- Text Info -->
+		<Label class="text-center text-orange-400 text-[14px]" row="4">
+			<FormattedString>
+				<Span text="&#xf0eb;" class="far" />
+				<Span text="&nbsp;&nbsp;" />
+				<Span text="Anda dapat mencari kata atau peribahasa disini" class="popin-l" />
+			</FormattedString>
+		</Label>
+
+		<!-- Searching Form -->
+		<GridLayout 
+			columns="auto, 5, *, 5, auto" 
+			borderRadius="10" 
+			borderWidth="1" 
+			borderColor="#9E9E9E"
+			class="px-3 py-1"
+			row="6">
+			<Label
+				text="&#xf5da;"
+				textWrap="true"
+				class="text-left text-gray-700 fas text-[24px]"
+				col="0"
+				/>
+			<TextField 
+				text="{{ searchText }}"
+				hint="Ketikan sesuatu untuk mencari..." 
+				background="#FFF" 
+				fontSize="14"
+				returnKeyType="search" 
+				returnPress="onSubmitSearch"
+				col="2" />
+				<Label
+					text="&#xf057;"
+					textWrap="true"
+					tap="onClearSearch"
+					class="text-left text-gray-400 far text-[18px]"
+					col="4"
+					/>
+		</GridLayout>
+	</GridLayout>
+</Page>

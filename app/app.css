@@ -1,0 +1,42 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.fab {
+  font-family: "Font Awesome 6 Brands", "fa-brands-400";
+  font-weight: 400;
+}
+
+.far {
+  font-family: "Font Awesome 6 Free", "fa-regular-400";
+  font-weight: 400;
+}
+
+.fas {
+  font-family: "Font Awesome 6 Free Solid", "fa-solid-900";
+  font-weight: 900;
+}
+
+.popin-l {
+  font-family: "Poppins Light", "Poppins-Light";
+  font-weight: 300;
+}
+
+.popin-r {
+  font-family: "Poppins", "Poppins-Regular";
+  font-weight: 400;
+}
+
+.popin-t {
+  font-family: "Poppins Thin", "Poppins-Thin";
+  font-weight: 250;
+  color: #000000 !important;
+}
+
+.search-bar-rounded {
+  border-color: red;
+  border-radius: 50%;
+  border-width: 1;
+  border-style: solid;
+  padding: 10 20;
+}

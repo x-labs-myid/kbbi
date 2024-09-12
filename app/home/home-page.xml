@@ -1,0 +1,61 @@
+<Page actionBarHidden="true"
+	navigatingTo="onNavigatingTo" 
+	xmlns="http://schemas.nativescript.org/tns.xsd">
+	
+	<!-- <ActionBar flat="true">
+		<GridLayout columns="*, 10, 50" width="100%">
+			<Label text="KBBI" class="popin-light text-black-100 text-[24px]" col="0" />
+			<Label text="&#xf2bd;" class="fas text-[24px]" col="2" />
+		</GridLayout>
+	</ActionBar> -->
+	<GridLayout rows="*, 0, auto, 0" class="p-5">
+		<StackLayout verticalAlignment="middle" row="0">
+			<Label
+				text="&#xf5da;"
+				textWrap="true"
+				class="text-left text-gray-700 fas text-[56px]"
+				/>
+			<Label
+				text="Kamus Besar Bahasa Indonesia"
+				textWrap="true"
+				class="text-left text-black popin-l text-[32px]"
+				/>
+			<Button
+					text="Cari kata atau peribahasa..."
+					textWrap="true"
+					tap="searchTap"
+					class="text-left text-black popin-r text-[14px] rounded-full bg-gray-200 px-5 py-3 active:bg-gray-350 active:scale-95 transition duration-150"
+			/>
+			
+			<Label
+					textWrap="true"
+					class="text-center text-black popin-r text-[14px] mt-3 px-5 py-3">
+				<FormattedString>
+					<Span text="&#xf02e;" class="far" />
+					<Span text="&nbsp;&nbsp;" />
+					<Span text="Penanda Buku" />
+				</FormattedString>
+			</Label>
+			
+		</StackLayout>
+		<StackLayout verticalAlignment="middle" row="2">
+			<Label
+				text=""
+				textWrap="true"
+				class="w-auto text-center text-blue-400 text-[14px] active:bg-blue-200 active:scale-95 transition duration-150"
+			>
+				<FormattedString>
+					<Span class="fas" text="&#xf641;" />
+					<Span text="&nbsp;&nbsp;" />
+					<Span class="popin-r" text="Tonton Iklan Sekarang" />
+				</FormattedString>
+			</Label>
+			<Label
+				text="Dukung kami dengan meluangkan waktu untuk menonton iklan. Terima kasih."
+				textWrap="true"
+				class="text-center text-gray-700 italic popin-r text-[12px] mt-2 px-5"
+			/>
+			
+		</StackLayout>
+	</GridLayout>
+</Page>
