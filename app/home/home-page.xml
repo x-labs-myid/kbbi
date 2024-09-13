@@ -4,7 +4,7 @@
 	
 	<!-- <ActionBar flat="true">
 		<GridLayout columns="*, 10, 50" width="100%">
-			<Label text="KBBI" class="popin-light text-black-100 text-[24px]" col="0" />
+			<Label text="KBBI" class="popin-r text-black-100 text-[24px]" col="0" />
 			<Label text="&#xf2bd;" class="fas text-[24px]" col="2" />
 		</GridLayout>
 	</ActionBar> -->
@@ -18,7 +18,7 @@
 			<Label
 				text="Kamus Besar Bahasa Indonesia"
 				textWrap="true"
-				class="text-left text-black popin-l text-[32px]"
+				class="text-left text-black popin-r text-[32px]"
 				/>
 			<Button
 					text="Cari kata atau peribahasa..."

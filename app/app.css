@@ -17,20 +17,19 @@
   font-weight: 900;
 }
 
-.popin-l {
-  font-family: "Poppins Light", "Poppins-Light";
-  font-weight: 300;
+.popin-br {
+  font-family: "Poppins Black", "Poppins-Black";
+  font-weight: 900;
+}
+
+.popin-b {
+  font-family: "Poppins", "Poppins-Bold";
+  font-weight: 700;
 }
 
 .popin-r {
   font-family: "Poppins", "Poppins-Regular";
   font-weight: 400;
-}
-
-.popin-t {
-  font-family: "Poppins Thin", "Poppins-Thin";
-  font-weight: 250;
-  color: #000000 !important;
 }
 
 .search-bar-rounded {

@@ -4,14 +4,14 @@
 	
 	<ActionBar flat="true">
 		<GridLayout columns="*, 10, auto, 15" width="100%">
-			<Label class="text-bold text-black text-[24px]" col="0">
+			<Label class="text-black" col="0">
 				<FormattedString>
 					<Span text="&#xf002;" class="fas" />
 					<Span text="&nbsp;" />
-					<Span text="Pencarian Terkini" class="popin-l" />
+					<Span text="Pencarian Terkini" class="popin-b" />
 				</FormattedString>
 			</Label>
-			<Label text="&#xf057;" class="fas text-black text-[24px]" tap="goBack" col="2" />
+			<Label text="&#xf057;" class="fas text-black text-[18px]" tap="goBack" col="2" />
 		</GridLayout>
 	</ActionBar>
 	<GridLayout rows="*, 5, auto, 30, auto, 10, auto, 0" class="p-5">
@@ -19,7 +19,7 @@
 			<ListView.itemTemplate>
 				<!-- The item template can only have a single root element -->
 				<GridLayout columns="*">
-					<Label col="1" textWrap="true" class="text-[16px] my-2">
+					<Label col="1" textWrap="true" class="text-[12px] my-2">
 						<FormattedString>
 							<Span text="&#xf1da;" class="fas" />
 							<Span text="&nbsp;&nbsp;&nbsp;" />
@@ -32,16 +32,16 @@
 
 		<!-- Trending Word Today -->
 		<StackLayout 
-			class="bg-blue-200 py-4 px-1 rounded"
+			class="bg-blue-100 py-3 px-1 rounded"
 			row="2">
-			<Label class="text-center text-blue-700 text-[14px]">
+			<Label class="text-center text-blue-700 text-[12px]">
 				<FormattedString>
 					<Span text="&#xf783;" class="fas" />
 					<Span text="&nbsp;&nbsp;" />
-					<Span text="Kata Hari Ini" class="popin-l" />
+					<Span text="Kata Hari Ini" class="popin-r" />
 				</FormattedString>
 			</Label>
-			<Label class="text-center italic text-black text-[16px]">
+			<Label class="text-center italic text-black text-[14px]">
 				<FormattedString>
 					<Span text="Bagaimana" class="popin-r" />
 				</FormattedString>
@@ -49,11 +49,11 @@
 		</StackLayout>
 
 		<!-- Text Info -->
-		<Label class="text-center text-orange-400 text-[14px]" row="4">
+		<Label class="text-center text-orange-400 text-[12px]" row="4">
 			<FormattedString>
 				<Span text="&#xf0eb;" class="far" />
 				<Span text="&nbsp;&nbsp;" />
-				<Span text="Anda dapat mencari kata atau peribahasa disini" class="popin-l" />
+				<Span text="Anda dapat mencari kata atau peribahasa disini" class="popin-r" />
 			</FormattedString>
 		</Label>
 
@@ -68,7 +68,7 @@
 			<Label
 				text="&#xf5da;"
 				textWrap="true"
-				class="text-left text-gray-700 fas text-[24px]"
+				class="text-left text-gray-700 fas text-[20px]"
 				col="0"
 				/>
 			<TextField 
@@ -83,7 +83,7 @@
 					text="&#xf057;"
 					textWrap="true"
 					tap="onClearSearch"
-					class="text-left text-gray-400 far text-[18px]"
+					class="text-left text-gray-400 far text-[16px]"
 					col="4"
 					/>
 		</GridLayout>
