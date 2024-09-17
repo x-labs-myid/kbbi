@@ -1,9 +1,13 @@
 import { Frame, Observable } from "@nativescript/core";
+import { internet } from "~/global-helper";
 
 const context = new Observable();
 
 export function onNavigatingTo(args) {
   const page = args.object;
+
+  _checkConnectivity();
+
   page.bindingContext = context;
 }
 
@@ -24,4 +28,12 @@ export function searchTap() {
       dataForm: null,
     },
   });
+}
+
+function _checkConnectivity() {
+  context.set("isConnected", internet().connected);
+  context.set(
+    "isLostConnectionMessage",
+    !context.isConnected && !context.loading
+  );
 }

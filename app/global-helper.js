@@ -1,4 +1,5 @@
-import { Http, Dialogs } from "@nativescript/core";
+import { Http, Dialogs, Connectivity } from "@nativescript/core";
+import * as htmlparser2 from "htmlparser2";
 import { SQL__query } from "~/sqlite-helper";
 
 export function initTables() {
@@ -111,6 +112,7 @@ export async function myHttpClient(_url, _method = "GET", _data = {}) {
         headers: { "Content-Type": "application/json" },
         url: END_POINT + _url,
       });
+      console.log("GET <<< ", res);
       return res.content.toJSON();
     } else {
       const res = await Http.request({
@@ -123,5 +125,58 @@ export async function myHttpClient(_url, _method = "GET", _data = {}) {
     }
   } catch (e) {
     Dialogs.alert("Error occurred!");
+  }
+}
+
+export function decodeHtml(html) {
+  let decoded = "";
+  const parser = new htmlparser2.Parser(
+    {
+      ontext(text) {
+        decoded += text;
+      },
+    },
+    { decodeEntities: true }
+  );
+
+  parser.write(html);
+  parser.end();
+
+  return decoded;
+}
+
+export function internet() {
+  const connectionType = Connectivity.getConnectionType();
+  switch (connectionType) {
+    case Connectivity.connectionType.wifi:
+      return {
+        connected: true,
+        type: "wifi",
+      };
+    case Connectivity.connectionType.ethernet:
+      return {
+        connected: true,
+        type: "wifi",
+      };
+    case Connectivity.connectionType.mobile:
+      return {
+        connected: true,
+        type: "mobile",
+      };
+    case Connectivity.connectionType.bluetooth:
+      return {
+        connected: false,
+        type: "none",
+      };
+    case Connectivity.connectionType.vpn:
+      return {
+        connected: false,
+        type: "none",
+      };
+    default:
+      return {
+        connected: false,
+        type: "none",
+      };
   }
 }

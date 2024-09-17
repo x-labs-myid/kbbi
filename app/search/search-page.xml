@@ -6,18 +6,24 @@
 		<GridLayout columns="*, 10, auto, 15" width="100%">
 			<Label class="text-black" col="0">
 				<FormattedString>
-					<Span text="&#xf002;" class="fas" />
-					<Span text="&nbsp;" />
-					<Span text="Pencarian Terkini" class="popin-b" />
+					<Span text="{{ recentSearches.length ? 'Pencarian Terkini' : 'Pencarian' }}" class="popin-b" />
 				</FormattedString>
 			</Label>
-			<Label text="&#xf057;" class="fas text-black text-[18px]" tap="goBack" col="2" />
+			<Label tap="goBack" col="2" textWrap="true">
+				<FormattedString>
+					<Span text="&#xf00d;" class="fas text-black text-[18px]" />
+					<!-- <Span text="&nbsp;&nbsp;" />
+					<Span text="Tutup" class="popin-r text-black" /> -->
+				</FormattedString>
+			</Label>
 		</GridLayout>
 	</ActionBar>
-	<GridLayout rows="*, 5, auto, 30, auto, 10, auto, 0" class="p-5">
-		<ListView items="{{ recentSearches }}" row="0">
+	<GridLayout rows="*, 5, auto, 30, auto, 10, auto, 0" class="px-5 pb-5">
+		<ListView 
+			items="{{ recentSearches }}" 
+			visibility="{{ recentSearches.length ? 'visible' : 'collapsed' }}" 
+			row="0">
 			<ListView.itemTemplate>
-				<!-- The item template can only have a single root element -->
 				<GridLayout columns="*">
 					<Label col="1" textWrap="true" class="text-[12px] my-2">
 						<FormattedString>
@@ -30,10 +36,29 @@
 			</ListView.itemTemplate>
 		</ListView>
 
+		<ListView 
+			items="{{ autoComplete }}" 
+			itemTap="onTapAutoComplete"
+			visibility="{{ autoComplete.length ? 'visible' : 'collapsed' }}"
+			row="0">
+			<ListView.itemTemplate>
+				<GridLayout columns="auto, auto, *">
+					<Label col="0" textWrap="true" class="text-[12px] my-2">
+						<FormattedString>
+							<Span text="&#xf002;" class="fas" />
+							<Span text="&nbsp;&nbsp;&nbsp;" />
+							<Span text="{{ searchWord }}" class="popin-br" />
+							<Span text="{{ otherWord }}" class="popin-r" />
+						</FormattedString>
+					</Label>
+				</GridLayout>
+			</ListView.itemTemplate>
+		</ListView>
+
 		<!-- Trending Word Today -->
-		<StackLayout 
+		<!-- <StackLayout 
 			class="bg-blue-100 py-3 px-1 rounded"
-			row="2">
+			row="2" visibility="{{ loadingLoadMore ? 'visible' : 'collapsed' }}">
 			<Label class="text-center text-blue-700 text-[12px]">
 				<FormattedString>
 					<Span text="&#xf783;" class="fas" />
@@ -46,10 +71,13 @@
 					<Span text="Bagaimana" class="popin-r" />
 				</FormattedString>
 			</Label>
-		</StackLayout>
+		</StackLayout> -->
 
 		<!-- Text Info -->
-		<Label class="text-center text-orange-400 text-[12px]" row="4">
+		<Label 
+			class="text-center text-orange-400 text-[12px]" 
+			visibility="{{ recentSearches.length ? 'visible' : 'collapsed' }}"
+			row="4">
 			<FormattedString>
 				<Span text="&#xf0eb;" class="far" />
 				<Span text="&nbsp;&nbsp;" />
@@ -76,6 +104,7 @@
 				hint="Ketikan sesuatu untuk mencari..." 
 				background="#FFF" 
 				fontSize="14"
+				textChange="onTextChangeSearch"
 				returnKeyType="search" 
 				returnPress="onSubmitSearch"
 				col="2" />
