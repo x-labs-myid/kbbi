@@ -11,8 +11,6 @@
 						<Span text="{{ isConnected ? 'online' : 'offline' }}" fontSize="16" />
 				</FormattedString>
 			</Label>
-			<!-- <Label text="KBBI" class="popin-r text-black-100 text-[24px]" col="0" /> -->
-			<!-- <Label text="&#xf2bd;" class="fas text-[24px]" col="2" /> -->
 			<Label col="2"
 					textWrap="true"
 					class="popin-l">

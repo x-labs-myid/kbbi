@@ -2,91 +2,171 @@
 	navigatingTo="onNavigatingTo" 
 	xmlns="http://schemas.nativescript.org/tns.xsd">
 	
-	<ActionBar flat="true">
-		<GridLayout columns="*, 10, auto, 15" width="100%">
-			<Label class="text-black" col="0">
+	<ActionBar flat="false">
+		<GridLayout 
+			columns="auto, 5, *, 5, auto, 20">
+			<Label
+				text="&#xf002;"
+				textWrap="true"
+				class="text-left text-gray-400 fas text-[18px]"
+				col="0"
+				/>
+			<TextField 
+				text="{{ searchText }}"
+				hint="Ketikan sesuatu untuk mencari..." 
+				background="#FFF" 
+				fontSize="14"
+				textChange="onTextChangeSearch"
+				returnKeyType="search" 
+				returnPress="onSubmitSearch"
+				col="2" />
+				<Label
+					text="&#xf00d;"
+					textWrap="true"
+					tap="onClearSearch"
+					class="text-left text-gray-400 fas text-[20px]"
+					col="4"
+					/>
+		</GridLayout>
+		<!-- <GridLayout columns="*, 10, auto, 15" width="100%">
+			<Label
+				visibility="{{ viewMode === 'SEARCH' ? 'visible' : 'collapsed' }}" 
+				class="text-black" col="0">
 				<FormattedString>
 					<Span text="{{ recentSearches.length ? 'Pencarian Terkini' : 'Pencarian' }}" class="popin-b" />
+				</FormattedString>
+			</Label>
+			<Label 
+				visibility="{{ viewMode === 'RESULT' ? 'visible' : 'collapsed' }}" 
+				class="text-black" col="0">
+				<FormattedString>
+					<Span text="Hasil Pencarian" class="popin-b" />
 				</FormattedString>
 			</Label>
 			<Label tap="goBack" col="2" textWrap="true">
 				<FormattedString>
 					<Span text="&#xf00d;" class="fas text-black text-[18px]" />
-					<!-- <Span text="&nbsp;&nbsp;" />
-					<Span text="Tutup" class="popin-r text-black" /> -->
 				</FormattedString>
 			</Label>
-		</GridLayout>
+		</GridLayout> -->
 	</ActionBar>
 	<GridLayout rows="*, 5, auto, 30, auto, 10, auto, 0" class="px-5 pb-5">
-		<ListView 
-			items="{{ recentSearches }}" 
-			visibility="{{ recentSearches.length ? 'visible' : 'collapsed' }}" 
-			row="0">
-			<ListView.itemTemplate>
-				<GridLayout columns="*">
-					<Label col="1" textWrap="true" class="text-[12px] my-2">
+		<GridLayout rows="auto, 0, *" row="0" 
+			visibility="{{ viewMode === 'SEARCH' ? 'visible' : 'collapsed' }}">
+			<Label
+				textWrap="true"
+				visibility="{{ recentSearches.length ? 'visible' : 'collapsed' }}" 
+				class="text-left text-[10px] my-3"
+				col="0">
+				<FormattedString>
+					<Span text="PENCARIAN TERKINI" class="popin-br text-gray-600" />
+				</FormattedString>
+			</Label>
+			<ListView 
+				items="{{ recentSearches }}" 
+				itemTap="onTapRecentSearches"
+				visibility="{{ recentSearches.length ? 'visible' : 'collapsed' }}" 
+				row="2">
+				<ListView.itemTemplate>
+					<GridLayout columns="*">
+						<Label col="1" textWrap="true" class="text-[12px] my-2">
+							<FormattedString>
+								<Span text="&#xf1da;" class="fas" />
+								<Span text="&nbsp;&nbsp;&nbsp;" />
+								<Span text="{{ word }}" class="popin-r" />
+							</FormattedString>
+						</Label>
+					</GridLayout>
+				</ListView.itemTemplate>
+			</ListView>
+
+			<Label
+				textWrap="true"
+				visibility="{{ autoComplete.length ? 'visible' : 'collapsed' }}" 
+				class="text-left text-[10px] my-3"
+				col="0">
+				<FormattedString>
+					<Span text="SARAN PENCARIAN" class="popin-br text-gray-600" />
+				</FormattedString>
+			</Label>
+			<ListView 
+				items="{{ autoComplete }}" 
+				itemTap="onTapAutoComplete"
+				visibility="{{ autoComplete.length ? 'visible' : 'collapsed' }}"
+				row="2">
+				<ListView.itemTemplate>
+					<GridLayout columns="auto, auto, *">
+						<Label col="0" textWrap="true" class="text-[12px] my-2">
+							<FormattedString>
+								<Span text="&#xf002;" class="fas" />
+								<Span text="&nbsp;&nbsp;&nbsp;" />
+								<Span text="{{ searchWord }}" class="popin-br" />
+								<Span text="{{ otherWord }}" class="popin-r" />
+							</FormattedString>
+						</Label>
+					</GridLayout>
+				</ListView.itemTemplate>
+			</ListView>
+		</GridLayout>
+
+		<GridLayout rows="auto, 0, *" row="0"
+			visibility="{{ viewMode === 'RESULT' ? 'visible' : 'collapsed' }}">
+			<Label
+				textWrap="true"
+				class="text-left text-[10px] mt-3 mb-2"
+				col="0">
+				<FormattedString>
+					<Span text="HASIL PENCARIAN" class="popin-br text-gray-600" />
+				</FormattedString>
+			</Label>
+
+			<ListView separatorColor="#FFF"
+				items="{{ localResultOfSearch }}"
+				visibility="{{ localResultOfSearch.length ? 'visible' : 'collapsed' }}" 
+				row="2">
+				<ListView.itemTemplate>
+					<StackLayout >
+					<Label textWrap="true" class="text-[24px] my-2">
 						<FormattedString>
-							<Span text="&#xf1da;" class="fas" />
-							<Span text="&nbsp;&nbsp;&nbsp;" />
 							<Span text="{{ word }}" class="popin-r" />
 						</FormattedString>
 					</Label>
-				</GridLayout>
-			</ListView.itemTemplate>
-		</ListView>
-
-		<ListView 
-			items="{{ autoComplete }}" 
-			itemTap="onTapAutoComplete"
-			visibility="{{ autoComplete.length ? 'visible' : 'collapsed' }}"
-			row="0">
-			<ListView.itemTemplate>
-				<GridLayout columns="auto, auto, *">
-					<Label col="0" textWrap="true" class="text-[12px] my-2">
+					<HtmlView html="{{ arti }}" />
+				</StackLayout>
+				</ListView.itemTemplate>
+			</ListView>
+			<!-- <ScrollView row="2">
+				<StackLayout >
+					<Label textWrap="true" class="text-[24px] my-2">
 						<FormattedString>
-							<Span text="&#xf002;" class="fas" />
-							<Span text="&nbsp;&nbsp;&nbsp;" />
-							<Span text="{{ searchWord }}" class="popin-br" />
-							<Span text="{{ otherWord }}" class="popin-r" />
+							<Span text="{{ localResultOfSearch__word }}" class="popin-r" />
 						</FormattedString>
 					</Label>
-				</GridLayout>
-			</ListView.itemTemplate>
-		</ListView>
+					<HtmlView html="{{ localResultOfSearch__meaning }}" />
 
-		<!-- Trending Word Today -->
-		<!-- <StackLayout 
-			class="bg-blue-100 py-3 px-1 rounded"
-			row="2" visibility="{{ loadingLoadMore ? 'visible' : 'collapsed' }}">
-			<Label class="text-center text-blue-700 text-[12px]">
-				<FormattedString>
-					<Span text="&#xf783;" class="fas" />
-					<Span text="&nbsp;&nbsp;" />
-					<Span text="Kata Hari Ini" class="popin-r" />
-				</FormattedString>
-			</Label>
-			<Label class="text-center italic text-black text-[14px]">
-				<FormattedString>
-					<Span text="Bagaimana" class="popin-r" />
-				</FormattedString>
-			</Label>
-		</StackLayout> -->
-
+					<Label textWrap="true" class="mt-5">
+						<FormattedString>
+							<Span text="SERVER DATA" class="popin-r" />
+						</FormattedString>
+					</Label>
+					<HtmlView html="{{ serverResultOfSearch__meaning }}" />
+				</StackLayout>
+			</ScrollView> -->
+		</GridLayout>
 		<!-- Text Info -->
 		<Label 
 			class="text-center text-orange-400 text-[12px]" 
 			visibility="{{ recentSearches.length ? 'visible' : 'collapsed' }}"
 			row="4">
 			<FormattedString>
-				<Span text="&#xf0eb;" class="far" />
+				<Span text="&#xf4d8;" class="fas" />
 				<Span text="&nbsp;&nbsp;" />
 				<Span text="Anda dapat mencari kata atau peribahasa disini" class="popin-r" />
 			</FormattedString>
 		</Label>
 
 		<!-- Searching Form -->
-		<GridLayout 
+		<!-- <GridLayout 
 			columns="auto, 5, *, 5, auto" 
 			borderRadius="10" 
 			borderWidth="1" 
@@ -115,6 +195,6 @@
 					class="text-left text-gray-400 far text-[16px]"
 					col="4"
 					/>
-		</GridLayout>
+		</GridLayout> -->
 	</GridLayout>
 </Page>

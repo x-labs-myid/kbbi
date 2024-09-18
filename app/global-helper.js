@@ -113,6 +113,8 @@ export async function myHttpClient(_url, _method = "GET", _data = {}) {
         url: END_POINT + _url,
       });
       console.log("GET <<< ", res);
+      console.log("GET content <<< ", res.content);
+      console.log("GET content toJSON() <<< ", res.content.toJSON());
       return res.content.toJSON();
     } else {
       const res = await Http.request({

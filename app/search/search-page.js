@@ -1,5 +1,5 @@
 import { Frame, Observable, ObservableArray } from "@nativescript/core";
-import { dictionary__find } from "~/dictionary";
+import { _dictionary__find, _dictionary__findStartWith } from "~/dictionary";
 import {
   getCurrentTime,
   initTables,
@@ -22,15 +22,21 @@ const pageSize = 10; // Number of items to load at once
 
 export function onNavigatingTo(args) {
   const page = args.object;
+  context.set("viewMode", "SEARCH");
   context.set("searchText", "");
+  context.set("localResultOfSearch", "");
+  context.set("localResultOfSearch__word", "");
+  context.set("localResultOfSearch__meaning", "");
+  context.set("serverResultOfSearch__word", "");
+  context.set("serverResultOfSearch__meaning", "");
 
   context.set("recentSearches", []);
   context.set("autoComplete", []);
   context.set("loadingLoadMore", false);
 
-  SQL__select("words").then((res) => {
-    console.log("words data >>> ", res);
-  });
+  // SQL__select("words").then((res) => {
+  //   console.log("words data >>> ", res);
+  // });
 
   // SQL__select("history").then((res) => {
   //   console.log("history data >>> ", res);
@@ -56,23 +62,36 @@ export function onTextChangeSearch(args) {
 
 export function onSubmitSearch(args) {
   const obj = args.object;
-  console.log("onSearch text >>> ", obj.text);
+  // console.log("onSearch text >>> ", obj.text);
   context.set("searchText", obj.text);
 
-  myHttpClient(`?search=${obj.text}`).then((res) => {
-    console.log("res >>> ", res);
-    if (res && res.data.length) {
-      saveToDB(res.data);
-    } else {
-    }
-  });
+  executeSearch(obj.text);
 }
 
 export function onClearSearch() {
   context.set("searchText", "");
-  SQL__truncate("words");
-  SQL__truncate("history");
+  context.set("viewMode", "SEARCH");
+  context.set("localResultOfSearch", "");
+  context.set("localResultOfSearch__word", "");
+  context.set("localResultOfSearch__meaning", "");
+  context.set("serverResultOfSearch__word", "");
+  context.set("serverResultOfSearch__meaning", "");
+  // SQL__truncate("words");
+  // SQL__truncate("history");
   loadRecentSearches();
+}
+
+export function onTapRecentSearches(args) {
+  let itemIndex = args.index;
+  let itemTap = args.view;
+  let itemTapData = itemTap.bindingContext;
+
+  // console.log("Tapped index >> ", itemIndex);
+  // console.log("Tapped item >> ", itemTapData);
+
+  context.set("searchText", itemTapData.word);
+
+  executeSearch(itemTapData.word);
 }
 
 export function onTapAutoComplete(args) {
@@ -80,10 +99,10 @@ export function onTapAutoComplete(args) {
   let itemTap = args.view;
   let itemTapData = itemTap.bindingContext;
 
-  console.log("Tapped index >> ", itemIndex);
-  console.log("Tapped item >> ", itemTapData);
+  // console.log("Tapped index >> ", itemIndex);
+  // console.log("Tapped item >> ", itemTapData);
 
-  saveToDB(itemTapData, "LOCAL");
+  executeSearch(itemTapData.word);
 }
 
 function loadRecentSearches() {
@@ -98,12 +117,37 @@ function loadRecentSearches() {
 function loadAutoComplete(keyword) {
   dictionary = [];
   if (keyword) {
-    const dictionaryFiltered = dictionary__find(keyword);
+    const dictionaryFiltered = _dictionary__findStartWith(keyword);
     dictionary.push(...dictionaryFiltered.slice(0, pageSize));
   }
 
   context.set("autoComplete", dictionary);
   context.set("recentSearches", []);
+}
+
+function executeSearch(_keyword) {
+  if (!_keyword) return;
+
+  context.set("viewMode", "RESULT");
+
+  const keyword = _keyword.toLowerCase();
+
+  const localDictionary = _dictionary__find(keyword, false);
+  console.log("localDictionary >>> ", localDictionary);
+  context.set("localResultOfSearch", localDictionary);
+
+  myHttpClient(`?search=${keyword}`).then((res) => {
+    if (res && res.data.length) {
+      console.log("serverResultOfSearch >>> ", res.data);
+      context.set("serverResultOfSearch__word", res.data.word);
+      context.set("serverResultOfSearch__meaning", res.data.arti);
+
+      saveToDB(res.data);
+    } else {
+    }
+  });
+
+  saveToDB(localDictionary, "LOCAL");
 }
 
 function saveToDB(_data, _type = "SERVER") {
@@ -141,7 +185,7 @@ function saveToDB(_data, _type = "SERVER") {
       );
     });
   } else {
-    SQL__select("words", "word", "WHERE word='" + _data.word + "'").then(
+    SQL__select("words", "word", "WHERE word='" + _data[0].word + "'").then(
       (res) => {
         if (res && res.length) {
           SQL__update(
@@ -155,9 +199,9 @@ function saveToDB(_data, _type = "SERVER") {
 
           SQL__insert("words", [
             { field: "guid", value: guid },
-            { field: "word", value: _data.word },
+            { field: "word", value: _data[0].word },
             { field: "lema", value: "x00000" },
-            { field: "arti", value: decodeHtml(_data.arti) },
+            { field: "arti", value: decodeHtml(_data[0].arti) },
             { field: "tesaurusLink", value: "x00000" },
             { field: "type", value: "word" },
             { field: "created_at", value: getCurrentTime() },
