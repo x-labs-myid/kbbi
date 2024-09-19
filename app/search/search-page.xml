@@ -68,11 +68,14 @@
 				visibility="{{ recentSearches.length ? 'visible' : 'collapsed' }}" 
 				row="2">
 				<ListView.itemTemplate>
-					<GridLayout columns="*">
-						<Label col="1" textWrap="true" class="text-[12px] my-2">
+					<GridLayout columns="auto, 10, *">
+						<Label col="0" textWrap="true" class="text-[12px] my-2">
 							<FormattedString>
 								<Span text="&#xf1da;" class="fas" />
-								<Span text="&nbsp;&nbsp;&nbsp;" />
+							</FormattedString>
+						</Label>
+						<Label col="2" textWrap="true" class="text-[12px] my-2">
+							<FormattedString>
 								<Span text="{{ word }}" class="popin-r" />
 							</FormattedString>
 						</Label>
@@ -86,7 +89,7 @@
 				class="text-left text-[10px] my-3"
 				col="0">
 				<FormattedString>
-					<Span text="SARAN PENCARIAN" class="popin-br text-gray-600" />
+					<Span text="HASIL PENCARIAN" class="popin-br text-gray-600" />
 				</FormattedString>
 			</Label>
 			<ListView 
@@ -111,14 +114,14 @@
 
 		<GridLayout rows="auto, 0, *" row="0"
 			visibility="{{ viewMode === 'RESULT' ? 'visible' : 'collapsed' }}">
-			<Label
+			<!-- <Label
 				textWrap="true"
 				class="text-left text-[10px] mt-3 mb-2"
 				col="0">
 				<FormattedString>
 					<Span text="HASIL PENCARIAN" class="popin-br text-gray-600" />
 				</FormattedString>
-			</Label>
+			</Label> -->
 
 			<ListView separatorColor="#FFF"
 				items="{{ localResultOfSearch }}"
@@ -153,6 +156,21 @@
 				</StackLayout>
 			</ScrollView> -->
 		</GridLayout>
+
+		<!-- Loading -->
+		<StackLayout 
+			orientation="horizontal" 
+			visibility="{{ loadingExecute ? 'visible' : 'collapsed' }}"
+			row="2" verticalAlignment="center">
+			<ActivityIndicator color="#FFA726" height="30" busy="true" />
+			&nbsp;&nbsp;&nbsp;
+			<Label class="text-center text-orange-400 text-[12px]">
+				<FormattedString>
+					<Span text="Loading..." class="popin-r" />
+				</FormattedString>
+			</Label>
+		</StackLayout>
+
 		<!-- Text Info -->
 		<Label 
 			class="text-center text-orange-400 text-[12px]" 

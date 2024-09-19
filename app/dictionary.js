@@ -2,16 +2,23 @@ import _ from "lodash";
 import { decodeHtml } from "~/global-helper";
 import { data } from "~/dictionary-json";
 
-export function _dictionary__findStartWith(keyword, enableUniq = true) {
+export async function _dictionary__findStartWith(
+  keyword,
+  enableUniq = true,
+  limit = 50
+) {
   const lowerKeyword = keyword.toLowerCase().trim(); // Lowercase keyword sekali saja
+  const batchSize = 5000; // Ukuran batch untuk proses async
+  let filteredData = [];
+  let currentBatch = 0;
 
   // Map data untuk menghapus field 'type' dan menormalkan 'word'
-  let words = _.map(data, (item) => {
+  let words = data.map((item) => {
     const { type, ...rest } = item; // Hapus field 'type'
     return {
       ...rest,
       word: rest.word.toLowerCase().trim(), // Normalize 'word'
-      arti: decodeHtml(rest.arti), // Normalize 'word'
+      arti: decodeHtml(rest.arti), // Decode arti
     };
   });
 
@@ -20,37 +27,58 @@ export function _dictionary__findStartWith(keyword, enableUniq = true) {
     words = _.uniqBy(words, "word");
   }
 
-  // Filter berdasarkan keyword
-  const filteredData = _.filter(words, (item) =>
-    item.word.startsWith(lowerKeyword)
-  );
+  // Fungsi untuk memproses setiap batch secara async
+  const processBatch = async (batch) => {
+    for (const item of batch) {
+      if (item.word.startsWith(lowerKeyword)) {
+        const searchWord = keyword;
+        const otherWord = item.word.slice(lowerKeyword.length);
+        filteredData.push({
+          ...item,
+          searchWord,
+          otherWord,
+        });
 
-  // Pisahkan kata menjadi 'searchWord' dan 'otherWord' untuk hasil filter
-  const result = _.map(filteredData, (item) => {
-    const searchWord = keyword;
-    const otherWord = item.word.slice(lowerKeyword.length);
+        // Jika hasil sudah mencapai limit, hentikan
+        if (filteredData.length >= limit) return;
+      }
+    }
+  };
 
-    return {
-      ...item,
-      searchWord,
-      otherWord,
-    };
-  });
+  // Proses data secara bertahap dalam batch untuk menjaga responsivitas
+  while (
+    currentBatch * batchSize < words.length &&
+    filteredData.length < limit
+  ) {
+    const batch = words.slice(
+      currentBatch * batchSize,
+      (currentBatch + 1) * batchSize
+    );
+    await processBatch(batch);
+    currentBatch++;
+  }
 
   // Urutkan hasil berdasarkan 'word'
-  return _.sortBy(result, "word");
+  return _.sortBy(filteredData, "word");
 }
 
-export function _dictionary__find(keyword, enableUniq = true) {
+export async function _dictionary__find(
+  keyword,
+  enableUniq = true,
+  limit = 50
+) {
   const lowerKeyword = keyword.toLowerCase().trim(); // Lowercase keyword sekali saja
+  const batchSize = 5000; // Ukuran batch untuk proses async
+  let filteredData = [];
+  let currentBatch = 0;
 
   // Map data untuk menghapus field 'type' dan menormalkan 'word'
-  let words = _.map(data, (item) => {
+  let words = data.map((item) => {
     const { type, ...rest } = item; // Hapus field 'type'
     return {
       ...rest,
       word: rest.word.toLowerCase().trim(), // Normalize 'word'
-      arti: decodeHtml(rest.arti), // Normalize 'word'
+      arti: decodeHtml(rest.arti), // Decode arti
     };
   });
 
@@ -59,10 +87,84 @@ export function _dictionary__find(keyword, enableUniq = true) {
     words = _.uniqBy(words, "word");
   }
 
-  // Filter berdasarkan keyword
+  // Fungsi untuk memproses setiap batch secara async
+  const processBatch = async (batch) => {
+    for (const item of batch) {
+      if (item.word === lowerKeyword) {
+        const searchWord = keyword;
+        const otherWord = item.word.slice(keyword.length);
+
+        filteredData.push({
+          ...item,
+          searchWord,
+          otherWord,
+        });
+
+        // Jika hasil sudah mencapai limit, hentikan
+        if (filteredData.length >= limit) return;
+      }
+    }
+  };
+
+  // Proses data secara bertahap dalam batch untuk menjaga responsivitas
+  while (
+    currentBatch * batchSize < words.length &&
+    filteredData.length < limit
+  ) {
+    const batch = words.slice(
+      currentBatch * batchSize,
+      (currentBatch + 1) * batchSize
+    );
+    await processBatch(batch);
+    currentBatch++;
+  }
+
+  // Urutkan hasil berdasarkan 'word'
+  return _.sortBy(filteredData, "word");
+}
+
+/**
+ * FIND OF DICTIONARY
+ * @param {*} keyword
+ * @param {*} enableUniq
+ * @param {*} page
+ * @param {*} pageSize
+ * @returns []
+ */
+const cacheFind = new Map(); // Cache untuk menyimpan hasil pencarian pada fungsi findOfDictionary
+
+export function findOfDictionary(
+  keyword,
+  enableUniq = true,
+  page = 1,
+  pageSize = 10
+) {
+  const lowerKeyword = keyword.toLowerCase().trim(); // Lowercase keyword sekali saja
+
+  // Cek cache untuk keyword yang sama
+  if (cacheFind.has(keyword)) {
+    return paginate(cacheFind.get(keyword), page, pageSize); // Ambil dari cache jika sudah ada
+  }
+
+  // Map data untuk menghapus field 'type' dan menormalkan 'word'
+  let words = _.map(data, (item) => {
+    const { type, ...rest } = item; // Hapus field 'type'
+    return {
+      ...rest,
+      word: rest.word.toLowerCase().trim(), // Normalize 'word'
+      arti: decodeHtml(rest.arti), // Decode HTML pada 'arti'
+    };
+  });
+
+  // Jika enableUniq aktif, gunakan Lodash uniqBy untuk menghilangkan duplikasi
+  if (enableUniq) {
+    words = _.uniqBy(words, "word");
+  }
+
+  // Filter berdasarkan keyword yang sama persis
   const filteredData = _.filter(words, (item) => item.word === lowerKeyword);
 
-  // Pisahkan kata menjadi 'searchWord' dan 'otherWord' untuk hasil filter
+  // Pisahkan kata menjadi 'searchWord' dan 'otherWord'
   const result = _.map(filteredData, (item) => {
     const searchWord = keyword;
     const otherWord = item.word.slice(keyword.length);
@@ -75,195 +177,82 @@ export function _dictionary__find(keyword, enableUniq = true) {
   });
 
   // Urutkan hasil berdasarkan 'word'
-  return _.sortBy(result, "word");
+  const sortedResult = _.sortBy(result, "word");
+
+  // Simpan hasil di cache
+  cacheFind.set(keyword, sortedResult);
+
+  // Kembalikan hasil dengan paginasi
+  return paginate(sortedResult, page, pageSize);
 }
 
 /**
- * Mendapatkan daftar kata
- * @param {number} limit Jumlah kata yang ingin diambil
- * @returns {Array} Array of object
+ * FINDSTARTWITH OF DICTIONARY
+ * @param {*} keyword
+ * @param {*} enableUniq
+ * @param {*} page
+ * @param {*} pageSize
+ * @returns []
  */
-export function dictionary__get(limit = 10) {
-  return data.slice(0, limit);
+
+const cache = new Map(); // Cache untuk menyimpan hasil pencarian
+
+// Fungsi untuk paginasi
+function paginate(array, page = 1, pageSize = 10) {
+  return _.slice(array, (page - 1) * pageSize, page * pageSize);
 }
 
-/**
- * Mencari kata yang dimulai dengan keyword
- * @param {string} keyword
- * @returns {Array} Array of object
- */
-export function dictionary__findStartWith(keyword, enableUniq = true) {
+export function findStartWithOfDictionary(
+  keyword,
+  enableUniq = true,
+  page = 1,
+  pageSize = 10
+) {
   const lowerKeyword = keyword.toLowerCase().trim(); // Lowercase keyword sekali saja
-  const uniqueWordsMap = new Map();
 
-  // Jika enableUniq aktif, simpan kata unik ke dalam Map
+  // Cek cache untuk keyword yang sama
+  if (cache.has(keyword)) {
+    return paginate(cache.get(keyword), page, pageSize); // Ambil hasil dari cache dan lakukan paginasi
+  }
+
+  // Map data untuk menghapus field 'type' dan menormalkan 'word'
+  let words = _.map(data, (item) => {
+    const { type, ...rest } = item; // Hapus field 'type'
+    return {
+      ...rest,
+      word: rest.word.toLowerCase().trim(), // Normalize 'word'
+      arti: decodeHtml(rest.arti), // Decode HTML pada 'arti'
+    };
+  });
+
+  // Jika enableUniq aktif, gunakan Lodash uniqBy untuk menghilangkan duplikasi
   if (enableUniq) {
-    for (const item of data) {
-      const word = item.word.toLowerCase().trim(); // Pastikan word konsisten dalam case dan spasi
-
-      // Hanya tambahkan jika kata belum ada di map
-      if (!uniqueWordsMap.has(word)) {
-        uniqueWordsMap.set(word, { ...item, word }); // Simpan item ke Map
-      }
-    }
-  } else {
-    // Jika tidak menghapus duplikat, langsung proses seluruh data
-    for (const item of data) {
-      const word = item.word.toLowerCase().trim(); // Normalize word
-      const arti = decodeHtml(item.arti); // Normalize word
-      uniqueWordsMap.set(word + uniqueWordsMap.size, { ...item, word, arti }); // Gunakan key yang unik
-    }
+    words = _.uniqBy(words, "word");
   }
 
-  const filteredData = [];
+  // Filter data berdasarkan keyword
+  const filteredData = _.filter(words, (item) =>
+    item.word.startsWith(lowerKeyword)
+  );
 
-  // Filter data yang dimulai dengan keyword
-  for (const item of uniqueWordsMap.values()) {
-    if (item.word.startsWith(lowerKeyword)) {
-      const searchWord = keyword;
-      const otherWord = item.word.slice(lowerKeyword.length);
+  // Pisahkan kata menjadi 'searchWord' dan 'otherWord'
+  const result = _.map(filteredData, (item) => {
+    const searchWord = keyword;
+    const otherWord = item.word.slice(lowerKeyword.length);
 
-      // Tambahkan ke hasil filter
-      filteredData.push({
-        ...item,
-        searchWord,
-        otherWord,
-      });
-    }
-  }
+    return {
+      ...item,
+      searchWord,
+      otherWord,
+    };
+  });
 
-  // Urutkan hasil berdasarkan 'word' dari A sampai Z
-  filteredData.sort((a, b) => a.word.localeCompare(b.word));
+  // Urutkan hasil berdasarkan 'word'
+  const sortedResult = _.sortBy(result, "word");
 
-  return filteredData;
+  // Simpan hasil di cache
+  cache.set(keyword, sortedResult);
+
+  // Kembalikan hasil dengan paginasi
+  return paginate(sortedResult, page, pageSize);
 }
-/* export function dictionary__findStartWith(keyword) {
-  // Filter data untuk kata yang dimulai dengan keyword
-  const filteredData = Array.from(
-    data
-      // Hapus field 'arti' dan 'type' dari setiap item
-      .map((item) => {
-        const { type, ...rest } = item; // Hapus 'arti' dan 'type'
-        return {
-          ...rest,
-          word: rest.word.toLowerCase().trim(), // Pastikan 'word' konsisten dalam case dan spasi
-        };
-      })
-      // Grouping data untuk menghapus duplikasi berdasarkan 'word'
-      .reduce((map, item) => {
-        if (!map.has(item.word)) {
-          map.set(item.word, item); // Simpan item ke dalam Map berdasarkan kata
-        }
-        return map;
-      }, new Map())
-      .values() // Ambil nilai unik dari Map
-  )
-    // Filter item yang dimulai dengan 'keyword'
-    .filter((item) => item.word.startsWith(keyword.toLowerCase().trim())) // Sesuaikan keyword dengan case dan spasi
-    .map((item) => {
-      // Pisahkan kata menjadi 'searchWord' dan 'otherWord'
-      const searchWord = keyword; // Bagian awal yang cocok dengan keyword
-      const otherWord = item.word.slice(keyword.length); // Sisa kata setelah keyword
-
-      // Tambahkan 'searchWord' dan 'otherWord' ke dalam objek hasil
-      return {
-        ...item,
-        searchWord,
-        otherWord,
-      };
-    })
-    // Urutkan berdasarkan 'word' dari A sampai Z
-    .sort((a, b) => a.word.localeCompare(b.word));
-
-  return filteredData;
-} */
-
-/**
- * Mencari kata yang dimulai dengan keyword
- * @param {string} keyword
- * @returns {Array} Array of object
- */
-export function dictionary__find(keyword, enableUniq = true) {
-  const lowerKeyword = keyword.toLowerCase().trim(); // Konversi keyword sekali saja
-  const uniqueWordsMap = new Map();
-
-  // Jika enableUniq aktif, simpan kata unik ke dalam Map
-  if (enableUniq) {
-    for (const item of data) {
-      const word = item.word.toLowerCase().trim(); // Normalize word
-
-      // Hanya tambahkan jika kata belum ada di map
-      if (!uniqueWordsMap.has(word)) {
-        uniqueWordsMap.set(word, { ...item, word });
-      }
-    }
-  } else {
-    // Jika tidak menghapus duplikat, langsung proses seluruh data
-    for (const item of data) {
-      const word = item.word.toLowerCase().trim(); // Normalize word
-      const arti = decodeHtml(item.arti); // Normalize word
-      uniqueWordsMap.set(word + uniqueWordsMap.size, { ...item, word, arti }); // Gunakan key unik untuk memastikan semua data disimpan
-    }
-  }
-
-  const filteredData = [];
-
-  // Filter data yang cocok dengan keyword
-  for (const item of uniqueWordsMap.values()) {
-    if (item.word === lowerKeyword) {
-      const searchWord = keyword;
-      const otherWord = item.word.slice(keyword.length);
-
-      filteredData.push({
-        ...item,
-        searchWord,
-        otherWord,
-      });
-    }
-  }
-
-  // Urutkan hasil berdasarkan 'word' dari A sampai Z
-  filteredData.sort((a, b) => a.word.localeCompare(b.word));
-
-  return filteredData;
-}
-/* export function dictionary__find(keyword) {
-  // Filter data untuk kata yang dimulai dengan keyword
-  const filteredData = Array.from(
-    data
-      // Hapus field 'arti' dan 'type' dari setiap item
-      .map((item) => {
-        const { type, ...rest } = item; // Hapus 'arti' dan 'type'
-        return {
-          ...rest,
-          word: rest.word.toLowerCase().trim(), // Pastikan 'word' konsisten dalam case dan spasi
-        };
-      })
-      // Grouping data untuk menghapus duplikasi berdasarkan 'word'
-      .reduce((map, item) => {
-        if (!map.has(item.word)) {
-          map.set(item.word, item); // Simpan item ke dalam Map berdasarkan kata
-        }
-        return map;
-      }, new Map())
-      .values() // Ambil nilai unik dari Map
-  )
-    // Filter item yang dimulai dengan 'keyword'
-    .filter((item) => item.word === keyword.toLowerCase().trim()) // Sesuaikan keyword dengan case dan spasi
-    .map((item) => {
-      // Pisahkan kata menjadi 'searchWord' dan 'otherWord'
-      const searchWord = keyword; // Bagian awal yang cocok dengan keyword
-      const otherWord = item.word.slice(keyword.length); // Sisa kata setelah keyword
-
-      // Tambahkan 'searchWord' dan 'otherWord' ke dalam objek hasil
-      return {
-        ...item,
-        searchWord,
-        otherWord,
-      };
-    })
-    // Urutkan berdasarkan 'word' dari A sampai Z
-    .sort((a, b) => a.word.localeCompare(b.word));
-
-  return filteredData;
-} */

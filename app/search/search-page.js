@@ -1,5 +1,10 @@
 import { Frame, Observable, ObservableArray } from "@nativescript/core";
-import { _dictionary__find, _dictionary__findStartWith } from "~/dictionary";
+import {
+  _dictionary__find,
+  _dictionary__findStartWith,
+  findOfDictionary,
+  findStartWithOfDictionary,
+} from "~/dictionary";
 import {
   getCurrentTime,
   initTables,
@@ -18,6 +23,7 @@ import {
 const context = new ObservableArray();
 
 let dictionary = [];
+let debounceSearchTimeout;
 const pageSize = 10; // Number of items to load at once
 
 export function onNavigatingTo(args) {
@@ -32,7 +38,7 @@ export function onNavigatingTo(args) {
 
   context.set("recentSearches", []);
   context.set("autoComplete", []);
-  context.set("loadingLoadMore", false);
+  context.set("loadingExecute", false);
 
   // SQL__select("words").then((res) => {
   //   console.log("words data >>> ", res);
@@ -52,12 +58,25 @@ export function goBack() {
 }
 
 export function onTextChangeSearch(args) {
-  // console.log("onTextChangeSearch >>> ", args.value);
-  if (args.value) {
-    loadAutoComplete(args.value);
-  } else {
-    loadRecentSearches();
+  // Bersihkan timeout sebelumnya agar tidak terjadi multiple execution
+  if (debounceSearchTimeout) {
+    clearTimeout(debounceSearchTimeout);
   }
+
+  context.set("loadingExecute", true);
+
+  // Atur debounce dengan timeout 300ms (misal)
+  debounceSearchTimeout = setTimeout(() => {
+    const searchTerm = args.value;
+
+    // Jalankan pencarian jika ada nilai input
+    if (searchTerm) {
+      loadAutoComplete(searchTerm);
+    } else {
+      loadRecentSearches();
+    }
+    context.set("loadingExecute", false);
+  }, 700); // Waktu tunggu setelah pengguna berhenti mengetik
 }
 
 export function onSubmitSearch(args) {
@@ -117,8 +136,9 @@ function loadRecentSearches() {
 function loadAutoComplete(keyword) {
   dictionary = [];
   if (keyword) {
-    const dictionaryFiltered = _dictionary__findStartWith(keyword);
-    dictionary.push(...dictionaryFiltered.slice(0, pageSize));
+    // const dictionaryFiltered = await _dictionary__findStartWith(keyword);
+    const dictionaryFiltered = findStartWithOfDictionary(keyword);
+    dictionary.push(...dictionaryFiltered);
   }
 
   context.set("autoComplete", dictionary);
@@ -128,27 +148,65 @@ function loadAutoComplete(keyword) {
 function executeSearch(_keyword) {
   if (!_keyword) return;
 
+  const searchCache = new Map(); // Cache untuk hasil pencarian
+  context.set("viewMode", "RESULT");
+  const keyword = _keyword.toLowerCase();
+
+  // Cek cache untuk melihat apakah hasil pencarian sudah ada
+  if (searchCache.has(keyword)) {
+    context.set("localResultOfSearch", searchCache.get(keyword));
+    return; // Kembali jika hasil sudah ada di cache
+  }
+
+  context.set("loadingExecute", true);
+
+  // Eksekusi pencarian dan simpan hasil ke dalam cache
+  const localDictionary = findOfDictionary(keyword, false);
+
+  // Simpan hasil pencarian di cache
+  searchCache.set(keyword, localDictionary);
+
+  // Gunakan setTimeout untuk memberikan sedikit waktu sebelum memperbarui hasil
+  setTimeout(() => {
+    context.set("localResultOfSearch", localDictionary);
+    context.set("loadingExecute", false);
+
+    // Simpan ke database
+    saveToDB(localDictionary, "LOCAL");
+  }, 100); // Waktu delay dapat disesuaikan
+}
+
+/* function executeSearch(_keyword) {
+  if (!_keyword) return;
+
   context.set("viewMode", "RESULT");
 
   const keyword = _keyword.toLowerCase();
 
-  const localDictionary = _dictionary__find(keyword, false);
-  console.log("localDictionary >>> ", localDictionary);
-  context.set("localResultOfSearch", localDictionary);
+  context.set("loadingExecute", true);
+  // const localDictionary = await _dictionary__find(keyword, false);
+  const localDictionary = findOfDictionary(keyword, false);
+  setTimeout(() => {
+    // console.log("localDictionary >>> ", localDictionary);
+    context.set("localResultOfSearch", localDictionary);
 
-  myHttpClient(`?search=${keyword}`).then((res) => {
-    if (res && res.data.length) {
-      console.log("serverResultOfSearch >>> ", res.data);
-      context.set("serverResultOfSearch__word", res.data.word);
-      context.set("serverResultOfSearch__meaning", res.data.arti);
+    // myHttpClient(`?search=${keyword}`).then((res) => {
+    //   if (res && res.data.length) {
+    //     console.log("serverResultOfSearch >>> ", res.data);
+    //     context.set("serverResultOfSearch__word", res.data.word);
+    //     context.set("serverResultOfSearch__meaning", res.data.arti);
 
-      saveToDB(res.data);
-    } else {
-    }
-  });
+    //     saveToDB(res.data);
+    //   } else {
+    //   }
+    // });
 
-  saveToDB(localDictionary, "LOCAL");
-}
+    context.set("loadingExecute", false);
+    setTimeout(() => {
+      saveToDB(localDictionary, "LOCAL");
+    }, 100);
+  }, 500);
+} */
 
 function saveToDB(_data, _type = "SERVER") {
   initTables();
