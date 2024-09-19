@@ -24,7 +24,6 @@ const context = new ObservableArray();
 
 let dictionary = [];
 let debounceSearchTimeout;
-const pageSize = 10; // Number of items to load at once
 
 export function onNavigatingTo(args) {
   const page = args.object;
@@ -90,11 +89,7 @@ export function onSubmitSearch(args) {
 export function onClearSearch() {
   context.set("searchText", "");
   context.set("viewMode", "SEARCH");
-  context.set("localResultOfSearch", "");
-  context.set("localResultOfSearch__word", "");
-  context.set("localResultOfSearch__meaning", "");
-  context.set("serverResultOfSearch__word", "");
-  context.set("serverResultOfSearch__meaning", "");
+  context.set("localResultOfSearch", []);
   // SQL__truncate("words");
   // SQL__truncate("history");
   loadRecentSearches();
@@ -108,9 +103,20 @@ export function onTapRecentSearches(args) {
   // console.log("Tapped index >> ", itemIndex);
   // console.log("Tapped item >> ", itemTapData);
 
+  context.set("viewMode", "RESULT");
+  context.set("loadingExecute", true);
   context.set("searchText", itemTapData.word);
 
-  executeSearch(itemTapData.word);
+  const query =
+    "SELECT w.word, w.arti FROM history h LEFT JOIN words w ON h.words_guid = w.guid WHERE w.word='" +
+    itemTapData.word +
+    "'";
+  SQL__selectRaw(query).then((res) => {
+    context.set("localResultOfSearch", res);
+    context.set("loadingExecute", false);
+  });
+
+  // executeSearch(itemTapData.word);
 }
 
 export function onTapAutoComplete(args) {
@@ -126,7 +132,7 @@ export function onTapAutoComplete(args) {
 
 function loadRecentSearches() {
   const query =
-    "SELECT w.word, w.type FROM history h LEFT JOIN words w ON h.words_guid = w.guid GROUP BY w.word, w.type ORDER BY h.updated_at DESC LIMIT 10";
+    "SELECT w.word, w.type FROM history h LEFT JOIN words w ON h.words_guid = w.guid GROUP BY w.word, w.type ORDER BY h.id DESC LIMIT 25";
   SQL__selectRaw(query).then((res) => {
     context.set("recentSearches", res);
     context.set("autoComplete", []);
@@ -167,13 +173,13 @@ function executeSearch(_keyword) {
   searchCache.set(keyword, localDictionary);
 
   // Gunakan setTimeout untuk memberikan sedikit waktu sebelum memperbarui hasil
-  setTimeout(() => {
-    context.set("localResultOfSearch", localDictionary);
-    context.set("loadingExecute", false);
+  // setTimeout(() => {
+  context.set("localResultOfSearch", localDictionary);
+  context.set("loadingExecute", false);
 
-    // Simpan ke database
-    saveToDB(localDictionary, "LOCAL");
-  }, 100); // Waktu delay dapat disesuaikan
+  // Simpan ke database
+  saveToDB(localDictionary, "LOCAL");
+  // }, 100); // Waktu delay dapat disesuaikan
 }
 
 /* function executeSearch(_keyword) {
@@ -210,40 +216,9 @@ function executeSearch(_keyword) {
 
 function saveToDB(_data, _type = "SERVER") {
   initTables();
-  if (_type == "SERVER") {
-    _data.forEach((item) => {
-      SQL__select("words", "word", "WHERE word='" + item.word + "'").then(
-        (res) => {
-          if (res && res.length) {
-            SQL__update(
-              "history",
-              [{ field: "updated_at", value: getCurrentTime() }],
-              null,
-              "WHERE words_guid='" + res.guid + "'"
-            );
-          } else {
-            const guid = generateUUID();
 
-            SQL__insert("words", [
-              { field: "guid", value: guid },
-              { field: "word", value: item.word },
-              { field: "lema", value: item.lema },
-              { field: "arti", value: JSON.stringify(item.arti) },
-              { field: "tesaurusLink", value: item.tesaurusLink },
-              { field: "type", value: item.type },
-              { field: "created_at", value: getCurrentTime() },
-            ]);
-            SQL__insert("history", [
-              { field: "words_guid", value: guid },
-              { field: "created_at", value: getCurrentTime() },
-              { field: "updated_at", value: getCurrentTime() },
-            ]);
-          }
-        }
-      );
-    });
-  } else {
-    SQL__select("words", "word", "WHERE word='" + _data[0].word + "'").then(
+  _data.forEach((item) => {
+    SQL__select("words", "word", "WHERE word='" + item.word + "'").then(
       (res) => {
         if (res && res.length) {
           SQL__update(
@@ -255,16 +230,27 @@ function saveToDB(_data, _type = "SERVER") {
         } else {
           const guid = generateUUID();
 
-          SQL__insert("words", [
-            { field: "guid", value: guid },
-            { field: "word", value: _data[0].word },
-            { field: "lema", value: "x00000" },
-            { field: "arti", value: decodeHtml(_data[0].arti) },
-            { field: "tesaurusLink", value: "x00000" },
-            { field: "type", value: "word" },
-            { field: "created_at", value: getCurrentTime() },
-          ]);
-
+          if (_type == "SERVER") {
+            SQL__insert("words", [
+              { field: "guid", value: guid },
+              { field: "word", value: item.word },
+              { field: "lema", value: item.lema },
+              { field: "arti", value: JSON.stringify(item.arti) },
+              { field: "tesaurusLink", value: item.tesaurusLink },
+              { field: "type", value: item.type },
+              { field: "created_at", value: getCurrentTime() },
+            ]);
+          } else {
+            SQL__insert("words", [
+              { field: "guid", value: guid },
+              { field: "word", value: item.word },
+              { field: "lema", value: "x00000" },
+              { field: "arti", value: decodeHtml(item.arti) },
+              { field: "tesaurusLink", value: "x00000" },
+              { field: "type", value: "word" },
+              { field: "created_at", value: getCurrentTime() },
+            ]);
+          }
           SQL__insert("history", [
             { field: "words_guid", value: guid },
             { field: "created_at", value: getCurrentTime() },
@@ -273,5 +259,37 @@ function saveToDB(_data, _type = "SERVER") {
         }
       }
     );
-  }
+  });
+  // } else {
+  // SQL__select("words", "word", "WHERE word='" + _data[0].word + "'").then(
+  //   (res) => {
+  //     if (res && res.length) {
+  //       SQL__update(
+  //         "history",
+  //         [{ field: "updated_at", value: getCurrentTime() }],
+  //         null,
+  //         "WHERE words_guid='" + res.guid + "'"
+  //       );
+  //     } else {
+  //       const guid = generateUUID();
+
+  //       SQL__insert("words", [
+  //         { field: "guid", value: guid },
+  //         { field: "word", value: _data[0].word },
+  //         { field: "lema", value: "x00000" },
+  //         { field: "arti", value: decodeHtml(_data[0].arti) },
+  //         { field: "tesaurusLink", value: "x00000" },
+  //         { field: "type", value: "word" },
+  //         { field: "created_at", value: getCurrentTime() },
+  //       ]);
+
+  //       SQL__insert("history", [
+  //         { field: "words_guid", value: guid },
+  //         { field: "created_at", value: getCurrentTime() },
+  //         { field: "updated_at", value: getCurrentTime() },
+  //       ]);
+  //     }
+  //   }
+  // );
+  // }
 }
