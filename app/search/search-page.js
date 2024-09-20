@@ -145,6 +145,8 @@ export function onTapAutoComplete(args) {
   // console.log("Tapped index >> ", itemIndex);
   // console.log("Tapped item >> ", itemTapData);
 
+  context.set("searchTextResult", itemTapData.word);
+
   executeSearch(itemTapData.word);
 }
 
