@@ -11,13 +11,11 @@
 						<Span text="{{ isConnected ? 'online' : 'offline' }}" fontSize="16" />
 				</FormattedString>
 			</Label>
-			<Label col="2"
-					textWrap="true"
-					class="popin-l">
+			<Label col="2" textWrap="true">
 				<FormattedString>
-					<Span text="Penanda Buku" />
+					<Span text="Penanda Buku" class="popin-l text-gray-700" />
 					<Span text="&nbsp;&nbsp;" />
-					<Span text="&#xf02e;" class="far" />
+					<Span text="&#xf02e;" class="fas  text-gray-400" />
 				</FormattedString>
 			</Label>
 		</GridLayout>
@@ -28,7 +26,7 @@
 			<Label
 				text="&#xf5da;"
 				textWrap="true"
-				class="text-left text-gray-700 fas text-[36px]"
+				class="text-left text-black fas text-[36px]"
 				/>
 			<Label
 				text="Kamus Besar Bahasa Indonesia"
@@ -36,11 +34,15 @@
 				class="text-left text-black popin-r text-[24px]"
 				/>
 			<Button
-					text="Cari kata atau peribahasa..."
+					
 					textWrap="true"
 					tap="searchTap"
-					class="text-left text-black popin-r text-[14px] rounded-full bg-gray-200 px-5 py-3 active:bg-gray-350 active:scale-95 transition duration-150"
-			/>
+					class="text-left text-black text-[14px] rounded-full bg-gray-200 px-5 py-3 active:bg-gray-300 active:scale-95 transition duration-150"
+			>
+				<Span text="&#xf002;" class="fas" />
+				<Span text="&nbsp;&nbsp;" />
+				<Span text="Cari kata atau peribahasa..." class="popin-r" />
+			</Button>
 		</StackLayout>
 		<StackLayout verticalAlignment="middle" row="3">
 			<Label

@@ -29,11 +29,8 @@ export function onNavigatingTo(args) {
   const page = args.object;
   context.set("viewMode", "SEARCH");
   context.set("searchText", "");
+  context.set("searchTextResult", "");
   context.set("localResultOfSearch", "");
-  context.set("localResultOfSearch__word", "");
-  context.set("localResultOfSearch__meaning", "");
-  context.set("serverResultOfSearch__word", "");
-  context.set("serverResultOfSearch__meaning", "");
 
   context.set("recentSearches", []);
   context.set("autoComplete", []);
@@ -53,7 +50,16 @@ export function onNavigatingTo(args) {
 }
 
 export function goBack() {
-  Frame.topmost().goBack();
+  // Frame.topmost().goBack();
+  Frame.topmost().navigate({
+    moduleName: "home/home-page",
+    animated: true,
+    transition: {
+      name: "fade", // Tipe transisi (bisa juga pakai 'fade', 'flip', dll.)
+      duration: 100, // Durasi transisi dalam milidetik
+      curve: "easeIn", // Kurva animasi
+    },
+  });
 }
 
 export function onTextChangeSearch(args) {
@@ -74,6 +80,7 @@ export function onTextChangeSearch(args) {
     } else {
       loadRecentSearches();
     }
+
     context.set("loadingExecute", false);
   }, 700); // Waktu tunggu setelah pengguna berhenti mengetik
 }
@@ -95,6 +102,16 @@ export function onClearSearch() {
   loadRecentSearches();
 }
 
+export function onTapHomeAndStartSearch() {
+  if (context.get("viewMode") === "RESULT") {
+    context.set("viewMode", "SEARCH");
+    // context.set("searchText", context.get("searchTextResult"));
+    context.set("searchTextResult", "");
+  } else {
+    goBack();
+  }
+}
+
 export function onTapRecentSearches(args) {
   let itemIndex = args.index;
   let itemTap = args.view;
@@ -105,7 +122,8 @@ export function onTapRecentSearches(args) {
 
   context.set("viewMode", "RESULT");
   context.set("loadingExecute", true);
-  context.set("searchText", itemTapData.word);
+
+  context.set("searchTextResult", itemTapData.word);
 
   const query =
     "SELECT w.word, w.arti FROM history h LEFT JOIN words w ON h.words_guid = w.guid WHERE w.word='" +
@@ -134,6 +152,7 @@ function loadRecentSearches() {
   const query =
     "SELECT w.word, w.type FROM history h LEFT JOIN words w ON h.words_guid = w.guid GROUP BY w.word, w.type ORDER BY h.id DESC LIMIT 25";
   SQL__selectRaw(query).then((res) => {
+    context.set("viewMode", "SEARCH");
     context.set("recentSearches", res);
     context.set("autoComplete", []);
   });
@@ -147,6 +166,7 @@ function loadAutoComplete(keyword) {
     dictionary.push(...dictionaryFiltered);
   }
 
+  context.set("viewMode", "SEARCH");
   context.set("autoComplete", dictionary);
   context.set("recentSearches", []);
 }
@@ -158,28 +178,35 @@ function executeSearch(_keyword) {
   context.set("viewMode", "RESULT");
   const keyword = _keyword.toLowerCase();
 
-  // Cek cache untuk melihat apakah hasil pencarian sudah ada
-  if (searchCache.has(keyword)) {
-    context.set("localResultOfSearch", searchCache.get(keyword));
-    return; // Kembali jika hasil sudah ada di cache
-  }
-
   context.set("loadingExecute", true);
 
-  // Eksekusi pencarian dan simpan hasil ke dalam cache
-  const localDictionary = findOfDictionary(keyword, false);
+  SQL__select("words", "*", "WHERE word='" + keyword + "'").then((resWords) => {
+    if (resWords && resWords.length) {
+      context.set("localResultOfSearch", resWords);
+      context.set("loadingExecute", false);
+    } else {
+      // Cek cache untuk melihat apakah hasil pencarian sudah ada
+      if (searchCache.has(keyword)) {
+        context.set("localResultOfSearch", searchCache.get(keyword));
+        return; // Kembali jika hasil sudah ada di cache
+      }
 
-  // Simpan hasil pencarian di cache
-  searchCache.set(keyword, localDictionary);
+      // Eksekusi pencarian dan simpan hasil ke dalam cache
+      const localDictionary = findOfDictionary(keyword, false);
 
-  // Gunakan setTimeout untuk memberikan sedikit waktu sebelum memperbarui hasil
-  // setTimeout(() => {
-  context.set("localResultOfSearch", localDictionary);
-  context.set("loadingExecute", false);
+      // Simpan hasil pencarian di cache
+      searchCache.set(keyword, localDictionary);
 
-  // Simpan ke database
-  saveToDB(localDictionary, "LOCAL");
-  // }, 100); // Waktu delay dapat disesuaikan
+      // Gunakan setTimeout untuk memberikan sedikit waktu sebelum memperbarui hasil
+      // setTimeout(() => {
+      context.set("localResultOfSearch", localDictionary);
+      context.set("loadingExecute", false);
+
+      // Simpan ke database
+      saveToDB(localDictionary, "LOCAL");
+      // }, 100); // Waktu delay dapat disesuaikan
+    }
+  });
 }
 
 /* function executeSearch(_keyword) {
@@ -219,14 +246,28 @@ function saveToDB(_data, _type = "SERVER") {
 
   _data.forEach((item) => {
     SQL__select("words", "word", "WHERE word='" + item.word + "'").then(
-      (res) => {
-        if (res && res.length) {
-          SQL__update(
+      (resWords) => {
+        if (resWords && resWords.length) {
+          SQL__select(
             "history",
-            [{ field: "updated_at", value: getCurrentTime() }],
-            null,
-            "WHERE words_guid='" + res.guid + "'"
-          );
+            "words_guid",
+            "WHERE words_guid='" + resWords.guid + "'"
+          ).then((resHistories) => {
+            if (!resHistories || !resHistories.length) {
+              SQL__insert("history", [
+                { field: "words_guid", value: resHistories[0].guid },
+                { field: "created_at", value: getCurrentTime() },
+                { field: "updated_at", value: getCurrentTime() },
+              ]);
+            } else {
+              SQL__update(
+                "history",
+                [{ field: "updated_at", value: getCurrentTime() }],
+                null,
+                "WHERE id='" + resHistories[0].id + "'"
+              );
+            }
+          });
         } else {
           const guid = generateUUID();
 

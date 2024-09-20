@@ -4,10 +4,11 @@
 	
 	<ActionBar flat="false">
 		<GridLayout 
-			columns="auto, 5, *, 5, auto, 20">
+			columns="auto, 10, *, 5, auto, 15">
 			<Label
 				visibility="{{ !loadingExecute ? 'visible' : 'collapsed' }}"
-				text="&#xf002;"
+				text="{{ viewMode === 'RESULT' ? '&#xf002;' : '&#xf015;' }}"
+				tap="onTapHomeAndStartSearch"
 				textWrap="true"
 				class="text-left text-gray-400 fas text-[18px]"
 				col="0"
@@ -20,6 +21,7 @@
 				busy="true" 
 				col="0" />
 			<TextField 
+				visibility="{{ viewMode === 'SEARCH' ? 'visible' : 'collapsed' }}"
 				text="{{ searchText }}"
 				hint="Ketikan sesuatu untuk mencari..." 
 				background="#FFF" 
@@ -28,13 +30,24 @@
 				returnKeyType="search" 
 				returnPress="onSubmitSearch"
 				col="2" />
-				<Label
-					text="&#xf00d;"
-					textWrap="true"
-					tap="onClearSearch"
-					class="text-left text-gray-400 fas text-[20px]"
-					col="4"
-					/>
+			<Label 
+				visibility="{{ viewMode === 'RESULT' ? 'visible' : 'collapsed' }}"
+				text="{{ searchTextResult }}" 
+				class="text-left text-black"
+				col="2" />
+			<!-- <Button 
+				text="&#xf00d;" 
+				textWrap="true" 
+				class="text-left text-gray-400 fas text-[20px]"
+				col="4" /> -->
+			<Label
+				visibility="{{ searchText ? 'visible' : 'collapsed' }}"
+				text="&#xf00d;"
+				textWrap="true"
+				tap="onClearSearch"
+				class="text-left text-gray-400 fas text-[18px]"
+				col="4"
+				/>
 		</GridLayout>
 	</ActionBar>
 	<GridLayout rows="*, 5, auto, 30, auto, 10, auto, 0" class="px-5 pb-5">
@@ -42,7 +55,7 @@
 			visibility="{{ viewMode === 'SEARCH' ? 'visible' : 'collapsed' }}">
 			<Label
 				textWrap="true"
-				visibility="{{ !searchText && !loadingExecute && recentSearches.length ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (!searchText && !loadingExecute && recentSearches.length) ? 'visible' : 'collapsed' }}" 
 				class="text-left text-[10px] my-3"
 				col="0">
 				<FormattedString>
@@ -52,7 +65,7 @@
 			<ListView 
 				items="{{ recentSearches }}" 
 				itemTap="onTapRecentSearches"
-				visibility="{{ !searchText && !loadingExecute && recentSearches.length ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (!searchText && !loadingExecute && recentSearches.length) ? 'visible' : 'collapsed' }}" 
 				row="2">
 				<ListView.itemTemplate>
 					<GridLayout columns="auto, 10, *">
@@ -69,8 +82,8 @@
 					</GridLayout>
 				</ListView.itemTemplate>
 			</ListView>
-			<StackLayout col="2" class="mt-5"
-				visibility="{{ !searchText && !loadingExecute && !recentSearches.length ? 'visible' : 'collapsed' }}" >
+			<StackLayout row="2" class="mt-5"
+				visibility="{{ (!searchText && !loadingExecute && !recentSearches.length) ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
 					text="&#xf5da;" class="fas text-center text-gray-400 text-[56px] mt-5"
@@ -83,7 +96,7 @@
 
 			<Label
 				textWrap="true"
-				visibility="{{ searchText && !loadingExecute && autoComplete.length ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (searchText && !loadingExecute && autoComplete.length) ? 'visible' : 'collapsed' }}" 
 				class="text-left text-[10px] my-3"
 				col="0">
 				<FormattedString>
@@ -108,7 +121,7 @@
 					</GridLayout>
 				</ListView.itemTemplate>
 			</ListView>
-			<StackLayout col="2" class="mt-5"
+			<StackLayout row="2" class="mt-5"
 				visibility="{{ searchText && !loadingExecute && !autoComplete.length ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
@@ -119,8 +132,8 @@
 					text="Kata tidak di temukan." class="popin-l text-center text-gray-400 mt-3"
 					/>
 			</StackLayout>
-			<StackLayout col="2" class="mt-5"
-				visibility="{{ searchText && loadingExecute && !autoComplete.length ? 'visible' : 'collapsed' }}" >
+			<StackLayout row="2" class="mt-5"
+				visibility="{{ searchText && loadingExecute ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
 					text="&#xf252;" class="far text-center text-gray-400 text-[56px] mt-5"
