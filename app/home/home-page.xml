@@ -1,9 +1,9 @@
-<Page actionBarHidden="false"
+<Page actionBarHidden="true"
 	navigatingTo="onNavigatingTo" 
 	xmlns="http://schemas.nativescript.org/tns.xsd">
 	
-	<ActionBar flat="true">
-		<GridLayout columns="*, 10, auto, 20" width="100%">
+	<!-- <ActionBar flat="true">
+		<GridLayout columns="auto, *, auto, 20" width="100%">
 			<Label textWrap="true" col="0">
 				<FormattedString>
 						<Span text="&#xf111;" class="fas" fontSize="12" color="{{ isConnected ? '#4CAF50' : '#F44336' }}" />
@@ -19,32 +19,43 @@
 				</FormattedString>
 			</Label>
 		</GridLayout>
-	</ActionBar>
+	</ActionBar> -->
+
 	<GridLayout rows="auto, *, 0, auto, 0" class="p-5">
-	
-		<StackLayout verticalAlignment="middle" row="1">
-			<Label
+		<GridLayout 
+			verticalAlignment="middle" 
+			rows="auto, auto, 5, auto" 
+			columns="*, 10, auto" row="1">
+			<Label row="0" col="0" colSpan="3"
 				text="&#xf5da;"
 				textWrap="true"
 				class="text-left text-black fas text-[36px]"
 				/>
-			<Label
+			<Label row="1" col="0" colSpan="3"
 				text="Kamus Besar Bahasa Indonesia"
 				textWrap="true"
-				class="text-left text-black popin-r text-[24px]"
+				class="text-left text-black popin-r text-[42px]"
 				/>
-			<Button
-					
+			<Button row="3" col="0"
 					textWrap="true"
 					tap="searchTap"
-					class="text-left text-black text-[14px] rounded-full bg-gray-200 px-5 py-3 active:bg-gray-300 active:scale-95 transition duration-150"
+					class="text-left text-black rounded-full bg-gray-200 px-5 py-3 active:bg-gray-300 active:scale-95 transition duration-150"
 			>
 				<Span text="&#xf002;" class="fas" />
 				<Span text="&nbsp;&nbsp;" />
 				<Span text="Cari kata atau peribahasa..." class="popin-r" />
 			</Button>
-		</StackLayout>
-		<StackLayout verticalAlignment="middle" row="3">
+			<Button row="3" col="2"
+					textWrap="true"
+					class="text-left text-white rounded-full bg-black px-5 py-3 active:bg-gray-300 active:scale-95 transition duration-150"
+					width="50"
+			>
+				<!-- <Span text="Cari kata atau peribahasa..." class="popin-r" /> -->
+				<!-- <Span text="&nbsp;&nbsp;" /> -->
+				<Span text="&#xf02e;" class="fas" />
+			</Button>
+		</GridLayout>
+		<!-- <StackLayout verticalAlignment="middle" row="3">
 			<Label
 				text=""
 				textWrap="true"
@@ -62,6 +73,6 @@
 				class="text-center text-gray-700 italic popin-r text-[12px] mt-2 px-5"
 			/>
 			
-		</StackLayout>
+		</StackLayout> -->
 	</GridLayout>
 </Page>

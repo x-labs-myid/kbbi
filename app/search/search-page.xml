@@ -41,7 +41,7 @@
 				class="text-left text-gray-400 fas text-[20px]"
 				col="4" /> -->
 			<Label
-				visibility="{{ !searchTextResult ? 'visible' : 'collapsed' }}"
+				visibility="{{ !searchTextResult && searchText ? 'visible' : 'collapsed' }}"
 				text="&#xf00d;"
 				textWrap="true"
 				tap="onClearSearch"
