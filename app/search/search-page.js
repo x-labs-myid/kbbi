@@ -1,10 +1,5 @@
-import { Frame, Observable, ObservableArray } from "@nativescript/core";
-import {
-  _dictionary__find,
-  _dictionary__findStartWith,
-  findOfDictionary,
-  findStartWithOfDictionary,
-} from "~/dictionary";
+import { Frame, ObservableArray } from "@nativescript/core";
+import { findOfDictionary, findStartWithOfDictionary } from "~/dictionary";
 import {
   getCurrentTime,
   initTables,
@@ -87,9 +82,7 @@ export function onTextChangeSearch(args) {
 
 export function onSubmitSearch(args) {
   const obj = args.object;
-  // console.log("onSearch text >>> ", obj.text);
   context.set("searchText", obj.text);
-
   executeSearch(obj.text);
 }
 
@@ -106,6 +99,7 @@ export function onTapHomeAndStartSearch() {
   if (context.get("viewMode") === "RESULT") {
     context.set("viewMode", "SEARCH");
     // context.set("searchText", context.get("searchTextResult"));
+    context.set("searchText", "");
     context.set("searchTextResult", "");
   } else {
     goBack();
@@ -116,9 +110,6 @@ export function onTapRecentSearches(args) {
   let itemIndex = args.index;
   let itemTap = args.view;
   let itemTapData = itemTap.bindingContext;
-
-  // console.log("Tapped index >> ", itemIndex);
-  // console.log("Tapped item >> ", itemTapData);
 
   context.set("viewMode", "RESULT");
   context.set("loadingExecute", true);
@@ -142,9 +133,6 @@ export function onTapAutoComplete(args) {
   let itemTap = args.view;
   let itemTapData = itemTap.bindingContext;
 
-  // console.log("Tapped index >> ", itemIndex);
-  // console.log("Tapped item >> ", itemTapData);
-
   context.set("searchTextResult", itemTapData.word);
 
   executeSearch(itemTapData.word);
@@ -152,7 +140,7 @@ export function onTapAutoComplete(args) {
 
 function loadRecentSearches() {
   const query =
-    "SELECT w.word, w.type FROM history h LEFT JOIN words w ON h.words_guid = w.guid GROUP BY w.word, w.type ORDER BY h.id DESC LIMIT 25";
+    "SELECT w.word, w.type FROM history h LEFT JOIN words w ON h.words_guid = w.guid GROUP BY w.word, w.type ORDER BY h.id DESC LIMIT 10";
   SQL__selectRaw(query).then((res) => {
     context.set("viewMode", "SEARCH");
     context.set("recentSearches", res);
@@ -163,7 +151,6 @@ function loadRecentSearches() {
 function loadAutoComplete(keyword) {
   dictionary = [];
   if (keyword) {
-    // const dictionaryFiltered = await _dictionary__findStartWith(keyword);
     const dictionaryFiltered = findStartWithOfDictionary(keyword);
     dictionary.push(...dictionaryFiltered);
   }
@@ -210,38 +197,6 @@ function executeSearch(_keyword) {
     }
   });
 }
-
-/* function executeSearch(_keyword) {
-  if (!_keyword) return;
-
-  context.set("viewMode", "RESULT");
-
-  const keyword = _keyword.toLowerCase();
-
-  context.set("loadingExecute", true);
-  // const localDictionary = await _dictionary__find(keyword, false);
-  const localDictionary = findOfDictionary(keyword, false);
-  setTimeout(() => {
-    // console.log("localDictionary >>> ", localDictionary);
-    context.set("localResultOfSearch", localDictionary);
-
-    // myHttpClient(`?search=${keyword}`).then((res) => {
-    //   if (res && res.data.length) {
-    //     console.log("serverResultOfSearch >>> ", res.data);
-    //     context.set("serverResultOfSearch__word", res.data.word);
-    //     context.set("serverResultOfSearch__meaning", res.data.arti);
-
-    //     saveToDB(res.data);
-    //   } else {
-    //   }
-    // });
-
-    context.set("loadingExecute", false);
-    setTimeout(() => {
-      saveToDB(localDictionary, "LOCAL");
-    }, 100);
-  }, 500);
-} */
 
 function saveToDB(_data, _type = "SERVER") {
   initTables();
@@ -303,36 +258,4 @@ function saveToDB(_data, _type = "SERVER") {
       }
     );
   });
-  // } else {
-  // SQL__select("words", "word", "WHERE word='" + _data[0].word + "'").then(
-  //   (res) => {
-  //     if (res && res.length) {
-  //       SQL__update(
-  //         "history",
-  //         [{ field: "updated_at", value: getCurrentTime() }],
-  //         null,
-  //         "WHERE words_guid='" + res.guid + "'"
-  //       );
-  //     } else {
-  //       const guid = generateUUID();
-
-  //       SQL__insert("words", [
-  //         { field: "guid", value: guid },
-  //         { field: "word", value: _data[0].word },
-  //         { field: "lema", value: "x00000" },
-  //         { field: "arti", value: decodeHtml(_data[0].arti) },
-  //         { field: "tesaurusLink", value: "x00000" },
-  //         { field: "type", value: "word" },
-  //         { field: "created_at", value: getCurrentTime() },
-  //       ]);
-
-  //       SQL__insert("history", [
-  //         { field: "words_guid", value: guid },
-  //         { field: "created_at", value: getCurrentTime() },
-  //         { field: "updated_at", value: getCurrentTime() },
-  //       ]);
-  //     }
-  //   }
-  // );
-  // }
 }

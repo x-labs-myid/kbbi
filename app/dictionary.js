@@ -131,6 +131,7 @@ export async function _dictionary__find(
  * @param {*} pageSize
  * @returns []
  */
+
 const cacheFind = new Map(); // Cache untuk menyimpan hasil pencarian pada fungsi findOfDictionary
 
 export function findOfDictionary(
