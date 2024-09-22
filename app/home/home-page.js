@@ -1,5 +1,5 @@
 import { Frame, Observable } from "@nativescript/core";
-import { internet } from "~/global-helper";
+import { internet, showToast } from "~/global-helper";
 
 const context = new Observable();
 
@@ -28,6 +28,10 @@ export function searchTap() {
       dataForm: null,
     },
   });
+}
+
+export function bookmarkTap() {
+  showToast("Fitur Penanda Buku belum tersedia.");
 }
 
 function _checkConnectivity() {

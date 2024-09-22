@@ -1,7 +1,7 @@
 import { NativeScriptConfig } from "@nativescript/core";
 
 export default {
-  id: "com.kang.cahya.apps.kbbi",
+  id: "com.kang.cahya.apps.mykbbi",
   appPath: "app",
   appResourcesPath: "App_Resources",
   android: {

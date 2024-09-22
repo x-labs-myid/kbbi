@@ -47,6 +47,7 @@
 			</Button>
 			<Button row="3" col="2"
 					textWrap="true"
+					tap="bookmarkTap"
 					class="text-left text-white rounded-full bg-black px-5 py-3 active:bg-gray-300 active:scale-95 transition duration-150"
 					width="50"
 			>

@@ -1,6 +1,8 @@
-import { Http, Dialogs, Connectivity } from "@nativescript/core";
+import { Application, Http, Dialogs, Connectivity } from "@nativescript/core";
 import * as htmlparser2 from "htmlparser2";
 import { SQL__query } from "~/sqlite-helper";
+
+const ToastClass = com.kangcahya.ToastClass;
 
 export function initTables() {
   SQL__query(`CREATE TABLE IF NOT EXISTS "words" (
@@ -181,4 +183,10 @@ export function internet() {
         type: "none",
       };
   }
+}
+
+export function showToast(message, duration = "short") {
+  const context =
+    Application.android.foregroundActivity || Application.android.startActivity;
+  ToastClass.showToast(context, message, duration);
 }
