@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/dyazincahya/API-KBBI-PHP-Codeigniter-4/main/kbbi.webp" width="150" />
+<img src="https://raw.githubusercontent.com/x-labs-86/hosting-assets/refs/heads/main/kbbi/icon.png" width="150" />
 
 # MyKBBI: Kamus Bahasa Indonesia
 
