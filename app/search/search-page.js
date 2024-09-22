@@ -22,6 +22,7 @@ let debounceSearchTimeout;
 
 export function onNavigatingTo(args) {
   const page = args.object;
+
   context.set("viewMode", "SEARCH");
   context.set("searchText", "");
   context.set("searchTextResult", "");
@@ -136,6 +137,15 @@ export function onTapAutoComplete(args) {
   context.set("searchTextResult", itemTapData.word);
 
   executeSearch(itemTapData.word);
+}
+
+export function TextFieldLoaded(args) {
+  const textField = args.object;
+  textField.focus();
+  textField.selectAll();
+
+  console.log("TextFieldLoaded >>> ", textField);
+  console.log("TextFieldLoaded >>> ", textField.text);
 }
 
 function loadRecentSearches() {

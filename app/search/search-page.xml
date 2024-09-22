@@ -4,14 +4,23 @@
 	
 	<ActionBar flat="false">
 		<GridLayout 
-			columns="40, 5, *, 5, auto, 15">
+			columns="auto, 5, *, 5, 40, 10">
 			<Button
-				visibility="{{ !loadingExecute ? 'visible' : 'collapsed' }}"
-				text="{{ viewMode === 'RESULT' ? '&#xf002;' : '&#xf015;' }}"
+				visibility="{{ !searchText && viewMode === 'SEARCH' ? 'visible' : 'collapsed' }}"
+				text="&#xf015;"
 				textWrap="true"
 				tap="onTapHomeAndStartSearch"
 				class="text-center text-black fas text-[18px] rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
-				width="40"
+				width="50"
+				col="0"
+				/>
+			<Button
+				visibility="{{ searchTextResult && viewMode === 'RESULT' ? 'visible' : 'collapsed' }}"
+				text="&#xf002;"
+				textWrap="true"
+				tap="onTapHomeAndStartSearch"
+				class="text-center text-black fas text-[18px] rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
+				width="50"
 				col="0"
 				/>
 			<!-- <Label
@@ -22,13 +31,7 @@
 				class="text-left text-gray-400 fas text-[18px]"
 				col="0"
 				/> -->
-			<ActivityIndicator 
-				visibility="{{ loadingExecute ? 'visible' : 'collapsed' }}"
-				color="#757575" 
-				width="30"
-				height="30" 
-				busy="true" 
-				col="0" />
+			
 			<TextField 
 				visibility="{{ viewMode === 'SEARCH' ? 'visible' : 'collapsed' }}"
 				text="{{ searchText }}"
@@ -38,6 +41,7 @@
 				textChange="onTextChangeSearch"
 				returnKeyType="search" 
 				returnPress="onSubmitSearch"
+				id="searchInput"
 				col="2" />
 			<Label 
 				visibility="{{ viewMode === 'RESULT' ? 'visible' : 'collapsed' }}"
@@ -49,14 +53,30 @@
 				textWrap="true" 
 				class="text-left text-gray-400 fas text-[20px]"
 				col="4" /> -->
-			<Label
+			<ActivityIndicator 
+				visibility="{{ loadingExecute ? 'visible' : 'collapsed' }}"
+				color="#000000" 
+				width="30"
+				height="30" 
+				busy="true" 
+				col="4" />
+			<Button
+				visibility="{{ !searchTextResult && searchText && !loadingExecute ? 'visible' : 'collapsed' }}"
+				text="&#xf00d;"
+				textWrap="true"
+				tap="onClearSearch"
+				class="text-center text-black fas text-[18px] rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
+				width="40"
+				col="4"
+				/>
+			<!-- <Label
 				visibility="{{ !searchTextResult && searchText ? 'visible' : 'collapsed' }}"
 				text="&#xf00d;"
 				textWrap="true"
 				tap="onClearSearch"
 				class="text-left text-gray-400 fas text-[18px]"
 				col="4"
-				/>
+				/> -->
 		</GridLayout>
 	</ActionBar>
 	

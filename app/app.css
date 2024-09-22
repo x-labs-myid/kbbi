@@ -39,3 +39,7 @@
   border-style: solid;
   padding: 10 20;
 }
+
+TextField {
+  placeholder-color: #000000;
+}
