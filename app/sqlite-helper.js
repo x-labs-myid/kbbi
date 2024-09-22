@@ -7,7 +7,7 @@ import { openOrCreate } from "@nativescript-community/sqlite";
 */
 
 const sqlite = openOrCreate("kbbi.db");
-const showError = true;
+const showError = false;
 
 export async function SQL__select(
   table,
