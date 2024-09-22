@@ -1,12 +1,13 @@
 import { Frame, Observable } from "@nativescript/core";
-import { internet, showToast } from "~/global-helper";
+import { internet, showToast, initTables } from "~/global-helper";
 
 const context = new Observable();
 
 export function onNavigatingTo(args) {
   const page = args.object;
 
-  _checkConnectivity();
+  initTables();
+  // _checkConnectivity();
 
   page.bindingContext = context;
 }
@@ -19,13 +20,6 @@ export function searchTap() {
       name: "fade", // Tipe transisi (bisa juga pakai 'fade', 'flip', dll.)
       duration: 100, // Durasi transisi dalam milidetik
       curve: "easeIn", // Kurva animasi
-    },
-    // transition: {
-    //   name: "slideTop",
-    // },
-    context: {
-      originModule: "home/home-page",
-      dataForm: null,
     },
   });
 }

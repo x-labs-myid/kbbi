@@ -4,27 +4,36 @@
 	
 	<ActionBar flat="false">
 		<GridLayout 
-			columns="auto, 10, *, 5, auto, 15">
-			<Label
+			columns="40, 5, *, 5, auto, 15">
+			<Button
+				visibility="{{ !loadingExecute ? 'visible' : 'collapsed' }}"
+				text="{{ viewMode === 'RESULT' ? '&#xf002;' : '&#xf015;' }}"
+				textWrap="true"
+				tap="onTapHomeAndStartSearch"
+				class="text-center text-black fas text-[18px] rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
+				width="40"
+				col="0"
+				/>
+			<!-- <Label
 				visibility="{{ !loadingExecute ? 'visible' : 'collapsed' }}"
 				text="{{ viewMode === 'RESULT' ? '&#xf002;' : '&#xf015;' }}"
 				tap="onTapHomeAndStartSearch"
 				textWrap="true"
 				class="text-left text-gray-400 fas text-[18px]"
 				col="0"
-				/>
+				/> -->
 			<ActivityIndicator 
 				visibility="{{ loadingExecute ? 'visible' : 'collapsed' }}"
 				color="#757575" 
-				width="25"
-				height="25" 
+				width="30"
+				height="30" 
 				busy="true" 
 				col="0" />
 			<TextField 
 				visibility="{{ viewMode === 'SEARCH' ? 'visible' : 'collapsed' }}"
 				text="{{ searchText }}"
 				hint="Ketikan sesuatu untuk mencari..." 
-				background="#FFF" 
+				class="bg-white text-black"
 				fontSize="14"
 				textChange="onTextChangeSearch"
 				returnKeyType="search" 
@@ -87,11 +96,11 @@
 				visibility="{{ (!searchText && !loadingExecute && !recentSearches.length) ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
-					text="&#xf5da;" class="fas text-center text-gray-400 text-[56px] mt-5"
+					text="&#xf5da;" class="fas text-center text-gray-500 text-[56px] mt-5"
 					/>
 				<Label
 					textWrap="true"
-					text="Tidak ada data." class="popin-l text-center text-gray-400 mt-3"
+					text="Tidak ada data." class="popin-l text-center text-gray-500 mt-3"
 					/>
 			</StackLayout>
 
@@ -126,22 +135,22 @@
 				visibility="{{ searchText && !loadingExecute && !autoComplete.length ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
-					text="&#xf5c8;" class="far text-center text-gray-400 text-[56px] mt-5"
+					text="&#xf5c8;" class="far text-center text-gray-500 text-[56px] mt-5"
 					/>
 				<Label
 					textWrap="true"
-					text="Kata tidak di temukan." class="popin-l text-center text-gray-400 mt-3"
+					text="Kata tidak di temukan." class="popin-l text-center text-gray-500 mt-3"
 					/>
 			</StackLayout>
 			<StackLayout row="2" class="mt-5"
 				visibility="{{ searchText && loadingExecute ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
-					text="&#xf252;" class="far text-center text-gray-400 text-[56px] mt-5"
+					text="&#xf252;" class="far text-center text-gray-500 text-[56px] mt-5"
 					/>
 				<Label
 					textWrap="true"
-					text="Harap tunggu, sedang mencari..." class="popin-l text-center text-gray-400 mt-3"
+					text="Harap tunggu, sedang mencari..." class="popin-l text-center text-gray-500 mt-3"
 					/>
 			</StackLayout>
 		</GridLayout>

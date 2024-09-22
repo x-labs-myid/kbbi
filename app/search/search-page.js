@@ -139,6 +139,8 @@ export function onTapAutoComplete(args) {
 }
 
 function loadRecentSearches() {
+  initTables();
+
   const query =
     "SELECT w.word, w.type FROM history h LEFT JOIN words w ON h.words_guid = w.guid GROUP BY w.word, w.type ORDER BY h.id DESC LIMIT 10";
   SQL__selectRaw(query).then((res) => {
