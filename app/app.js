@@ -1,4 +1,6 @@
 import { Application, Color } from "@nativescript/core";
+import { firebase } from "@nativescript/firebase-core";
+import { Admob } from "@nativescript/firebase-admob";
 
 if (Application.android) {
   Application.android.on(Application.android.activityStartedEvent, function () {
@@ -6,6 +8,9 @@ if (Application.android) {
     window.setStatusBarColor(new Color("#3B82F6").android);
   });
 }
+
+await firebase().initializeApp();
+Admob.init();
 
 Application.run({ moduleName: "app-root" });
 

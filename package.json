@@ -7,6 +7,8 @@
     "@nativescript-community/sqlite": "^3.5.1",
     "@nativescript-community/ui-collectionview": "^5.3.40",
     "@nativescript/core": "~8.8.0",
+    "@nativescript/firebase-admob": "^3.3.2",
+    "@nativescript/firebase-core": "^3.3.2",
     "@nativescript/tailwind": "^2.1.0",
     "htmlparser2": "^9.1.0",
     "lodash": "^4.17.21",

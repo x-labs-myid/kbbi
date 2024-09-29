@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1078595252903",
+    "project_id": "mykbbi-kamus-bahasa-indonesia",
+    "storage_bucket": "mykbbi-kamus-bahasa-indonesia.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078595252903:android:a6996e9e8276d088316182",
+        "android_client_info": {
+          "package_name": "com.kang.cahya.apps.mykbbi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA49-Y93MSjb2bK-Mfw16FoqneW4E1fyzI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,7 @@
 <Page actionBarHidden="false"
 	navigatingTo="onNavigatingTo" 
-	xmlns="http://schemas.nativescript.org/tns.xsd">
+	xmlns="http://schemas.nativescript.org/tns.xsd"
+	xmlns:ui="@nativescript/firebase-admob">
 	
 	<ActionBar flat="false">
 		<GridLayout 
@@ -10,7 +11,7 @@
 				text="&#xf015;"
 				textWrap="true"
 				tap="onTapHomeAndStartSearch"
-				class="text-center text-black fas text-[18px] rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
+				class="text-center text-black fas text-[18px] border-none rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
 				width="50"
 				col="0"
 				/>
@@ -19,7 +20,7 @@
 				text="&#xf002;"
 				textWrap="true"
 				tap="onTapHomeAndStartSearch"
-				class="text-center text-black fas text-[18px] rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
+				class="text-center text-black fas text-[18px] border-none rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
 				width="50"
 				col="0"
 				/>
@@ -65,7 +66,7 @@
 				text="&#xf00d;"
 				textWrap="true"
 				tap="onClearSearch"
-				class="text-center text-black fas text-[18px] rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
+				class="text-center text-black fas text-[18px] border-none rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
 				width="40"
 				col="4"
 				/>
@@ -197,15 +198,22 @@
 		</GridLayout>
 
 		<!-- Text Info -->
-		<Label 
-			class="text-center text-orange-400 text-[12px] mt-3" 
-			visibility="{{ viewMode === 'SEARCH' && recentSearches.length ? 'visible' : 'collapsed' }}"
-			row="3">
-			<FormattedString>
-				<Span text="&#xf4d8;" class="fas" />
-				<Span text="&nbsp;&nbsp;" />
-				<Span text="Anda dapat mencari kata atau peribahasa disini" class="popin-r" />
-			</FormattedString>
-		</Label>
+		<StackLayout class="mt-2" row="3">
+			<ui:BannerAd
+				height="70"
+				width="350"
+				unitId="ca-app-pub-1640120316722376/2423878232"
+				layoutChanged="bannerAdLoaded" row="0" />
+			<Label 
+				class="text-center text-orange-400 text-[12px] mt-5" 
+				visibility="{{ viewMode === 'SEARCH' && recentSearches.length ? 'visible' : 'collapsed' }}"
+				>
+				<FormattedString>
+					<Span text="&#xf4d8;" class="fas" />
+					<Span text="&nbsp;&nbsp;" />
+					<Span text="Anda dapat mencari kata atau peribahasa disini" class="popin-r" />
+				</FormattedString>
+			</Label>
+		</StackLayout>
 	</GridLayout>
 </Page>
