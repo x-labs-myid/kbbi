@@ -164,7 +164,7 @@ export function onTapRecentSearches(args) {
   let itemTap = args.view;
   let itemTapData = itemTap.bindingContext;
 
-  // context.set("viewMode", "RESULT");
+  context.set("viewMode", "RESULT");
   context.set("loadingExecute", true);
 
   context.set("searchTextResult", itemTapData.word);
@@ -174,9 +174,8 @@ export function onTapRecentSearches(args) {
     itemTapData.word +
     "'";
   SQL__selectRaw(query).then((res) => {
-    // context.set("localResultOfSearch", res);
+    context.set("localResultOfSearch", res);
     context.set("loadingExecute", false);
-    directToResult(res);
   });
 
   // executeSearch(itemTapData.word);
@@ -243,9 +242,8 @@ function executeSearch(_keyword) {
 
   SQL__select("words", "*", "WHERE word='" + keyword + "'").then((resWords) => {
     if (resWords && resWords.length) {
-      // context.set("localResultOfSearch", resWords);
+      context.set("localResultOfSearch", resWords);
       context.set("loadingExecute", false);
-      directToResult(resWords);
     } else {
       // Cek cache untuk melihat apakah hasil pencarian sudah ada
       if (searchCache.has(keyword)) {
@@ -261,14 +259,12 @@ function executeSearch(_keyword) {
 
       // Gunakan setTimeout untuk memberikan sedikit waktu sebelum memperbarui hasil
       // setTimeout(() => {
-      // context.set("localResultOfSearch", localDictionary);
+      context.set("localResultOfSearch", localDictionary);
       context.set("loadingExecute", false);
 
       // Simpan ke database
       saveToDB(localDictionary, "LOCAL");
-      // }, 100); // Waktu delay dapat
-
-      directToResult(localDictionary);
+      // }, 100); // Waktu delay dapat disesuaikan
     }
   });
 }
@@ -332,21 +328,5 @@ function saveToDB(_data, _type = "SERVER") {
         }
       }
     );
-  });
-}
-
-function directToResult(_data) {
-  Frame.topmost().navigate({
-    moduleName: "result/result-page",
-    animated: true,
-    transition: {
-      name: "fade", // Tipe transisi (bisa juga pakai 'fade', 'flip', dll.)
-      duration: 100, // Durasi transisi dalam milidetik
-      curve: "easeIn", // Kurva animasi
-    },
-    context: {
-      keyword: context.get("searchText"),
-      data: _data,
-    },
   });
 }

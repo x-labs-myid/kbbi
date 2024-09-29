@@ -1,0 +1,62 @@
+<Page actionBarHidden="false"
+	navigatingTo="onNavigatingTo" 
+	xmlns="http://schemas.nativescript.org/tns.xsd"
+	xmlns:ui="@nativescript/firebase-admob">
+	
+	<ActionBar flat="false">
+		<GridLayout 
+			columns="auto, 5, *, 5, 40, 10">
+			<Button
+				text="&#xf002;"
+				textWrap="true"
+				tap="goBack"
+				class="text-center text-black fas text-[18px] border-none rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
+				width="50"
+				col="0"
+				/>
+			<Label 
+				text="{{ searchTextResult }}" 
+				class="text-left text-black"
+				col="2" />
+			<!-- <Button
+				text="&#xf00d;"
+				textWrap="true"
+				tap="goBack"
+				class="text-center text-black fas text-[18px] border-none rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
+				width="40"
+				col="4"
+				/> -->
+		</GridLayout>
+	</ActionBar>
+	
+	<GridLayout rows="10, *, 0, auto" class="px-5 pb-5">
+		<GridLayout rows="auto, 0, *" row="1">
+			
+
+			<ListView separatorColor="#FFF"
+				items="{{ localResultOfSearch }}"
+				visibility="{{ localResultOfSearch.length ? 'visible' : 'collapsed' }}" 
+				row="2">
+				<ListView.itemTemplate>
+					<StackLayout >
+					<Label textWrap="true" class="text-[24px] my-2">
+						<FormattedString>
+							<Span text="{{ word }}" class="popin-r" />
+						</FormattedString>
+					</Label>
+					<HtmlView html="{{ arti }}" />
+				</StackLayout>
+				</ListView.itemTemplate>
+			</ListView>
+		</GridLayout>
+
+		<!-- Text Info -->
+		<StackLayout class="mt-2" row="3">
+			<ui:BannerAd
+				height="70"
+				width="350"
+				unitId="ca-app-pub-1640120316722376/2423878232"
+				layoutChanged="bannerAdLoaded" />
+		</StackLayout>
+	</GridLayout>
+</Page>
