@@ -1,5 +1,10 @@
 import { Frame, Observable } from "@nativescript/core";
-import { internet, showToast, initTables } from "~/global-helper";
+import {
+  internet,
+  showToast,
+  initTables,
+  __createDirectories,
+} from "~/global-helper";
 import { BannerAdSize } from "@nativescript/firebase-admob";
 import { loadInterstisialAd, loadRewardedAd } from "~/admob";
 
@@ -9,6 +14,7 @@ export function onNavigatingTo(args) {
   const page = args.object;
 
   initTables();
+  __createDirectories();
   context.set("isWatchInterstitialAd", false);
   // _checkConnectivity();
 
@@ -31,19 +37,28 @@ export function bookmarkTap() {
   showToast("Fitur Penanda Buku belum tersedia.");
 }
 
-export function aboutTap() {
-  showToast("Halaman ini belum tersedia.");
+export function aboutTap(args) {
+  const mainView = args.object;
+
+  const fullscreen = true;
+
+  mainView.showBottomSheet({
+    view: "~/bottom-sheet-views/about/about-page",
+    closeCallback: () => {},
+    fullscreen,
+  });
 }
 
 export function watchInterstitialAd() {
   if (internet().connected) {
     context.set("isWatchInterstitialAd", true);
     const randomNumber = Math.floor(Math.random() * 2);
-    if (randomNumber % 2 == 0) {
-      loadInterstisialAd();
-    } else {
-      loadRewardedAd();
-    }
+    loadInterstisialAd();
+    // if (randomNumber % 2 == 0) {
+    //   loadInterstisialAd();
+    // } else {
+    //   loadRewardedAd();
+    // }
     setTimeout(() => {
       context.set("isWatchInterstitialAd", false);
     }, 5000);

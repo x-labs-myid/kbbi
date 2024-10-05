@@ -1,0 +1,105 @@
+<Page
+    navigatingTo="onNavigatingTo"  
+    xmlns="http://schemas.nativescript.org/tns.xsd"
+    xmlns:ui="@nativescript/firebase-admob">
+
+    <ActionBar>
+			<GridLayout columns="*" width="100%">
+				<!-- <Button
+					text="&#xf129;"
+					textWrap="true"
+					tap="close"
+					class="text-center text-white fas border-none rounded-full bg-gray-200 active:bg-gray-600 active:scale-95 transition duration-150"
+					width="50"
+					col="0"
+					/> -->
+				<Label col="0">
+					<FormattedString>
+						<Span text="Tentang" class="popin-br text-lg text-black" />
+					</FormattedString>
+        </Label>
+			</GridLayout>
+        
+        <ActionItem tap="openUrl" text="Blog" url="https://www.kang-cahya.com" android.position="popup" />
+        <ActionItem tap="openUrl" text="Github" url="https://github.com/dyazincahya" android.position="popup" />
+        <ActionItem tap="openUrl" text="Official Site" url="https://x-labs.my.id" android.position="popup" />
+    </ActionBar>
+
+    <ScrollView class="h-full w-full mt-8">
+        <StackLayout class="px-5 pb-12">
+            
+            <Label textWrap="true" class="header border-b border-black text-black text-lg pb-2">
+                <FormattedString>
+                    <Span text="&#xf2bb;" class="far" />
+                    <Span text="&nbsp;Aplikasi" />
+                </FormattedString>
+            </Label>
+
+            <Label text="Nama" textWrap="true" class="title text-[16px] text-gray-800 mt-4" />
+            <Label text="MyKBBI" textWrap="true" class="text-[12px] text-gray-600" />
+            
+            <Label text="Keterangan" textWrap="true" class="title text-[16px] text-gray-800 mt-4" />
+            <Label text="Kamus Besar Bahasa Indonesia (KBBI) lengkap dalam genggaman Anda. Kamus luring kami berisi sekitar 100.000 data, baik kata maupun peribahasa." textWrap="true" class="text-[12px] text-gray-600" />
+            
+            <Label text="Version" textWrap="true" class="title text-[16px] text-gray-800 mt-4" />
+            <Label text="1.0.0 rc-1" textWrap="true" class="text-[12px] text-gray-600" />
+
+            <Label text="Developer" textWrap="true" class="title text-[16px] text-gray-800 mt-4" />
+						<Image src="~/assets/x-labs.png" height="15" horizontalAlignment="left" class="mt-1" />
+            <!-- <Label text="X-LABS.my.id" textWrap="true" class="text-[12px] text-gray-600" /> -->
+
+            <Label textWrap="true" class="header text-black text-lg border-b border-black pb-2 mt-9">
+                <FormattedString>
+                    <Span text="&#xf5c2;" class="far" />
+                    <Span text="&nbsp;Masukan dan Dukungan" />
+                </FormattedString>
+            </Label>
+
+            <GridLayout class="mt-4" columns="*,5,*">
+                <StackLayout col="0">
+                    <Label text="Berikan 5 bintang" textWrap="true" class="title text-[16px] text-gray-800" />
+                    <Label text="Jangan lupa untuk memberikan 5 bintang untuk aplikasi ini di Google Play Store" textWrap="true" class="text-[12px] text-gray-600 p-0 m-0" />
+                    <Button text="Nilai sekarang" tap="rateNow" class="rate-button bg-green-600 text-white font-bold rounded-full mt-2 h-11" />
+                </StackLayout>
+                <StackLayout col="2">
+                    <Label text="Laporan Bug" textWrap="true" class="title text-[16px] text-gray-800" />
+                    <Label text="Jangan lupa laporkan kepada kamu jika Anda menemukan sebuah Bug pada aplikasi ini." textWrap="true" class="text-[12px] text-gray-600 p-0 m-0" />
+                    <Button text="Laporkan Sekarang" tap="reportNow" class="report-button bg-red-600 text-white font-bold rounded-full mt-2 h-11" />
+                </StackLayout>
+            </GridLayout>
+
+            <Label textWrap="true" class="header text-black text-lg border-b border-black pb-2 mt-9">
+                <FormattedString>
+                    <Span text="&#xf25d;" class="far" />
+                    <Span text="&nbsp;Kredit" />
+                </FormattedString>
+            </Label>
+
+            <Label text="Font Icon" textWrap="true" class="title text-[16px] text-gray-800 mt-4" />
+            <Label text="fontawesome.com" textWrap="true" class="text-[12px] text-gray-600" /> 
+
+            <!-- <Label textWrap="true" class="header text-black text-lg border-b border-black pb-2 mt-9">
+                <FormattedString>
+                    <Span text="&#xf3ab;" class="fab" />
+                    <Span text="&nbsp;Aplikasi kami yang lain" />
+                </FormattedString>
+            </Label>
+
+            <ListView height="{{ heightListView }}" items="{{ items }}" itemTap="onItemTap" separatorColor="#40aeff" class="list-group mt-4" visibility="{{ items ? 'visible' : 'collapsed' }}">
+                <ListView.itemTemplate>
+                    <GridLayout class="list-group-item" rows="auto,auto,auto" columns="10, auto, 10, *, 10" tap="openUrl" url="{{ playstore_url }}">
+                        <Image src="{{ icon_url }}" verticalAlignment="middle" height="45" row="0" rowSpan="2" col="1" />
+                        <Label text="{{ name }}" class="font-bold text-lg" textWrap="true" row="0" col="3" />
+                        <Label text="{{ short_description }}" class="text-sm" textWrap="true" row="1" col="3" />
+                    </GridLayout>
+                </ListView.itemTemplate>
+            </ListView>
+
+            <GridLayout rows="auto,auto,auto" class="page__content mt-8" visibility="{{ !items ? 'visible' : 'collapsed' }}">
+                <Label row="0" class="page__content-icon fas" text="&#xf01c;"></Label>
+                <Label row="1" class="page__content-placeholder" text="No apps!" />
+                <Button row="2" tap="refresh" text="Refresh" class="w-24" />
+            </GridLayout> -->
+        </StackLayout>
+    </ScrollView>
+</Page>

@@ -5,13 +5,14 @@
 	
 	<ActionBar flat="false">
 		<GridLayout 
-			columns="auto, 5, *, 5, 40, 10">
+			columns="auto, 5, *, 15"
+			class="py-2">
 			<Button
 				visibility="{{ !searchText ? 'visible' : 'collapsed' }}"
 				text="&#xf015;"
 				textWrap="true"
 				tap="onTapHomeAndStartSearch"
-				class="text-center text-black fas text-[18px] border-none rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
+				class="text-center text-white fas border-none rounded-full bg-black active:bg-gray-800 active:scale-95 transition duration-150"
 				width="50"
 				col="0"
 				/>
@@ -32,39 +33,43 @@
 				class="text-left text-gray-400 fas text-[18px]"
 				col="0"
 				/> -->
-			
-			<TextField 
-				text="{{ searchText }}"
-				hint="Ketikan sesuatu untuk mencari..." 
-				class="bg-white text-black"
-				fontSize="14"
-				textChange="onTextChangeSearch"
-				returnKeyType="search" 
-				returnPress="onSubmitSearch"
-				id="searchInput"
-				col="2" />
-			
-			<!-- <Button 
-				text="&#xf00d;" 
-				textWrap="true" 
-				class="text-left text-gray-400 fas text-[20px]"
-				col="4" /> -->
-			<ActivityIndicator 
-				visibility="{{ loadingExecute ? 'visible' : 'collapsed' }}"
-				color="#000000" 
-				width="30"
-				height="30" 
-				busy="true" 
-				col="4" />
-			<Button
-				visibility="{{ !searchTextResult && searchText && !loadingExecute ? 'visible' : 'collapsed' }}"
-				text="&#xf00d;"
-				textWrap="true"
-				tap="onClearSearch"
-				class="text-center text-black fas text-[18px] border-none rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
-				width="40"
-				col="4"
-				/>
+			<GridLayout 
+				col="2" 
+				columns="15, *, 5, 50, 10" 
+				class="border-none bg-gray-200 rounded-full">
+				<TextField 
+					text="{{ searchText }}"
+					hint="Ketikan sesuatu untuk mencari..." 
+					class="bg-gray-200 text-black"
+					fontSize="14"
+					textChange="onTextChangeSearch"
+					returnKeyType="search" 
+					returnPress="onSubmitSearch"
+					id="searchInput"
+					col="1" />
+				
+				<!-- <Button 
+					text="&#xf00d;" 
+					textWrap="true" 
+					class="text-left text-gray-400 fas text-[20px]"
+					col="4" /> -->
+				<ActivityIndicator 
+					visibility="{{ loadingExecute ? 'visible' : 'collapsed' }}"
+					color="#000000" 
+					width="30"
+					height="30" 
+					busy="true" 
+					col="3" />
+				<Button
+					visibility="{{ searchText && !loadingExecute ? 'visible' : 'collapsed' }}"
+					text="&#xf00d;"
+					textWrap="true"
+					tap="onClearSearch"
+					class="text-center text-black fas text-[18px] border-none rounded-full bg-none active:bg-gray-300 active:scale-95 transition duration-150"
+					width="50"
+					col="3"
+					/>
+			</GridLayout>
 			<!-- <Label
 				visibility="{{ !searchTextResult && searchText ? 'visible' : 'collapsed' }}"
 				text="&#xf00d;"

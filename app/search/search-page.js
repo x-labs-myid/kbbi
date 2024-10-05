@@ -23,12 +23,13 @@ import {
 } from "~/sqlite-helper";
 
 const context = new ObservableArray();
+let page;
 
 let dictionary = [];
 let debounceSearchTimeout;
 
 export function onNavigatingTo(args) {
-  const page = args.object;
+  page = args.object;
 
   if (isAndroid) {
     // Register for back button press event
@@ -37,40 +38,11 @@ export function onNavigatingTo(args) {
       (e) => {
         // Prevent default back button behavior
         e.cancel = true;
+        goBack();
 
-        const currentPage = Frame.topmost().currentPage;
-        const context = currentPage.bindingContext;
-
-        if (context.get("viewMode") === "RESULT") {
-          // Contoh aksi manual lainnya: jika pada viewMode "RESULT"
-          // console.log("Kembali ke mode pencarian.");
-          context.set("viewMode", "SEARCH");
-          context.set("searchText", "");
-          context.set("searchTextResult", "");
-        } else {
-          // Jika ingin keluar dari aplikasi atau kembali ke halaman sebelumnya
-          if (Frame.topmost().canGoBack()) {
-            goBack(); // Kembali ke halaman sebelumnya jika bisa
-          } else {
-            // Keluar dari aplikasi jika tidak ada halaman untuk kembali
-            android.os.Process.killProcess(android.os.Process.myPid());
-          }
-        }
-
-        // Perform custom back button handling
-        // const viewMode = context.get("viewMode");
-
-        // if (viewMode === "RESULT") {
-        //   context.set("viewMode", "SEARCH");
-        //   context.set("searchText", "");
-        //   context.set("searchTextResult", "");
-
-        //   return;
-        // }
-
-        // if (viewMode === "SEARCH") {
-        //   Frame.topmost().goBack();
-        // }
+        Application.android.off(
+          Application.AndroidApplication.activityBackPressedEvent
+        );
       }
     );
   }
@@ -176,7 +148,7 @@ export function onTapRecentSearches(args) {
   SQL__selectRaw(query).then((res) => {
     // context.set("localResultOfSearch", res);
     context.set("loadingExecute", false);
-    directToResult(res);
+    directToResult(itemTapData.word, res);
   });
 
   // executeSearch(itemTapData.word);
@@ -206,6 +178,21 @@ export function bannerAdLoaded(args) {
   const adSize = new BannerAdSize(350, 70);
   banner.size = adSize;
   banner.load();
+}
+
+export function openBottomSheet(args) {
+  const mainView = args.object;
+  const bsContext = {
+    keyword: context.searchText,
+    data: context.localResultOfSearch,
+  };
+  const fullscreen = true;
+  mainView.showBottomSheet({
+    view: "~/result/result-page",
+    bsContext,
+    closeCallback: () => {},
+    fullscreen,
+  });
 }
 
 function loadRecentSearches() {
@@ -245,7 +232,7 @@ function executeSearch(_keyword) {
     if (resWords && resWords.length) {
       // context.set("localResultOfSearch", resWords);
       context.set("loadingExecute", false);
-      directToResult(resWords);
+      directToResult(keyword, resWords);
     } else {
       // Cek cache untuk melihat apakah hasil pencarian sudah ada
       if (searchCache.has(keyword)) {
@@ -268,7 +255,7 @@ function executeSearch(_keyword) {
       saveToDB(localDictionary, "LOCAL");
       // }, 100); // Waktu delay dapat
 
-      directToResult(localDictionary);
+      directToResult(keyword, localDictionary);
     }
   });
 }
@@ -335,18 +322,42 @@ function saveToDB(_data, _type = "SERVER") {
   });
 }
 
-function directToResult(_data) {
-  Frame.topmost().navigate({
-    moduleName: "result/result-page",
-    animated: true,
-    transition: {
-      name: "fade", // Tipe transisi (bisa juga pakai 'fade', 'flip', dll.)
-      duration: 100, // Durasi transisi dalam milidetik
-      curve: "easeIn", // Kurva animasi
-    },
-    context: {
-      keyword: context.get("searchText"),
-      data: _data,
-    },
+function directToResult(_keyword, _data) {
+  const dataWithIndex = _data.map((item, index) => {
+    item.index = index;
+    return item;
   });
+  const mainView = page;
+  const bsContext = {
+    keyword: _keyword,
+    data: dataWithIndex,
+  };
+  const fullscreen = true;
+
+  mainView.showBottomSheet({
+    view: "~/bottom-sheet-views/result/result-page",
+    context: bsContext,
+    closeCallback: (data) => {
+      console.log("closeCallback >>> ", data);
+      Application.android.off(
+        Application.AndroidApplication.activityBackPressedEvent
+      );
+    },
+    fullscreen,
+  });
+
+  // Frame.topmost().navigate({
+  //   moduleName: "result/result-page",
+  //   animated: true,
+  //   clearHistory: true,
+  //   transition: {
+  //     name: "fade", // Tipe transisi (bisa juga pakai 'fade', 'flip', dll.)
+  //     duration: 100, // Durasi transisi dalam milidetik
+  //     curve: "easeIn", // Kurva animasi
+  //   },
+  //   context: {
+  //     keyword: _keyword,
+  //     data: _data,
+  //   },
+  // });
 }
