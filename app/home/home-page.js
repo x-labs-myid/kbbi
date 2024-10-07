@@ -44,6 +44,7 @@ export function aboutTap(args) {
 
   mainView.showBottomSheet({
     view: "~/bottom-sheet-views/about/about-page",
+    dismissOnBackButton: true,
     closeCallback: () => {},
     fullscreen,
   });

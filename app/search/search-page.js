@@ -31,21 +31,21 @@ let debounceSearchTimeout;
 export function onNavigatingTo(args) {
   page = args.object;
 
-  if (isAndroid) {
-    // Register for back button press event
-    Application.android.on(
-      Application.android.activityBackPressedEvent,
-      (e) => {
-        // Prevent default back button behavior
-        e.cancel = true;
-        goBack();
+  // if (isAndroid) {
+  //   // Register for back button press event
+  //   Application.android.on(
+  //     Application.android.activityBackPressedEvent,
+  //     (e) => {
+  //       // Prevent default back button behavior
+  //       e.cancel = true;
+  //       goBack();
 
-        Application.android.off(
-          Application.AndroidApplication.activityBackPressedEvent
-        );
-      }
-    );
-  }
+  //       Application.android.off(
+  //         Application.AndroidApplication.activityBackPressedEvent
+  //       );
+  //     }
+  //   );
+  // }
 
   context.set("viewMode", "SEARCH");
   context.set("searchText", "");
@@ -332,16 +332,16 @@ function directToResult(_keyword, _data) {
     keyword: _keyword,
     data: dataWithIndex,
   };
-  const fullscreen = true;
+  const fullscreen = false;
 
   mainView.showBottomSheet({
     view: "~/bottom-sheet-views/result/result-page",
     context: bsContext,
+    dismissOnBackButton: true,
+    dismissOnBackgroundTap: false,
+    dismissOnDraggingDownSheet: false,
     closeCallback: (data) => {
       console.log("closeCallback >>> ", data);
-      Application.android.off(
-        Application.AndroidApplication.activityBackPressedEvent
-      );
     },
     fullscreen,
   });

@@ -35,12 +35,12 @@
 				/> -->
 			<GridLayout 
 				col="2" 
-				columns="15, *, 5, 50, 10" 
+				columns="10, *, 5, 50" 
 				class="border-none bg-gray-200 rounded-full">
 				<TextField 
 					text="{{ searchText }}"
 					hint="Ketikan sesuatu untuk mencari..." 
-					class="bg-gray-200 text-black"
+					class="bg-gray-200 text-black mt-1"
 					fontSize="14"
 					textChange="onTextChangeSearch"
 					returnKeyType="search" 
