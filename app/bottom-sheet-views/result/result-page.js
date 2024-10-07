@@ -1,6 +1,9 @@
-import { fromObject } from "@nativescript/core";
+import { fromObject, Observable } from "@nativescript/core";
 import { BannerAdSize } from "@nativescript/firebase-admob";
 
+import { shareQuoteOnInstagramAndroid } from "~/ift-instagram";
+
+let context = new Observable();
 export function onNavigatingTo(args) {
   const page = args.object;
 
@@ -10,13 +13,6 @@ export function onNavigatingTo(args) {
 
     page.bindingContext = bindingContext;
   });
-
-  context.set("searchTextResult", context.keyword);
-  if (context.data) {
-    context.set("localResultOfSearch", context.data);
-  } else {
-    context.set("localResultOfSearch", []);
-  }
 
   page.bindingContext = context;
 }
