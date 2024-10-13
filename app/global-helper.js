@@ -1,12 +1,12 @@
 import {
   Application,
-  Http,
   Dialogs,
   Connectivity,
   knownFolders,
   Folder,
   path,
 } from "@nativescript/core";
+import { Http } from "@klippa/nativescript-http";
 import * as htmlparser2 from "htmlparser2";
 import { SQL__query } from "~/sqlite-helper";
 
@@ -23,6 +23,11 @@ export function initTables() {
     "created_at"	TEXT NOT NULL,
     PRIMARY KEY("guid")
   )`);
+
+  SQL__query(`
+    CREATE INDEX idx_words_word ON words(word);
+    CREATE INDEX idx_words_arti ON words(arti);
+  `);
 
   SQL__query(`CREATE TABLE IF NOT EXISTS "history" (
     "id"	INTEGER NOT NULL UNIQUE,
@@ -113,7 +118,8 @@ export function generateUUID() {
 }
 
 export async function myHttpClient(_url, _method = "GET", _data = {}) {
-  const END_POINT = "https://x-labs.my.id/api/kbbi";
+  const END_POINT = "";
+
   try {
     if (_method.toUpperCase() === "GET") {
       console.log("GET >>> ", END_POINT + _url);

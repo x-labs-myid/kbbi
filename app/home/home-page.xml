@@ -28,6 +28,21 @@
 			width="350"
 			unitId="ca-app-pub-1640120316722376/2423878232"
 			layoutChanged="bannerAdLoaded" row="0" />
+		<!-- <StackLayout row="0">
+			<Label
+				text="syncronize progress"
+				textWrap="true"
+				class="text-center text-black text-[18px]"
+				/>
+			<Label
+				text="{{ syncronize }}"
+				textWrap="true"
+				class="text-center text-black bold text-[24px]"
+				/>
+			<Label text="Sinkronisasi sedang berlangsung..." />
+			<Progress id="progressBar" value="0" maxValue="100" />
+			<Label id="progressLabel" text="Progres: 0%" />
+		</StackLayout> -->
 		<GridLayout 
 			verticalAlignment="middle" 
 			rows="auto, auto, 5, auto" 

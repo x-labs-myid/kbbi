@@ -21,6 +21,7 @@ import {
   SQL__dropTable,
   SQL__selectRaw,
 } from "~/sqlite-helper";
+import { speak, speakWithSSML } from "~/tts-helper";
 
 const context = new ObservableArray();
 let page;
@@ -168,9 +169,6 @@ export function TextFieldLoaded(args) {
   const textField = args.object;
   textField.focus();
   textField.selectAll();
-
-  console.log("TextFieldLoaded >>> ", textField);
-  console.log("TextFieldLoaded >>> ", textField.text);
 }
 
 export function bannerAdLoaded(args) {
@@ -325,6 +323,8 @@ function saveToDB(_data, _type = "SERVER") {
 function directToResult(_keyword, _data) {
   const dataWithIndex = _data.map((item, index) => {
     item.index = index;
+    // item.onTTS = speakWithSSML(item.word, item.arti);
+
     return item;
   });
   const mainView = page;
@@ -341,7 +341,7 @@ function directToResult(_keyword, _data) {
     dismissOnBackgroundTap: false,
     dismissOnDraggingDownSheet: false,
     closeCallback: (data) => {
-      console.log("closeCallback >>> ", data);
+      // console.log("closeCallback >>> ", data);
     },
     fullscreen,
   });

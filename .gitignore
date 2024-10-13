@@ -21,6 +21,7 @@ yarn-error.log*
 .project
 tmp/
 typings/
+yarn.lock
 
 # Visual Studio Code
 .vscode/*
