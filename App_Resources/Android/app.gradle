@@ -16,8 +16,8 @@ android {
     targetSdkVersion 34
 
     // Version Information
-    versionCode 7
-    versionName "1.0.1"
+    versionCode 9
+    versionName "1.0.3"
     
     generatedDensities = []
   }

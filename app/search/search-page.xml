@@ -16,23 +16,6 @@
 				width="50"
 				col="0"
 				/>
-			<!-- <Button
-				visibility="{{ searchTextResult && viewMode === 'RESULT' ? 'visible' : 'collapsed' }}"
-				text="&#xf002;"
-				textWrap="true"
-				tap="onTapHomeAndStartSearch"
-				class="text-center text-black fas text-[18px] border-none rounded-full bg-white active:bg-gray-200 active:scale-95 transition duration-150"
-				width="50"
-				col="0"
-				/> -->
-			<!-- <Label
-				visibility="{{ !loadingExecute ? 'visible' : 'collapsed' }}"
-				text="{{ viewMode === 'RESULT' ? '&#xf002;' : '&#xf015;' }}"
-				tap="onTapHomeAndStartSearch"
-				textWrap="true"
-				class="text-left text-gray-400 fas text-[18px]"
-				col="0"
-				/> -->
 			<GridLayout 
 				col="2" 
 				columns="10, *, 5, 50" 
@@ -48,11 +31,6 @@
 					id="searchInput"
 					col="1" />
 				
-				<!-- <Button 
-					text="&#xf00d;" 
-					textWrap="true" 
-					class="text-left text-gray-400 fas text-[20px]"
-					col="4" /> -->
 				<ActivityIndicator 
 					visibility="{{ loadingExecute ? 'visible' : 'collapsed' }}"
 					color="#000000" 
@@ -61,7 +39,7 @@
 					busy="true" 
 					col="3" />
 				<Button
-					visibility="{{ searchText && !loadingExecute ? 'visible' : 'collapsed' }}"
+					visibility="{{ searchText &amp;&amp; !loadingExecute ? 'visible' : 'collapsed' }}"
 					text="&#xf00d;"
 					textWrap="true"
 					tap="onClearSearch"
@@ -70,14 +48,6 @@
 					col="3"
 					/>
 			</GridLayout>
-			<!-- <Label
-				visibility="{{ !searchTextResult && searchText ? 'visible' : 'collapsed' }}"
-				text="&#xf00d;"
-				textWrap="true"
-				tap="onClearSearch"
-				class="text-left text-gray-400 fas text-[18px]"
-				col="4"
-				/> -->
 		</GridLayout>
 	</ActionBar>
 	
@@ -85,7 +55,7 @@
 		<GridLayout rows="auto, 0, *" row="1">
 			<Label
 				textWrap="true"
-				visibility="{{ (!searchText && !loadingExecute && recentSearches.length) ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (!searchText &amp;&amp; !loadingExecute &amp;&amp; recentSearches.length) ? 'visible' : 'collapsed' }}" 
 				class="text-left text-[10px] my-3"
 				col="0">
 				<FormattedString>
@@ -95,7 +65,7 @@
 			<ListView 
 				items="{{ recentSearches }}" 
 				itemTap="onTapRecentSearches"
-				visibility="{{ (!searchText && !loadingExecute && recentSearches.length) ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (!searchText &amp;&amp; !loadingExecute &amp;&amp; recentSearches.length) ? 'visible' : 'collapsed' }}" 
 				row="2">
 				<ListView.itemTemplate>
 					<GridLayout columns="auto, 10, *">
@@ -113,7 +83,7 @@
 				</ListView.itemTemplate>
 			</ListView>
 			<StackLayout row="2" class="mt-5"
-				visibility="{{ (!searchText && !loadingExecute && !recentSearches.length) ? 'visible' : 'collapsed' }}" >
+				visibility="{{ (!searchText &amp;&amp; !loadingExecute &amp;&amp; !recentSearches.length) ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
 					text="&#xf5da;" class="fas text-center text-gray-500 text-[56px] mt-5"
@@ -126,7 +96,7 @@
 
 			<Label
 				textWrap="true"
-				visibility="{{ (searchText && !loadingExecute && autoComplete.length) ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (searchText &amp;&amp; !loadingExecute &amp;&amp; autoComplete.length) ? 'visible' : 'collapsed' }}" 
 				class="text-left text-[10px] my-3"
 				col="0">
 				<FormattedString>
@@ -136,7 +106,7 @@
 			<ListView 
 				items="{{ autoComplete }}" 
 				itemTap="onTapAutoComplete"
-				visibility="{{ searchText && !loadingExecute && autoComplete.length ? 'visible' : 'collapsed' }}"
+				visibility="{{ searchText &amp;&amp; !loadingExecute &amp;&amp; autoComplete.length ? 'visible' : 'collapsed' }}"
 				row="2">
 				<ListView.itemTemplate>
 					<GridLayout columns="auto, auto, *">
@@ -152,7 +122,7 @@
 				</ListView.itemTemplate>
 			</ListView>
 			<StackLayout row="2" class="mt-5"
-				visibility="{{ searchText && !loadingExecute && !autoComplete.length ? 'visible' : 'collapsed' }}" >
+				visibility="{{ searchText &amp;&amp; !loadingExecute &amp;&amp; !autoComplete.length ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
 					text="&#xf5c8;" class="far text-center text-gray-500 text-[56px] mt-5"
@@ -163,7 +133,7 @@
 					/>
 			</StackLayout>
 			<StackLayout row="2" class="mt-5"
-				visibility="{{ searchText && loadingExecute ? 'visible' : 'collapsed' }}" >
+				visibility="{{ searchText &amp;&amp; loadingExecute ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
 					text="&#xf252;" class="far text-center text-gray-500 text-[56px] mt-5"
@@ -184,7 +154,7 @@
 				layoutChanged="bannerAdLoaded" row="0" />
 			<Label 
 				class="text-center text-orange-400 text-[12px] mt-5" 
-				visibility="{{ viewMode === 'SEARCH' && recentSearches.length ? 'visible' : 'collapsed' }}"
+				visibility="{{ viewMode === 'SEARCH' &amp;&amp; recentSearches.length ? 'visible' : 'collapsed' }}"
 				>
 				<FormattedString>
 					<Span text="&#xf4d8;" class="fas" />

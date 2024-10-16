@@ -21,7 +21,6 @@ import {
   SQL__dropTable,
   SQL__selectRaw,
 } from "~/sqlite-helper";
-import { speak, speakWithSSML } from "~/tts-helper";
 
 const context = new ObservableArray();
 let page;
@@ -323,7 +322,7 @@ function saveToDB(_data, _type = "SERVER") {
 function directToResult(_keyword, _data) {
   const dataWithIndex = _data.map((item, index) => {
     item.index = index;
-    // item.onTTS = speakWithSSML(item.word, item.arti);
+    item.isPlayTTS = false;
 
     return item;
   });
@@ -339,7 +338,7 @@ function directToResult(_keyword, _data) {
     context: bsContext,
     dismissOnBackButton: true,
     dismissOnBackgroundTap: false,
-    dismissOnDraggingDownSheet: false,
+    dismissOnDraggingDownSheet: true,
     closeCallback: (data) => {
       // console.log("closeCallback >>> ", data);
     },

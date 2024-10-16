@@ -1,6 +1,8 @@
 import { fromObject, Observable } from "@nativescript/core";
 import { BannerAdSize } from "@nativescript/firebase-admob";
 
+import { speak, speakWithSSML } from "~/tts-helper";
+
 export function onLoaded(args) {
   const page = args.object;
 
@@ -25,10 +27,16 @@ export function close(args) {
   button.closeBottomSheet({ action: "close" });
 }
 
-// export function xspeak() {
-//   console.log("speak >> ", xKeyword);
-//   speak(xKeyword);
-// }
+export function onItemTap(args) {
+  let itemTap = args.view;
+  let itemTapData = itemTap.bindingContext;
+  console.log("speak >> ", itemTapData);
+
+  // itemTapData.isPlayTTS = !itemTapData.isPlayTTS
+  // if(itemTapData.isPlayTTS){
+  // }
+  speakWithSSML(itemTapData.word, itemTapData.arti);
+}
 
 export function bannerAdLoaded(args) {
   const banner = args.object;

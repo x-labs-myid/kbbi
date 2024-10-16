@@ -140,6 +140,7 @@ function _loadDataApps() {
       method: "GET",
     }).then(
       (response) => {
+        // console.log(response);
         const res = response.content.toJSON();
         context.set("listViewHeight", (res.data.length + 1) * 80);
         context.set("listViewItems", res.data);

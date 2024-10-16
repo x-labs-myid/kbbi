@@ -36,6 +36,14 @@ export function initTables() {
     "updated_at"	TEXT NOT NULL,
     PRIMARY KEY("id" AUTOINCREMENT)
   )`);
+
+  SQL__query(`CREATE TABLE IF NOT EXISTS "bookmark" (
+    "id"	INTEGER NOT NULL UNIQUE,
+    "words_guid"	TEXT NOT NULL,
+    "created_at"	TEXT NOT NULL,
+    "updated_at"	TEXT NOT NULL,
+    PRIMARY KEY("id" AUTOINCREMENT)
+  )`);
 }
 
 export function getCurrentTime() {
