@@ -14,6 +14,7 @@ import {
   initTables,
   __createDirectories,
 } from "~/global-helper";
+import { SQL__selectRaw } from "~/sqlite-helper";
 import { speak } from "~/tts-helper";
 // import { data } from "~/dictionary-json";
 // import { SyncManager } from "~/sync-manager";
@@ -69,9 +70,32 @@ export function searchTap() {
   });
 }
 
-export function bookmarkTap() {
-  speak("Fitur Penanda Buku belum tersedia");
-  showToast("Fitur Penanda Buku belum tersedia.");
+export function bookmarkTap(args) {
+  // speak("Fitur Penanda Buku belum tersedia");
+  // showToast("Fitur Penanda Buku belum tersedia.");
+
+  const mainView = args.object;
+
+  initTables();
+
+  const query =
+    "SELECT w.word, w.type FROM bookmark b LEFT JOIN words w ON b.words_guid = w.guid GROUP BY w.word, w.type ORDER BY b.id DESC LIMIT 100";
+  SQL__selectRaw(query).then((res) => {
+    const bsContext = {
+      listViewItems: res,
+    };
+    const fullscreen = true;
+
+    mainView.showBottomSheet({
+      view: "~/bottom-sheet-views/bookmark/bookmark-page",
+      context: bsContext,
+      dismissOnBackButton: true,
+      dismissOnBackgroundTap: false,
+      dismissOnDraggingDownSheet: false,
+      closeCallback: () => {},
+      fullscreen,
+    });
+  });
 }
 
 export function aboutTap(args) {

@@ -313,6 +313,13 @@ function saveToDB(_data, _type = "SERVER") {
             { field: "created_at", value: getCurrentTime() },
             { field: "updated_at", value: getCurrentTime() },
           ]);
+
+          /* TEMPORARY for TESTING BOOKMARK FUNCTION */
+          SQL__insert("bookmark", [
+            { field: "words_guid", value: guid },
+            { field: "created_at", value: getCurrentTime() },
+            { field: "updated_at", value: getCurrentTime() },
+          ]);
         }
       }
     );
@@ -338,7 +345,7 @@ function directToResult(_keyword, _data) {
     context: bsContext,
     dismissOnBackButton: true,
     dismissOnBackgroundTap: false,
-    dismissOnDraggingDownSheet: true,
+    dismissOnDraggingDownSheet: false,
     closeCallback: (data) => {
       // console.log("closeCallback >>> ", data);
     },

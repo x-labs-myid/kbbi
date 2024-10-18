@@ -1,0 +1,40 @@
+<Page
+    loaded="onLoaded" 
+    xmlns:ui="@nativescript/firebase-admob">
+
+    <ActionBar>
+        <GridLayout 
+            columns="*, 5, auto, 15">
+            <Label 
+                text="Penanda Buku" 
+                class="popin-br text-left text-black"
+                textWrap="true"
+                col="0" />
+            <Button
+                text="&#xf00d;"
+                textWrap="true"
+                tap="close"
+                class="text-center text-black fas text-[18px] border-none rounded-full bg-none active:bg-gray-300 active:scale-95 transition duration-150"
+                width="50"
+                col="2"
+                />
+			
+		</GridLayout>
+    </ActionBar>
+
+    <GridLayout>
+        <ListView items="{{ listViewItems }}" itemTap="onItemTap" separatorColor="#40aeff" class="list-group mt-4" visibility="{{ listViewItems ? 'visible' : 'collapsed' }}">
+            <ListView.itemTemplate>
+                <GridLayout class="pt-1 pb-2" rows="auto,auto,auto" columns="10, auto, 10, *, 10" tap="openUrl" url="{{ playstore_url }}">
+                    <Label text="{{ word }}" class="font-bold text-[16px]" textWrap="true" row="0" col="3" />
+                    <!-- <Label text="{{ short_description }}" class="text-[12px]" textWrap="true" row="1" col="3" /> -->
+                </GridLayout>
+            </ListView.itemTemplate>
+        </ListView>
+
+        <GridLayout rows="auto,auto,auto" class="page__content mt-8" visibility="{{ !listViewItems ? 'visible' : 'collapsed' }}">
+            <Label row="0" horizontalAlignment="center" class="page__content-icon fas" text="&#xf01c;" />
+            <Label row="1" horizontalAlignment="center" class="page__content-placeholder" text="No apps!" />
+        </GridLayout>
+    </GridLayout>
+</Page>
