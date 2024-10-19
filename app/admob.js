@@ -1,5 +1,9 @@
 import { InterstitialAd, RewardedAd } from "@nativescript/firebase-admob";
 
+let initialized = false;
+export function setInitialized(_initialized) {
+  initialized = _initialized;
+}
 const interstitial = InterstitialAd.createForAdRequest(
   "ca-app-pub-1640120316722376/8805453750"
 );
@@ -9,6 +13,7 @@ const rewarded = RewardedAd.createForAdRequest(
 );
 
 export function loadInterstisialAd(_immersiveModeEnabled = true) {
+  console.log('initialized:', initialized)
   interstitial.onAdEvent((event, error, data) => {
     // if (event === AdEventType.LOADED) {
     //   console.log("rewarded", "loaded");
@@ -24,6 +29,7 @@ export function loadInterstisialAd(_immersiveModeEnabled = true) {
 }
 
 export function loadRewardedAd(_immersiveModeEnabled = true) {
+  console.log('initialized:', initialized)
   rewarded.onAdEvent((event, error, data) => {
     // if (event === AdEventType.LOADED) {
     //   console.log("rewarded", "loaded");

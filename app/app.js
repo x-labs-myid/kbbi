@@ -1,6 +1,7 @@
 import { Application, Color, Utils } from "@nativescript/core";
 import { firebase } from "@nativescript/firebase-core";
 import { Admob } from "@nativescript/firebase-admob";
+import { setInitialized } from "./admob";
 
 import { install } from "@nativescript-community/ui-material-bottomsheet";
 install();
@@ -25,8 +26,17 @@ if (Application.android) {
   });
 }
 
-await firebase().initializeApp();
-Admob.init();
+const fb = firebase();
+Application.on(Application.launchEvent, function() {
+
+  fb.initializeApp()
+    .then(() => {
+      console.log('firebase initialized.')
+      Admob.init();
+      setInitialized(true);
+    });
+});
+
 
 Application.run({ moduleName: "app-root" });
 
