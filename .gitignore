@@ -22,6 +22,7 @@ yarn-error.log*
 tmp/
 typings/
 yarn.lock
+package.lock
 
 # Visual Studio Code
 .vscode/*
