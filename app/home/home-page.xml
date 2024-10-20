@@ -66,14 +66,14 @@
 				<Span text="&nbsp;&nbsp;" />
 				<Span text="Cari..." class="popin-r" />
 			</Button>
-			<Button row="3" col="2"
+			<!-- <Button row="3" col="2"
 				textWrap="true"
 				tap="bookmarkTap"
 				class="text-center text-white border-none rounded-full bg-black px-5 py-3 active:bg-gray-300 active:scale-95 transition duration-150"
 				width="50"
 			>
 				<Span text="&#xf02e;" class="fas" />
-			</Button>
+			</Button> -->
 			<Button row="3" col="4"
 				textWrap="true"
 				tap="aboutTap"

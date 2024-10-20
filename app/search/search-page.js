@@ -313,13 +313,6 @@ function saveToDB(_data, _type = "SERVER") {
             { field: "created_at", value: getCurrentTime() },
             { field: "updated_at", value: getCurrentTime() },
           ]);
-
-          /* TEMPORARY for TESTING BOOKMARK FUNCTION */
-          SQL__insert("bookmark", [
-            { field: "words_guid", value: guid },
-            { field: "created_at", value: getCurrentTime() },
-            { field: "updated_at", value: getCurrentTime() },
-          ]);
         }
       }
     );
@@ -337,6 +330,7 @@ function directToResult(_keyword, _data) {
   const bsContext = {
     keyword: _keyword,
     data: dataWithIndex,
+    listViewHeight: (dataWithIndex.length + 1) * 80,
   };
   const fullscreen = false;
 

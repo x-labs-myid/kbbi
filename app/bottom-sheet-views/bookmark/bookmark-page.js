@@ -58,5 +58,5 @@ export function onItemTap(args) {
   let itemTap = args.view;
   let itemTapData = itemTap.bindingContext;
 
-  Utils.openUrl(itemTapData.playstore_url);
+  // Utils.openUrl(itemTapData.playstore_url);
 }

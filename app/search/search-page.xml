@@ -3,7 +3,7 @@
 	xmlns="http://schemas.nativescript.org/tns.xsd"
 	xmlns:ui="@nativescript/firebase-admob">
 	
-	<ActionBar flat="false">
+	<ActionBar flat="true">
 		<GridLayout 
 			columns="auto, 5, *, 15"
 			class="py-2">

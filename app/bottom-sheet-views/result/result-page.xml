@@ -2,11 +2,11 @@
 	loaded="onLoaded" 
 	xmlns:ui="@nativescript/firebase-admob">
 	
-	<ActionBar flat="false">
+	<ActionBar flat="true">
 		<GridLayout 
 			columns="*, 5, auto, 15">
 			<Label 
-				text="Hasil Pencarian" 
+				text="Rincian Kata" 
 				class="popin-br text-left text-black"
 				textWrap="true"
 				col="0" />
@@ -14,26 +14,28 @@
 				text="&#xf002;"
 				textWrap="true"
 				tap="close"
-				class="text-center text-black fas text-[18px] border-none rounded-full bg-none active:bg-gray-300 active:scale-95 transition duration-150"
+				class="text-center text-black fas text-[18px] border-none rounded-full bg-none active:bg-gray-100 active:scale-95 transition duration-150"
 				width="50"
 				col="2"
 				/>
-			
 		</GridLayout>
 	</ActionBar>
 	
-	<GridLayout rows="10, *, 0, auto">
-		<GridLayout rows="auto, 0, *" row="1">
-			<Label 
-				class="text-left text-black bg-yellow-100 px-5 py-2"
-				textWrap="true"
-				col="0">
+	<GridLayout rows="10, auto, 15, *, 0, auto">
+		<GridLayout rows="auto, auto" columns="*, auto, *" row="1">
+			<Label
+				class="text-center text-black text-[20px] px-5 py-2"
+				textWrap="true" row="0" col="1">
 				<FormattedString>
-					<Span text="Kata kunci" class="popin-r" />
-					<Span text="&nbsp; : &nbsp;" />
-					<Span text="{{ keyword }}" class="popin-br" />
+					<Span text="&#xf10d;" class="fas" />
+					<Span text="&nbsp;&nbsp;" />
+					<Span text="{{ keyword }}" class="popin-r" />
+					<Span text="&nbsp;&nbsp;" />
+					<Span text="&#xf10e;" class="fas" />
 				</FormattedString>
 			</Label>
+		</GridLayout>
+		<GridLayout rows="auto, 0, *" row="3"  class="bg-gray-200 pt-5" borderRadius="45 45 0 0">
 			<ListView 
 				class="mx-5 mb-5"
 				separatorColor="#FFF"
@@ -41,23 +43,30 @@
 				visibility="{{ data.length ? 'visible' : 'collapsed' }}" 
 				row="2">
 				<ListView.itemTemplate>
-					<StackLayout >
-						<Label textWrap="true" class="text-[18px] my-2">
+					<GridLayout rows="auto, auto, auto" columns="*, auto">
+						<Label textWrap="true" class="text-black text-[16px] my-2" row="0" col="0" colSpan="2">
 							<FormattedString>
-								<!-- <Span text="&#xf027;" tap="{{ onTTS }}" class="popin-r fas" />
-								<Span text="&nbsp;&nbsp;" /> -->
+								<Span text="&#xf00c;" class="fas" />
+								<Span text="&nbsp;&nbsp;" />
 								<Span text="{{ word }}" class="popin-r" />
 							</FormattedString>
 						</Label>
-						<HtmlView html="{{ arti }}" />
 
-						<ui:BannerAd class="mt-3"
+						<!-- <Label textWrap="true" class="text-black text-[16px] my-2" row="0" col="1">
+							<FormattedString>
+								<Span text="&#xf02e;" class="far" />
+							</FormattedString>
+						</Label> -->
+
+						<HtmlView html="{{ arti }}" class="text-black" row="1" col="0" colSpan="2" />
+
+						<ui:BannerAd class="mt-3" row="2" col="0" colSpan="2"
 							visibility="{{ index % 3 === 0 ? 'visible' : 'collapsed' }}"
 							height="70"
 							width="350"
 							unitId="ca-app-pub-1640120316722376/2423878232"
 							layoutChanged="bannerAdLoaded" />
-					</StackLayout>
+					</GridLayout>
 				</ListView.itemTemplate>
 			</ListView>
 		</GridLayout>
