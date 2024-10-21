@@ -25,8 +25,8 @@ export function initTables() {
   )`);
 
   SQL__query(`
-    CREATE INDEX idx_words_word ON words(word);
-    CREATE INDEX idx_words_arti ON words(arti);
+    CREATE INDEX IF NOT EXISTS idx_words_word ON words(word);
+    CREATE INDEX IF NOT EXISTS idx_words_arti ON words(arti);
   `);
 
   SQL__query(`CREATE TABLE IF NOT EXISTS "history" (

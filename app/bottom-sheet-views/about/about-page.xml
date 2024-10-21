@@ -2,7 +2,7 @@
     loaded="onLoaded" 
     xmlns:ui="@nativescript/firebase-admob">
 
-    <ActionBar>
+    <ActionBar flat="true">
 			<GridLayout columns="*" width="100%">
 				<!-- <Button
 					text="&#xf129;"

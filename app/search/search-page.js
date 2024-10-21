@@ -225,6 +225,28 @@ function executeSearch(_keyword) {
 
   context.set("loadingExecute", true);
 
+  // const query =
+  //   `
+  //   SELECT
+  //       w.word,
+  //       w.arti,
+  //       w.type,
+  //       CASE
+  //           WHEN b.words_guid IS NOT NULL THEN 'true'
+  //           ELSE 'false'
+  //       END AS isMark
+  //   FROM
+  //       words w
+  //   LEFT JOIN
+  //       bookmark b ON w.guid = b.words_guid
+  //   WHERE word='` +
+  //   keyword +
+  //   `'
+  //   ORDER BY
+  //       b.id DESC
+  //   LIMIT 100
+  // `;
+  // SQL__selectRaw(query).then((resWords) => {
   SQL__select("words", "*", "WHERE word='" + keyword + "'").then((resWords) => {
     if (resWords && resWords.length) {
       // context.set("localResultOfSearch", resWords);
@@ -322,7 +344,6 @@ function saveToDB(_data, _type = "SERVER") {
 function directToResult(_keyword, _data) {
   const dataWithIndex = _data.map((item, index) => {
     item.index = index;
-    item.isPlayTTS = false;
 
     return item;
   });
