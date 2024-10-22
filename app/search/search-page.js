@@ -219,7 +219,6 @@ function loadAutoComplete(keyword) {
 function executeSearch(_keyword) {
   if (!_keyword) return;
 
-  const searchCache = new Map(); // Cache untuk hasil pencarian
   context.set("viewMode", "RESULT");
   const keyword = _keyword.toLowerCase();
 
@@ -247,23 +246,15 @@ function executeSearch(_keyword) {
   //   LIMIT 100
   // `;
   // SQL__selectRaw(query).then((resWords) => {
+
   SQL__select("words", "*", "WHERE word='" + keyword + "'").then((resWords) => {
     if (resWords && resWords.length) {
       // context.set("localResultOfSearch", resWords);
       context.set("loadingExecute", false);
       directToResult(keyword, resWords);
     } else {
-      // Cek cache untuk melihat apakah hasil pencarian sudah ada
-      if (searchCache.has(keyword)) {
-        context.set("localResultOfSearch", searchCache.get(keyword));
-        return; // Kembali jika hasil sudah ada di cache
-      }
-
       // Eksekusi pencarian dan simpan hasil ke dalam cache
       const localDictionary = findOfDictionary(keyword, false);
-
-      // Simpan hasil pencarian di cache
-      searchCache.set(keyword, localDictionary);
 
       // Gunakan setTimeout untuk memberikan sedikit waktu sebelum memperbarui hasil
       // setTimeout(() => {
