@@ -43,3 +43,10 @@
 TextField {
   placeholder-color: #000000;
 }
+
+Tabs MDTabStrip {
+  background-color: #e5e7eb;
+  color: #000000;
+  font-weight: 900;
+  highlight-color: #000;
+}

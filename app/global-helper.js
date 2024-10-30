@@ -12,39 +12,43 @@ import { SQL__query } from "~/sqlite-helper";
 
 const ToastClass = com.kangcahya.ToastClass;
 
-export function initTables() {
-  SQL__query(`CREATE TABLE IF NOT EXISTS "words" (
-    "guid"	TEXT NOT NULL,
+/*
+  ==================================================
+  init table (dictionary, history, bookmark)
+  ==================================================
+
+  CREATE TABLE "dictionary" (
+    "_id"	INTEGER,
     "word"	TEXT NOT NULL,
-    "lema"	TEXT NOT NULL,
+    "lema"	TEXT DEFAULT NULL,
     "arti"	TEXT NOT NULL,
-    "tesaurusLink"	TEXT,
-    "type"	TEXT NOT NULL DEFAULT 'word',
-    "created_at"	TEXT NOT NULL,
-    PRIMARY KEY("guid")
-  )`);
+    "tesaurusLink"	TEXT DEFAULT NULL,
+    "type"	INTEGER NOT NULL,
+    "isServer"	INTEGER DEFAULT 0,
+    PRIMARY KEY("_id" AUTOINCREMENT)
+  );
 
-  SQL__query(`
-    CREATE INDEX IF NOT EXISTS idx_words_word ON words(word);
-    CREATE INDEX IF NOT EXISTS idx_words_arti ON words(arti);
-  `);
+  CREATE INDEX IF NOT EXISTS idx_dictionary_word ON dictionary(word);
+  CREATE INDEX IF NOT EXISTS idx_dictionary_arti ON dictionary(arti);
 
-  SQL__query(`CREATE TABLE IF NOT EXISTS "history" (
+
+  CREATE TABLE "history" (
     "id"	INTEGER NOT NULL UNIQUE,
-    "words_guid"	TEXT NOT NULL,
+    "word"	TEXT NOT NULL,
     "created_at"	TEXT NOT NULL,
     "updated_at"	TEXT NOT NULL,
     PRIMARY KEY("id" AUTOINCREMENT)
-  )`);
+  );
 
-  SQL__query(`CREATE TABLE IF NOT EXISTS "bookmark" (
+
+  CREATE TABLE "bookmark" (
     "id"	INTEGER NOT NULL UNIQUE,
-    "words_guid"	TEXT NOT NULL,
+    "dictionary_id"	INTEGER NOT NULL,
     "created_at"	TEXT NOT NULL,
     "updated_at"	TEXT NOT NULL,
     PRIMARY KEY("id" AUTOINCREMENT)
-  )`);
-}
+  );
+*/
 
 export function getCurrentTime() {
   var d = new Date();

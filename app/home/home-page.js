@@ -6,59 +6,24 @@ import {
 } from "@nativescript/core";
 import { Http } from "@klippa/nativescript-http";
 import { BannerAdSize } from "@nativescript/firebase-admob";
-import { loadInterstisialAd, loadRewardedAd } from "~/admob";
+import { loadInterstisialAd } from "~/admob";
 
-import {
-  internet,
-  showToast,
-  initTables,
-  __createDirectories,
-} from "~/global-helper";
+import { internet, showToast, __createDirectories } from "~/global-helper";
 import { SQL__selectRaw } from "~/sqlite-helper";
-import { speak } from "~/tts-helper";
-// import { data } from "~/dictionary-json";
-// import { SyncManager } from "~/sync-manager";
 
 const context = new Observable();
 
 export function onNavigatingTo(args) {
   const page = args.object;
 
-  initTables();
   __createDirectories();
   _loadDataApps();
   context.set("isWatchInterstitialAd", false);
-
-  // context.set("syncronize", data.length);
-  // startSyncronize();
-
-  // const progressBar = page.getViewById("progressBar");
-  // const progressLabel = page.getViewById("progressLabel");
-
-  // Application.on(Application.resumeEvent, () => {
-  //   console.log("Aplikasi kembali ke foreground");
-  //   SyncManager.startSync();
-
-  //   // Update UI setiap kali ada progres baru
-  //   setInterval(() => {
-  //     const progress = SyncManager.getSyncProgress();
-  //     progressBar.value = progress;
-  //     progressLabel.text = `Progres: ${progress}%`;
-  //   }, 500); // Update UI setiap 1 detik
-  // });
-
-  // Application.on(Application.suspendEvent, () => {
-  //   console.log("Aplikasi masuk ke background");
-  //   SyncManager.stopSync(); // Hentikan sinkronisasi jika aplikasi masuk background
-  // });
-
-  // _checkConnectivity();
 
   page.bindingContext = context;
 }
 
 export function searchTap() {
-  // speakWithSSML();
   Frame.topmost().navigate({
     moduleName: "search/search-page",
     animated: true,
@@ -71,15 +36,10 @@ export function searchTap() {
 }
 
 export function bookmarkTap(args) {
-  // speak("Fitur Penanda Buku belum tersedia");
-  // showToast("Fitur Penanda Buku belum tersedia.");
-
   const mainView = args.object;
 
-  initTables();
-
   const query =
-    "SELECT w.word, w.type FROM bookmark b LEFT JOIN words w ON b.words_guid = w.guid GROUP BY w.word, w.type ORDER BY b.id DESC LIMIT 100";
+    "SELECT d.word FROM bookmark b LEFT JOIN dictionary d ON b.dictionary_id = d.guid GROUP BY d.word ORDER BY b.id DESC LIMIT 100";
   SQL__selectRaw(query).then((res) => {
     const bsContext = {
       listViewItems: res,
@@ -121,11 +81,6 @@ export function watchInterstitialAd() {
     context.set("isWatchInterstitialAd", true);
     const randomNumber = Math.floor(Math.random() * 2);
     loadInterstisialAd();
-    // if (randomNumber % 2 == 0) {
-    //   loadInterstisialAd();
-    // } else {
-    //   loadRewardedAd();
-    // }
     setTimeout(() => {
       context.set("isWatchInterstitialAd", false);
     }, 5000);
@@ -175,14 +130,3 @@ function _loadDataApps() {
     );
   }
 }
-
-// function startSyncronize() {
-//   const intervalId = setInterval(() => {
-//     if (context.get("syncronize") > 0) {
-//       context.set("syncronize", context.get("syncronize") - 1);
-//     } else {
-//       clearInterval(intervalId); // Stop the syncronize when it reaches 0
-//       console.log("syncronize finished!");
-//     }
-//   }, 1000); // Update every 1 second
-// }

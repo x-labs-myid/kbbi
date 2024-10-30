@@ -1,6 +1,7 @@
 import { Application, Color, Utils } from "@nativescript/core";
 import { firebase } from "@nativescript/firebase-core";
 import { Admob } from "@nativescript/firebase-admob";
+
 import { setInitialized } from "./admob";
 
 import { install } from "@nativescript-community/ui-material-bottomsheet";

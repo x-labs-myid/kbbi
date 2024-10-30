@@ -13,7 +13,7 @@ const rewarded = RewardedAd.createForAdRequest(
 );
 
 export function loadInterstisialAd(_immersiveModeEnabled = true) {
-  console.log('initialized:', initialized)
+  // console.log('initialized:', initialized)
   interstitial.onAdEvent((event, error, data) => {
     // if (event === AdEventType.LOADED) {
     //   console.log("rewarded", "loaded");
@@ -29,7 +29,7 @@ export function loadInterstisialAd(_immersiveModeEnabled = true) {
 }
 
 export function loadRewardedAd(_immersiveModeEnabled = true) {
-  console.log('initialized:', initialized)
+  // console.log('initialized:', initialized)
   rewarded.onAdEvent((event, error, data) => {
     // if (event === AdEventType.LOADED) {
     //   console.log("rewarded", "loaded");
