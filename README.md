@@ -32,8 +32,9 @@ CREATE TABLE "dictionary" (
   PRIMARY KEY("_id" AUTOINCREMENT)
 );
 
-CREATE INDEX IF NOT EXISTS idx_dictionary_word ON dictionary(word);
-CREATE INDEX IF NOT EXISTS idx_dictionary_arti ON dictionary(arti);
+
+CREATE INDEX IF NOT EXISTS idx_dictionary_word ON dictionary(word); -- Mandatory
+CREATE INDEX IF NOT EXISTS idx_dictionary_arti ON dictionary(arti); -- Optional
 
 
 CREATE TABLE "history" (
