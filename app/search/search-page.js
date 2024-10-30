@@ -260,7 +260,7 @@ function directToResult(_keyword, _data) {
   mainView.showBottomSheet({
     view: "~/bottom-sheet-views/result/result-page",
     context: bsContext,
-    dismissOnBackButton: true,
+    dismissOnBackButton: false,
     dismissOnBackgroundTap: false,
     dismissOnDraggingDownSheet: false,
     closeCallback: (data) => {
