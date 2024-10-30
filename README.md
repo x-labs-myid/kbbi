@@ -15,3 +15,41 @@ Fitur yang akan datang termasuk integrasi daring untuk memperbarui data kamus se
 Perlu diketahui bahwa MyKBBI adalah aplikasi pihak ketiga, namun sumber data yang digunakan tetap berasal dari situs resmi Kamus Besar Bahasa Indonesia, yaitu https://kbbi.kemdikbud.go.id untuk data daring, dan https://github.com/bachors/KBBI.sql untuk data luring.
 
 Dengan antarmuka yang mudah digunakan, MyKBBI menjadi solusi sempurna bagi siapa saja yang membutuhkan akses cepat dan akurat ke arti kata dalam Bahasa Indonesia, baik untuk keperluan sehari-hari, pendidikan, maupun profesional.
+
+```sql
+-- ==================================================
+-- init table (dictionary, history, bookmark)
+-- ==================================================
+
+CREATE TABLE "dictionary" (
+  "_id"	INTEGER,
+  "word"	TEXT NOT NULL,
+  "lema"	TEXT DEFAULT NULL,
+  "arti"	TEXT NOT NULL,
+  "tesaurusLink"	TEXT DEFAULT NULL,
+  "type"	INTEGER NOT NULL,
+  "isServer"	INTEGER DEFAULT 0,
+  PRIMARY KEY("_id" AUTOINCREMENT)
+);
+
+CREATE INDEX IF NOT EXISTS idx_dictionary_word ON dictionary(word);
+CREATE INDEX IF NOT EXISTS idx_dictionary_arti ON dictionary(arti);
+
+
+CREATE TABLE "history" (
+  "id"	INTEGER NOT NULL UNIQUE,
+  "word"	TEXT NOT NULL,
+  "created_at"	TEXT NOT NULL,
+  "updated_at"	TEXT NOT NULL,
+  PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+
+CREATE TABLE "bookmark" (
+  "id"	INTEGER NOT NULL UNIQUE,
+  "dictionary_id"	INTEGER NOT NULL,
+  "created_at"	TEXT NOT NULL,
+  "updated_at"	TEXT NOT NULL,
+  PRIMARY KEY("id" AUTOINCREMENT)
+);
+```

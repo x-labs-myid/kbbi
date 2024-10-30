@@ -8,47 +8,8 @@ import {
 } from "@nativescript/core";
 import { Http } from "@klippa/nativescript-http";
 import * as htmlparser2 from "htmlparser2";
-import { SQL__query } from "~/sqlite-helper";
 
 const ToastClass = com.kangcahya.ToastClass;
-
-/*
-  ==================================================
-  init table (dictionary, history, bookmark)
-  ==================================================
-
-  CREATE TABLE "dictionary" (
-    "_id"	INTEGER,
-    "word"	TEXT NOT NULL,
-    "lema"	TEXT DEFAULT NULL,
-    "arti"	TEXT NOT NULL,
-    "tesaurusLink"	TEXT DEFAULT NULL,
-    "type"	INTEGER NOT NULL,
-    "isServer"	INTEGER DEFAULT 0,
-    PRIMARY KEY("_id" AUTOINCREMENT)
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_dictionary_word ON dictionary(word);
-  CREATE INDEX IF NOT EXISTS idx_dictionary_arti ON dictionary(arti);
-
-
-  CREATE TABLE "history" (
-    "id"	INTEGER NOT NULL UNIQUE,
-    "word"	TEXT NOT NULL,
-    "created_at"	TEXT NOT NULL,
-    "updated_at"	TEXT NOT NULL,
-    PRIMARY KEY("id" AUTOINCREMENT)
-  );
-
-
-  CREATE TABLE "bookmark" (
-    "id"	INTEGER NOT NULL UNIQUE,
-    "dictionary_id"	INTEGER NOT NULL,
-    "created_at"	TEXT NOT NULL,
-    "updated_at"	TEXT NOT NULL,
-    PRIMARY KEY("id" AUTOINCREMENT)
-  );
-*/
 
 export function getCurrentTime() {
   var d = new Date();
