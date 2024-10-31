@@ -30,7 +30,6 @@ if (Application.android) {
 const fb = firebase();
 Application.on(Application.launchEvent, function () {
   fb.initializeApp().then(() => {
-    console.log("firebase initialized.");
     Admob.init();
     setInitialized(true);
   });

@@ -36,7 +36,7 @@
 				</FormattedString>
 			</Label>
 		<!-- </GridLayout> -->
-		<GridLayout rows="auto, 0, *" row="3" class="bg-gray-200 pt-5" borderRadius="45 45 0 0">
+		<GridLayout rows="auto, 15, *" row="3" class="bg-gray-200 pt-5" borderRadius="45 45 0 0">
 			<mdt:Tabs swipeEnabled="false" tabsPosition="top" row="2">
         <!-- The bottom tab UI is created via TabStrip (the containier) and TabStripItem (for each tab)-->
         <mdt:TabStrip>

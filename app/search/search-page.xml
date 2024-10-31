@@ -116,6 +116,7 @@
 								<Span text="&nbsp;&nbsp;&nbsp;" />
 								<Span text="{{ searchWord }}" class="popin-br" />
 								<Span text="{{ otherWord }}" class="popin-r" />
+								<!-- <Span text="{{ word }}" class="popin-r" /> -->
 							</FormattedString>
 						</Label>
 					</GridLayout>

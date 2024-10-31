@@ -96,21 +96,23 @@ export function onTapRecentSearches(args) {
 
   context.set("searchTextResult", itemTapData.word);
 
-  SQL__select("dictionary", "*", "WHERE word='" + itemTapData.word + "'").then(
-    (resWords) => {
-      if (resWords && resWords.length) {
-        const formattedResults = resWords.map((wordObj) => {
-          return {
-            ...wordObj,
-            arti: decodeHtml(wordObj.arti),
-          };
-        });
+  SQL__select(
+    "dictionary",
+    "TRIM(word) as word, arti, tesaurusLink, isServer",
+    "WHERE LOWER(TRIM(word))='" + itemTapData.word + "'"
+  ).then((resWords) => {
+    if (resWords && resWords.length) {
+      resWords = resWords.map((wordObj) => {
+        return {
+          ...wordObj,
+          arti: decodeHtml(wordObj.arti),
+        };
+      });
 
-        context.set("loadingExecute", false);
-        directToResult(itemTapData.word, formattedResults);
-      }
+      context.set("loadingExecute", false);
+      directToResult(itemTapData.word, resWords);
     }
-  );
+  });
 }
 
 export function onTapAutoComplete(args) {
@@ -163,36 +165,43 @@ function loadRecentSearches() {
 async function loadAutoComplete(keyword) {
   dictionary = [];
   if (keyword) {
-    // Menunggu hasil dari SQL__select
-    const resWords = await SQL__select(
-      "dictionary",
-      "*",
-      "WHERE word LIKE '" + keyword + "%'"
-    );
-    const formattedResults = resWords.map((wordObj) => {
-      const word = wordObj.word;
-      let _searchWord = "";
-      let _otherWord = "";
+    const lowerKeyword = keyword.toLowerCase();
 
-      // Memisahkan _searchWord dan _otherWord
-      if (word.startsWith(keyword)) {
-        _searchWord = keyword;
-        _otherWord = word.slice(keyword.length);
-      }
+    try {
+      const resWords = await SQL__selectRaw(
+        `SELECT word FROM dictionary WHERE LOWER(TRIM(word)) LIKE '${lowerKeyword}%' GROUP BY TRIM(word) ORDER BY word ASC`
+      );
 
-      return {
-        searchWord: _searchWord,
-        otherWord: _otherWord,
-        word: word,
-      };
-    });
+      // Format results
+      const formattedResults = resWords.map((wordObj) => {
+        const word = wordObj.word.toLowerCase();
+        let _searchWord = "";
+        let _otherWord = "";
 
-    // Menggabungkan hasil yang sudah diformat ke dalam array dictionary
-    dictionary.push(...formattedResults);
+        // Separate _searchWord and _otherWord
+        if (word.startsWith(lowerKeyword)) {
+          _searchWord = lowerKeyword; // Ensure search word is lowercased
+          _otherWord = word.slice(lowerKeyword.length);
+        }
+
+        return {
+          ...wordObj,
+          searchWord: _searchWord,
+          otherWord: _otherWord,
+          word: word,
+        };
+      });
+
+      // Combine formatted results into the dictionary
+      dictionary.push(...formattedResults);
+      context.set("autoComplete", dictionary);
+    } catch (error) {
+      console.error("Error loading autocomplete: ", error);
+    }
   }
 
+  // Set the context for view mode and recent searches
   context.set("viewMode", "SEARCH");
-  context.set("autoComplete", dictionary);
   context.set("recentSearches", []);
 }
 
@@ -200,34 +209,36 @@ function executeSearch(_keyword) {
   if (!_keyword) return;
 
   context.set("viewMode", "RESULT");
-  const keyword = _keyword.toLowerCase();
+  const keyword = _keyword.toLowerCase().trim();
 
   context.set("loadingExecute", true);
-
-  SQL__select("dictionary", "*", "WHERE word='" + keyword + "'").then(
-    (resWords) => {
-      if (resWords && resWords.length) {
-        const formattedResults = resWords.map((wordObj) => {
-          return {
-            ...wordObj,
-            arti: decodeHtml(wordObj.arti),
-          };
-        });
-        // context.set("localResultOfSearch", resWords);
-        context.set("loadingExecute", false);
-        directToResult(keyword, formattedResults);
-        saveToHistory(formattedResults[0]);
-      }
+  SQL__select(
+    "dictionary",
+    "TRIM(word) as word, arti, tesaurusLink, isServer",
+    "WHERE LOWER(TRIM(word))='" + keyword + "'"
+  ).then((resWords) => {
+    if (resWords && resWords.length) {
+      const formattedResults = resWords.map((wordObj) => {
+        return {
+          ...wordObj,
+          arti: decodeHtml(wordObj.arti),
+        };
+      });
+      // context.set("localResultOfSearch", resWords);
+      context.set("loadingExecute", false);
+      directToResult(keyword, formattedResults);
+      saveToHistory(formattedResults[0]);
     }
-  );
+  });
 }
 
 function saveToHistory(_data) {
-  SQL__select("history", "word", "WHERE word='" + _data.word + "'").then(
+  const _word = _data.word.toLowerCase().trim();
+  SQL__select("history", "word", "WHERE word='" + _word + "'").then(
     (resHistories) => {
       if (!resHistories || !resHistories.length) {
         const dataInsert = [
-          { field: "word", value: _data.word },
+          { field: "word", value: _word },
           { field: "created_at", value: getCurrentTime() },
           { field: "updated_at", value: getCurrentTime() },
         ];
