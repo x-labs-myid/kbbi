@@ -266,12 +266,12 @@ function directToResult(_keyword, _data) {
     keyword: _keyword,
     data: dataWithIndex,
   };
-  const fullscreen = false;
+  const fullscreen = true;
 
   mainView.showBottomSheet({
     view: "~/bottom-sheet-views/result/result-page",
     context: bsContext,
-    dismissOnBackButton: false,
+    dismissOnBackButton: true,
     dismissOnBackgroundTap: false,
     dismissOnDraggingDownSheet: false,
     closeCallback: (data) => {

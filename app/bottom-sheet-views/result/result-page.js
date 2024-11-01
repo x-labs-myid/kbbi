@@ -22,6 +22,17 @@ function setupContext(openContext) {
     onTapBookmark() {
       console.log("tapped bookmark");
     },
+    switchChecked: false,
+    switchChanges(args) {
+      // console.log("switch changes");
+      // console.log("switch changes >> ", args.object.checked);
+      // console.log("switch changes value >> ", args.value);
+      bindingContext.set("switchChecked", args.value);
+    },
+    switchToggle(args) {
+      console.log("checked >> ", args.object.checked);
+      bindingContext.set("switchChecked", args.object.checked);
+    },
     // other properties and method
   });
 }
