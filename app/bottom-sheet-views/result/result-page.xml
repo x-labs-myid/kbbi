@@ -1,5 +1,6 @@
 <Page actionBarHidden="false"
 	loaded="onLoaded" 
+	xmlns="http://schemas.nativescript.org/tns.xsd"
 	xmlns:admob="@nativescript/firebase-admob">
 	
 	<ActionBar flat="true">
@@ -13,7 +14,7 @@
 			<Button
 				text="&#xf002;"
 				textWrap="true"
-				tap="close"
+				tap="{{ close }}"
 				class="text-center text-black fas text-[18px] border-none rounded-full bg-none active:bg-gray-100 active:scale-95 transition duration-150"
 				width="50"
 				col="2"
@@ -64,17 +65,27 @@
 				</Label>
 			</GridLayout>
 		<!-- </GridLayout> -->
-		<GridLayout rows="auto, 10, *" row="5" class="bg-gray-200 pt-5" borderRadius="45 45 0 0">
+		<GridLayout rows="auto, auto, *" row="5" class="bg-gray-200 pt-5" borderRadius="45 45 0 0">
 			<!-- KBBI LURING -->
 			<Label row="0"
 				visibility="{{ !switchChecked ? 'visible' : 'collapsed' }}"
 				class="text-center px-5 pt-2"
 				color="{{ switchChecked ? '#BDBDBD' : '#000000' }}"
-				textWrap="true" col="1">
+				textWrap="true">
 				<FormattedString>
 					<Span text="&#xe560;" class="fas  text-[22px]" />
 					<Span text="&nbsp;" />
 					<Span text="KBBI Luring" class="popin-r  text-[18px]" />
+				</FormattedString>
+			</Label>
+			<Label row="1"
+				visibility="{{ !switchChecked ? 'visible' : 'collapsed' }}"
+				class="text-center px-5 pb-2"
+				color="{{ switchChecked ? '#BDBDBD' : '#000000' }}"
+				textWrap="true">
+				<FormattedString>
+					<Span text="Untuk versi luring bersumber dari basis data lokal&nbsp;" class="popin-r" />
+					<Span text="KBBI III" class="popin-b" />
 				</FormattedString>
 			</Label>
 			<!-- KBBI DARING -->
@@ -82,11 +93,21 @@
 			visibility="{{ switchChecked ? 'visible' : 'collapsed' }}"
 				class="text-center px-5 pt-2"
 				color="{{ switchChecked ? '#388E3C' : '#BDBDBD' }}"
-				textWrap="true" col="5">
+				textWrap="true">
 				<FormattedString>
 				<Span text="&#xe55c;" class="fas  text-[22px]" />
 					<Span text="&nbsp;" />
 					<Span text="KBBI Daring" class="popin-r  text-[18px]" />
+				</FormattedString>
+			</Label>
+			<Label row="1"
+				visibility="{{ switchChecked ? 'visible' : 'collapsed' }}"
+				class="text-center px-5 pb-2"
+				color="{{ switchChecked ? '#388E3C' : '#BDBDBD' }}"
+				textWrap="true">
+				<FormattedString>
+					<Span text="Untuk versi daring bersumber dari basis data&nbsp;" class="popin-r" />
+					<Span text="KBBI VI daring (kbbi.kemdikbud.go.id)" class="popin-b" />
 				</FormattedString>
 			</Label>
 
@@ -94,7 +115,6 @@
 				class="mx-5 my-3"
 				separatorColor="#f5f5f5"
 				items="{{ data }}"
-				itemTap="onItemTap"
 				visibility="{{ !switchChecked ? 'visible' : 'collapsed' }}" row="2"
 				>
 				<ListView.itemTemplate>
@@ -127,9 +147,55 @@
 				</ListView.itemTemplate>
 			</ListView>
 
-			<GridLayout visibility="{{ switchChecked ? 'visible' : 'collapsed' }}" row="2">
-				<Label text="KBBI daring akan segera hadir" class="text-[16px] text-center"></Label>
+			<GridLayout row="2" visibility="{{ !switchChecked &amp;&amp; !data.length ? 'visible' : 'collapsed' }}">
+				<Label text="Mohon maaf terjadi kesalahan yang menyebabkan gagal memuat data." textWrap="true" class="popin-r text-center" />
 			</GridLayout>
+
+			<ListView 
+				id="daring-list"
+				class="mx-5 my-3"
+				separatorColor="#f5f5f5"
+				items="{{ dataDaring }}"
+				visibility="{{ switchChecked &amp;&amp; showListKBBIDaring ? 'visible' : 'collapsed' }}" row="2"
+				>
+				<ListView.itemTemplate>
+					<GridLayout rows="auto, auto, auto, auto" columns="*, auto" class="pb-3">
+						<Label textWrap="true" class="popin-b text-black text-[16px] my-2" row="0" col="0" colSpan="2">
+							<FormattedString>
+								<Span text="{{ (index+1) + '.' }}" />
+								<Span text="&nbsp;&nbsp;" />
+								<Span text="{{ word }}" />
+							</FormattedString>
+						</Label>
+
+						<Label textWrap="true" class="text-black text-[14px]" row="1" col="0" colSpan="2">
+							<FormattedString>
+								<Span text="lema" class="popin-r" />
+								<Span text="&nbsp; &#xf178; &nbsp;" class="fas" />
+								<Span text="{{ lema }}" class="popin-r" />
+							</FormattedString>
+						</Label>
+						<HtmlView html="{{ arti }}" class="text-black" row="2" col="0" colSpan="2" />
+					</GridLayout>
+				</ListView.itemTemplate>
+			</ListView>
+
+			<GridLayout rows="*, auto, auto, *" row="2" class="px-5" visibility="{{ switchChecked &amp;&amp; !showListKBBIDaring ? 'visible' : 'collapsed' }}">
+				<Button tap="{{ requestKBBIDaring }}" textWrap="true" class="mx-5 text-center text-white text-[12px] border-none rounded-full bg-black active:bg-gray-300 active:scale-95 transition duration-150" row="1" visibility="{{ !loadingRequestKBBIDaring ? 'visible' : 'collapsed' }}">
+					<FormattedString>
+						<Span text="&#xf04b;" class="fas" />
+						<Span text="&nbsp;&nbsp;" />
+						<Span text="Ambil Data Daring" class="popin-r " />
+					</FormattedString>
+				</Button>
+				<ActivityIndicator busy="true" height="40" width="40" row="1" visibility="{{ loadingRequestKBBIDaring ? 'visible' : 'collapsed' }}" />
+				<Label textWrap="true" class="text-center text-black mt-2" row="2" visibility="{{ loadingRequestKBBIDaring ? 'visible' : 'collapsed' }}">
+					<FormattedString>
+						<Span text="Sedang mengambil data, mungkin ini akan membutuhkan waktu beberapa saat." class="popin-r" />
+					</FormattedString>
+				</Label>
+			</GridLayout>
+			
 		</GridLayout>
 
 		<!-- Text Info -->
@@ -138,7 +204,7 @@
 				height="70"
 				width="350"
 				unitId="ca-app-pub-1640120316722376/2423878232"
-				layoutChanged="bannerAdLoaded" />
+				layoutChanged="{{ bannerAdLoaded }}" />
 		</StackLayout>
 	</GridLayout>
 </Page>

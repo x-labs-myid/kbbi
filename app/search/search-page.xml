@@ -134,7 +134,7 @@
 					/>
 			</StackLayout>
 			<StackLayout row="2" class="mt-5"
-				visibility="{{ searchText &amp;&amp; loadingExecute ? 'visible' : 'collapsed' }}" >
+				visibility="{{ loadingExecute ? 'visible' : 'collapsed' }}" >
 				<Label
 					textWrap="true"
 					text="&#xf252;" class="far text-center text-gray-500 text-[56px] mt-5"

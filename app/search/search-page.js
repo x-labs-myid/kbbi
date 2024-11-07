@@ -1,7 +1,7 @@
 import { Frame, ObservableArray } from "@nativescript/core";
 import { BannerAdSize } from "@nativescript/firebase-admob";
 
-import { getCurrentTime, decodeHtml } from "~/global-helper";
+import { getCurrentTime, decodeHtml, KBBIDaring } from "~/global-helper";
 import { SQL__select, SQL__insert, SQL__selectRaw } from "~/sqlite-helper";
 
 const context = new ObservableArray();
@@ -64,8 +64,8 @@ export function onTextChangeSearch(args) {
 
 export function onSubmitSearch(args) {
   const obj = args.object;
-  context.set("searchText", obj.text);
-  executeSearch(obj.text);
+  // context.set("searchText", obj.text);
+  // executeSearch(obj.text);
 }
 
 export function onClearSearch() {
@@ -86,33 +86,41 @@ export function onTapHomeAndStartSearch() {
   }
 }
 
-export function onTapRecentSearches(args) {
+export async function onTapRecentSearches(args) {
   let itemIndex = args.index;
   let itemTap = args.view;
   let itemTapData = itemTap.bindingContext;
 
-  // context.set("viewMode", "RESULT");
   context.set("loadingExecute", true);
-
   context.set("searchTextResult", itemTapData.word);
 
-  SQL__select(
-    "dictionary",
-    "TRIM(word) as word, arti, tesaurusLink, isServer",
-    "WHERE LOWER(TRIM(word))='" + itemTapData.word + "'"
-  ).then((resWords) => {
-    if (resWords && resWords.length) {
-      resWords = resWords.map((wordObj) => {
-        return {
-          ...wordObj,
-          arti: decodeHtml(wordObj.arti),
-        };
-      });
+  // Wait for KBBIDaring() to complete
+  // const isDataAvailable = await KBBIDaring(itemTapData.word);
 
-      context.set("loadingExecute", false);
-      directToResult(itemTapData.word, resWords);
-    }
-  });
+  // if (isDataAvailable) {
+  // Now that KBBIDaring is complete, retrieve the data from the database
+  const resWords = await SQL__select(
+    "dictionary",
+    "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
+    "WHERE LOWER(TRIM(word))='" + itemTapData.word + "'"
+  );
+
+  // console.log("Data fetched >> ", resWords, " >> ", resWords.length);
+
+  if (resWords && resWords.length) {
+    // Process the results
+    const formattedWords = resWords.map((wordObj) => ({
+      ...wordObj,
+      arti: decodeHtml(wordObj.arti),
+    }));
+
+    context.set("loadingExecute", false);
+    directToResult(itemTapData.word, formattedWords);
+  }
+  // } else {
+  //   console.log("Error: Data could not be retrieved.");
+  //   context.set("loadingExecute", false);
+  // }
 }
 
 export function onTapAutoComplete(args) {
@@ -154,7 +162,7 @@ export function openBottomSheet(args) {
 }
 
 function loadRecentSearches() {
-  const query = "SELECT word FROM history ORDER BY created_at DESC LIMIT 15";
+  const query = "SELECT word FROM history ORDER BY updated_at DESC LIMIT 100";
   SQL__selectRaw(query).then((res) => {
     context.set("viewMode", "SEARCH");
     context.set("recentSearches", res);
@@ -205,32 +213,69 @@ async function loadAutoComplete(keyword) {
   context.set("recentSearches", []);
 }
 
-function executeSearch(_keyword) {
+async function executeSearch(_keyword) {
   if (!_keyword) return;
 
   context.set("viewMode", "RESULT");
   const keyword = _keyword.toLowerCase().trim();
 
   context.set("loadingExecute", true);
-  SQL__select(
+
+  // Wait for KBBIDaring to complete
+  // await KBBIDaring(_keyword);
+
+  // After KBBIDaring is complete, proceed with the database query
+  const resWords = await SQL__select(
     "dictionary",
-    "TRIM(word) as word, arti, tesaurusLink, isServer",
+    "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
     "WHERE LOWER(TRIM(word))='" + keyword + "'"
-  ).then((resWords) => {
-    if (resWords && resWords.length) {
-      const formattedResults = resWords.map((wordObj) => {
-        return {
-          ...wordObj,
-          arti: decodeHtml(wordObj.arti),
-        };
-      });
-      // context.set("localResultOfSearch", resWords);
-      context.set("loadingExecute", false);
-      directToResult(keyword, formattedResults);
-      saveToHistory(formattedResults[0]);
-    }
-  });
+  );
+
+  if (resWords && resWords.length) {
+    // Format the results
+    const formattedResults = resWords.map((wordObj) => ({
+      ...wordObj,
+      arti: decodeHtml(wordObj.arti),
+    }));
+
+    // Update context and execute further actions
+    context.set("loadingExecute", false);
+    directToResult(keyword, formattedResults);
+    saveToHistory(formattedResults[0]);
+  } else {
+    context.set("loadingExecute", false);
+    console.log("No results found in the dictionary.");
+  }
 }
+
+// function executeSearch(_keyword) {
+//   if (!_keyword) return;
+
+//   context.set("viewMode", "RESULT");
+//   const keyword = _keyword.toLowerCase().trim();
+
+//   context.set("loadingExecute", true);
+//   KBBIDaring(_keyword).then(() => {
+//     SQL__select(
+//       "dictionary",
+//       "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
+//       "WHERE LOWER(TRIM(word))='" + keyword + "'"
+//     ).then((resWords) => {
+//       if (resWords && resWords.length) {
+//         const formattedResults = resWords.map((wordObj) => {
+//           return {
+//             ...wordObj,
+//             arti: decodeHtml(wordObj.arti),
+//           };
+//         });
+//         // context.set("localResultOfSearch", resWords);
+//         context.set("loadingExecute", false);
+//         directToResult(keyword, formattedResults);
+//         saveToHistory(formattedResults[0]);
+//       }
+//     });
+//   });
+// }
 
 function saveToHistory(_data) {
   const _word = _data.word.toLowerCase().trim();
@@ -256,16 +301,30 @@ function saveToHistory(_data) {
 }
 
 function directToResult(_keyword, _data) {
-  const dataWithIndex = _data.map((item, index) => {
-    item.index = index;
+  const _dataLuring = _data
+    .filter((e) => e.isServer === 0)
+    .map((item, index) => {
+      item.index = index;
 
-    return item;
-  });
+      return item;
+    });
+  const _dataDaring = _data
+    .filter((e) => e.isServer === 1)
+    .map((item, index) => {
+      item.index = index;
+
+      return item;
+    });
+
   const mainView = page;
   const bsContext = {
     keyword: _keyword,
-    data: dataWithIndex,
+    data: _dataLuring,
+    dataDaring: _dataDaring,
   };
+
+  // console.log("bsContext >> ", bsContext);
+
   const fullscreen = true;
 
   mainView.showBottomSheet({

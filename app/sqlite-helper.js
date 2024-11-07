@@ -13,7 +13,7 @@ import { openOrCreate } from "@nativescript-community/sqlite";
  */
 const config = {
   databaseName: "kbbi.db",
-  debug: false,
+  debug: true,
   paths: {
     documentsFolder: knownFolders.documents(),
     assetsFolder: "assets/db",

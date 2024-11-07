@@ -9,6 +9,8 @@ import {
 import { Http } from "@klippa/nativescript-http";
 import * as htmlparser2 from "htmlparser2";
 
+import { SQL__select, SQL__insert, SQL__selectRaw } from "./sqlite-helper";
+
 const ToastClass = com.kangcahya.ToastClass;
 
 export function getCurrentTime() {
@@ -198,4 +200,61 @@ export function __createDirectories() {
       // Folder.fromPath(cacheFolderPath);
       // console.log("Crashpad directory created successfully");
     });
+}
+
+export async function KBBIDaring(_keyword) {
+  const _url = "https://x-labs.my.id/api/kbbi?search=" + _keyword;
+
+  try {
+    console.log("GET >>> ", _url);
+
+    // Check if the word is already in the database
+    const resWords = await SQL__select(
+      "dictionary",
+      "TRIM(word) as word, isServer",
+      "WHERE LOWER(TRIM(word))='" + _keyword + "' AND isServer=1"
+    );
+
+    // console.log("resWords >>> ", resWords);
+
+    // If word exists in the database, return immediately
+    if (resWords && resWords.length) {
+      return true;
+    }
+
+    // Otherwise, fetch data from the API
+    console.log("Fetching data from API...");
+    const response = await Http.request({
+      url: _url,
+      method: "GET",
+    });
+
+    const datas = response.content.toJSON().data;
+    if (datas && datas.length) {
+      for (const data of datas) {
+        for (const arti of data.arti) {
+          // console.log("Inserting data >> ", arti);
+
+          // Prepare data for insertion
+          const dataInsert = [
+            { field: "word", value: data.word },
+            { field: "lema", value: data.lema },
+            { field: "arti", value: arti.deskripsi },
+            { field: "tesaurusLink", value: data.tesaurusLink },
+            { field: "type", value: 100 },
+            { field: "isServer", value: 1 },
+          ];
+
+          // Insert data into the database
+          await SQL__insert("dictionary", dataInsert);
+        }
+      }
+    }
+
+    return true; // Resolve when API call and insertion are complete
+  } catch (error) {
+    console.error("Error occurred:", error);
+    showToast("Tidak ada koneksi internet");
+    return false; // Return false in case of an error
+  }
 }
