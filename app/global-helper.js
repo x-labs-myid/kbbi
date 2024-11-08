@@ -206,7 +206,7 @@ export async function KBBIDaring(_keyword) {
   const _url = "https://x-labs.my.id/api/kbbi?search=" + _keyword;
 
   try {
-    console.log("GET >>> ", _url);
+    // console.log("GET >>> ", _url);
 
     // Check if the word is already in the database
     const resWords = await SQL__select(
@@ -223,7 +223,7 @@ export async function KBBIDaring(_keyword) {
     }
 
     // Otherwise, fetch data from the API
-    console.log("Fetching data from API...");
+    // console.log("Fetching data from API...");
     const response = await Http.request({
       url: _url,
       method: "GET",

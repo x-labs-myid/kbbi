@@ -183,15 +183,25 @@
 			<GridLayout rows="*, auto, auto, *" row="2" class="px-5" visibility="{{ switchChecked &amp;&amp; !showListKBBIDaring ? 'visible' : 'collapsed' }}">
 				<Button tap="{{ requestKBBIDaring }}" textWrap="true" class="mx-5 text-center text-white text-[12px] border-none rounded-full bg-black active:bg-gray-300 active:scale-95 transition duration-150" row="1" visibility="{{ !loadingRequestKBBIDaring ? 'visible' : 'collapsed' }}">
 					<FormattedString>
-						<Span text="&#xf04b;" class="fas" />
+						<Span text="{{ failRequestKBBIDARING ? '&#xf2f9;' : '&#xf04b;' }}" class="fas" />
 						<Span text="&nbsp;&nbsp;" />
-						<Span text="Ambil Data Daring" class="popin-r " />
+						<Span text="{{ failRequestKBBIDARING ? 'Meminta Data Lagi' : 'Meminta Data' }}" class="popin-r " />
 					</FormattedString>
 				</Button>
-				<ActivityIndicator busy="true" height="40" width="40" row="1" visibility="{{ loadingRequestKBBIDaring ? 'visible' : 'collapsed' }}" />
-				<Label textWrap="true" class="text-center text-black mt-2" row="2" visibility="{{ loadingRequestKBBIDaring ? 'visible' : 'collapsed' }}">
+				<Label textWrap="true" class="text-center text-red-500 mt-3 mx-5" row="2" visibility="{{ !loadingRequestKBBIDaring &amp;&amp; failRequestKBBIDARING ? 'visible' : 'collapsed' }}">
 					<FormattedString>
-						<Span text="Sedang mengambil data, mungkin ini akan membutuhkan waktu beberapa saat." class="popin-r" />
+						<Span text="Terjadi sedikit kesalahan, &nbsp;" class="popin-r" />
+						<Span text="proses dihentikan karena server&nbsp;" class="popin-r" />
+						<Span text="kbbi.kemdikbud.go.id&nbsp;" class="popin-b" />
+						<Span text="tidak merespon, silahkan coba kembali beberapa saat, terimakasih&nbsp;" class="popin-r" />
+						<Span text="&#xf118;" class="far" />
+					</FormattedString>
+				</Label>
+				<ActivityIndicator busy="true" height="40" width="40" row="1" visibility="{{ loadingRequestKBBIDaring ? 'visible' : 'collapsed' }}" />
+				<Label textWrap="true" class="text-center text-black mt-3 mx-5" row="2" visibility="{{ loadingRequestKBBIDaring ? 'visible' : 'collapsed' }}">
+					<FormattedString>
+						<Span text="Proses sedang berlangsung, mungkin ini akan membutuhkan waktu beberapa saat, mohon untuk bersabar&nbsp;" class="popin-r" />
+						<Span text="&#xf25b;" class="fas" />
 					</FormattedString>
 				</Label>
 			</GridLayout>

@@ -162,7 +162,7 @@ export function openBottomSheet(args) {
 }
 
 function loadRecentSearches() {
-  const query = "SELECT word FROM history ORDER BY updated_at DESC LIMIT 100";
+  const query = `SELECT word FROM history ORDER BY id DESC LIMIT 100`;
   SQL__selectRaw(query).then((res) => {
     context.set("viewMode", "SEARCH");
     context.set("recentSearches", res);

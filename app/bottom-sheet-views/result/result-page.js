@@ -37,6 +37,7 @@ function setupContext(openContext) {
         ? true
         : false,
     loadingRequestKBBIDaring: false,
+    failRequestKBBIDARING: false,
     async requestKBBIDaring(args) {
       const page = args.object.page;
       const daringList = page.getViewById("daring-list");
@@ -54,6 +55,7 @@ function setupContext(openContext) {
       );
 
       if (resWords && resWords.length) {
+        this.set("failRequestKBBIDARING", false);
         this.set("showListKBBIDaring", true);
 
         const formattedResults = resWords.map((wordObj, index) => ({
@@ -67,12 +69,9 @@ function setupContext(openContext) {
         daringList.refresh();
         showToast("Berhasil mendapatkan hasil dari KBBI Daring.");
       } else {
+        this.set("failRequestKBBIDARING", true);
         this.set("showListKBBIDaring", false);
         this.set("loadingRequestKBBIDaring", false);
-        showToast(
-          "Tidak mendapatkan hasil dari KBBI Daring. Terjadi kesalahan, atau mungkin data tidak/belum tersedia!",
-          "long"
-        );
       }
     },
     bannerAdLoaded(args) {
