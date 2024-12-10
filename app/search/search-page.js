@@ -161,6 +161,10 @@ export function openBottomSheet(args) {
   });
 }
 
+export function executeSearchFromExternal(_keyword, _page) {
+  executeSearch(_keyword, _page);
+}
+
 function loadRecentSearches() {
   const query = `SELECT word FROM history ORDER BY id DESC LIMIT 100`;
   SQL__selectRaw(query).then((res) => {
@@ -213,7 +217,7 @@ async function loadAutoComplete(keyword) {
   context.set("recentSearches", []);
 }
 
-async function executeSearch(_keyword) {
+async function executeSearch(_keyword, _page = page) {
   if (!_keyword) return;
 
   context.set("viewMode", "RESULT");
@@ -240,7 +244,7 @@ async function executeSearch(_keyword) {
 
     // Update context and execute further actions
     context.set("loadingExecute", false);
-    directToResult(keyword, formattedResults);
+    directToResult(keyword, formattedResults, _page);
     saveToHistory(formattedResults[0]);
   } else {
     context.set("loadingExecute", false);
@@ -300,7 +304,7 @@ function saveToHistory(_data) {
   );
 }
 
-function directToResult(_keyword, _data) {
+function directToResult(_keyword, _data, _page) {
   const _dataLuring = _data
     .filter((e) => e.isServer === 0)
     .map((item, index) => {
@@ -316,7 +320,7 @@ function directToResult(_keyword, _data) {
       return item;
     });
 
-  const mainView = page;
+  const mainView = _page;
   const bsContext = {
     keyword: _keyword,
     data: _dataLuring,

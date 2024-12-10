@@ -8,16 +8,19 @@ import { Http } from "@klippa/nativescript-http";
 import { BannerAdSize } from "@nativescript/firebase-admob";
 import { loadInterstisialAd } from "~/admob";
 
+import { executeSearchFromExternal } from "~/search/search-page";
 import { internet, showToast, __createDirectories } from "~/global-helper";
 import { SQL__selectRaw } from "~/sqlite-helper";
 
 const context = new Observable();
+let page;
 
 export function onNavigatingTo(args) {
-  const page = args.object;
+  page = args.object;
 
   __createDirectories();
   _loadDataApps();
+  _loadWeeklyWords();
   context.set("isWatchInterstitialAd", false);
 
   page.bindingContext = context;
@@ -96,6 +99,14 @@ export function bannerAdLoaded(args) {
   banner.load();
 }
 
+export function onTapWeeklyWord(args) {
+  let itemIndex = args.index;
+  let itemTap = args.view;
+  let itemTapData = itemTap.bindingContext;
+
+  executeSearchFromExternal(itemTapData.word, page);
+}
+
 function _checkConnectivity() {
   context.set("isConnected", internet().connected);
   context.set(
@@ -125,6 +136,47 @@ function _loadDataApps() {
         context.set("listViewItems", res.data);
         ApplicationSettings.setString("lastFetchDate", today);
         ApplicationSettings.setString("cachedData", JSON.stringify(res.data));
+      },
+      (e) => {}
+    );
+  }
+}
+
+function _loadWeeklyWords() {
+  const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+  const lastFetchDate = ApplicationSettings.getString(
+    "lastFetchDateWeeklyWord",
+    ""
+  );
+  const cachedData = ApplicationSettings.getString("cachedDataWeeklyWord", "");
+
+  if (lastFetchDate === today && cachedData) {
+    const data = JSON.parse(cachedData);
+    context.set("dailyWordItems", data);
+  } else {
+    Http.request({
+      url: "https://x-labs.my.id/api/kbbi/top-entries/weekly/all/6",
+      method: "GET",
+    }).then(
+      (response) => {
+        const res = response.content.toJSON();
+        if (res.data.length === 0) {
+          context.set("dailyWordItems", []);
+          return;
+        }
+
+        const dataX = res.data.map((item, index) => {
+          return {
+            ...item,
+            id: index + 1,
+          };
+        });
+        context.set("dailyWordItems", dataX);
+        ApplicationSettings.setString("lastFetchDateWeeklyWord", today);
+        ApplicationSettings.setString(
+          "cachedDataWeeklyWord",
+          JSON.stringify(dataX)
+        );
       },
       (e) => {}
     );

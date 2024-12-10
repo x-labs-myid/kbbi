@@ -1,7 +1,8 @@
 <Page actionBarHidden="true"
 	navigatingTo="onNavigatingTo" 
 	xmlns="http://schemas.nativescript.org/tns.xsd"
-	xmlns:ui="@nativescript/firebase-admob">
+	xmlns:ui="@nativescript/firebase-admob"
+	xmlns:gv="@nativescript-community/ui-collectionview">
 	
 	<!-- <ActionBar flat="true">
 		<GridLayout columns="auto, *, auto, 20" width="100%">
@@ -45,7 +46,7 @@
 		</StackLayout> -->
 		<GridLayout 
 			verticalAlignment="middle" 
-			rows="auto, auto, 5, auto" 
+			rows="auto, auto, 5, auto, 25, auto, 10, auto" 
 			columns="*, 5, auto, 5, auto" row="1">
 			<Label row="0" col="0" colSpan="3"
 				text="&#xf5da;"
@@ -82,6 +83,28 @@
 			>
 				<Span text="&#xf129;" class="fas" />
 			</Button>
+
+			<Label class="text-center text-black text-[16px]" textWrap="true" row="5" col="0" colSpan="5">
+				<FormattedString>
+					<Span text="&#xe561;" class="fas" />
+					<Span text="&nbsp;&nbsp;" />
+					<Span text="Kata Populer Minggu Ini" />
+				</FormattedString>
+			</Label>
+			<gv:CollectionView items="{{ dailyWordItems }}" itemTap="onTapWeeklyWord" orientation="vertical" colWidth="50%" row="7" col="0" colSpan="5">
+				<gv:CollectionView.itemTemplate>
+					<GridLayout>
+						<Label  class="rounded-full border-2 border-black text-black text-center mr-3 mb-3 py-1" textWrap="true">
+							<FormattedString>
+								<Span text="{{ id }}" />
+								<Span text=".&nbsp;&nbsp;" />
+								<Span text="{{ word }}" />
+							</FormattedString>
+						</Label>
+					</GridLayout>
+				</gv:CollectionView.itemTemplate>
+			</gv:CollectionView>
+
 		</GridLayout>
 		<StackLayout verticalAlignment="middle" padding="0 20" row="3">
 			<GridLayout rows="auto, auto" columns="*, auto, *"
