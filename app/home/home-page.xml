@@ -2,62 +2,160 @@
 	navigatingTo="onNavigatingTo" 
 	xmlns="http://schemas.nativescript.org/tns.xsd"
 	xmlns:ui="@nativescript/firebase-admob"
-	xmlns:gv="@nativescript-community/ui-collectionview">
+	xmlns:gv="@nativescript-community/ui-collectionview"
+	class="bg-gray-100"
+	>
 	
-	<!-- <ActionBar flat="true">
-		<GridLayout columns="auto, *, auto, 20" width="100%">
-			<Label textWrap="true" col="0">
-				<FormattedString>
-						<Span text="&#xf111;" class="fas" fontSize="12" color="{{ isConnected ? '#4CAF50' : '#F44336' }}" />
-						<Span text="&nbsp;&nbsp;" />
-						<Span text="{{ isConnected ? 'online' : 'offline' }}" fontSize="16" />
-				</FormattedString>
-			</Label>
-			<Label col="2" textWrap="true">
-				<FormattedString>
-					<Span text="Penanda Buku" class="popin-l text-gray-700" />
-					<Span text="&nbsp;&nbsp;" />
-					<Span text="&#xf02e;" class="fas  text-gray-400" />
-				</FormattedString>
-			</Label>
-		</GridLayout>
-	</ActionBar> -->
+  <GridLayout rows="auto, auto, auto, *, auto" columns="*" class="p-4">
+    <!-- Header -->
+    <GridLayout row="0" rows="auto,auto" columns="auto, 20, *, auto" class="items-center">
+      <!-- Ikon kiri -->
+      <Label text="&#xf5da;" class="text-black text-[42px] fas ml-2" row="0" rowSpan="2" col="0" />
+      <!-- Teks Google -->
+      <Label text="Kamus Besar" textWrap="true" class="text-left text-black-900 text-[18px] font-bold" row="0" col="2" />
 
-	<GridLayout rows="auto, *, 0, auto, 0" class="p-5">
+      <Label text="Bahasa Indonesia" textWrap="true" class="text-left text-black text-[24px] font-bold" row="1" col="2" />
+      <!-- Ikon kanan -->
+      <!-- <Label text="&#xf05a;" class="text-black-500 text-2xl fas mr-2" col="3" /> -->
+			<Button row="0" rowSpan="2" col="3"
+				textWrap="true"
+				tap="aboutTap"
+				class="text-center text-white border-none rounded-full bg-gray-500 active:bg-gray-300 active:scale-95 transition duration-150"
+				width="35"
+				height="35"
+			>
+				<Span text="&#xf129;" class="fas" />
+			</Button>
+    </GridLayout>
+
+    <!-- Search Bar -->
+    <StackLayout row="1" class="mt-7 bg-white rounded-2xl shadow-lg py-5 px-6">
+      <GridLayout rows="auto" columns="auto, *, auto" class="items-center">
+        <!-- Ikon Search -->
+        <Label text="&#xf002;" class="text-black text-2xl fas" tap="searchTap" col="0" />
+        <!-- Input Search -->
+        <Label text="Cari kata..." class="text-base text-black mx-4 active:text-black-400 transition" borderWidth="0" tap="searchTap" col="1" />
+        <!-- Ikon Mikrofon -->
+        <!-- <Label text="&#xf1da;" class="text-blue-500 text-2xl fas" col="2" /> -->
+				<Button col="2"
+					textWrap="true"
+					tap="historyTap"
+					class="text-center text-blue-500 border-white text-2xl rounded-full bg-white active:bg-gray-100 active:scale-95 transition duration-150"
+					width="50"
+					height="50"
+				>
+					<Span text="&#xf1da;" class="fas" />
+				</Button>
+      </GridLayout>
+
+			<StackLayout row="2" class="mt-5 ml-1">
+				<Label class="text-left text-gray-500 text-[12px]" textWrap="true">
+					<FormattedString>
+						<Span text="&#xe561;" class="fas" />
+						<Span text="&nbsp;&nbsp;" />
+						<Span text="10 KATA POPULER MINGGU INI" />
+					</FormattedString>
+				</Label>
+				<gv:CollectionView items="{{ dailyWordItems }}" itemTap="onTapWeeklyWord" orientation="horizontal" colWidth="40%" class="mt-3">
+					<gv:CollectionView.itemTemplate>
+						<GridLayout>
+							<Label  class="rounded border-2 border-gray-300 text-gray-700 text-center text-[12px] bg-gray-200 mr-3 mb-3 py-2 px-1" textWrap="true">
+								<FormattedString>
+									<Span text="{{ id }}" />
+									<Span text=".&nbsp;&nbsp;" />
+									<Span text="{{ word }}" />
+								</FormattedString>
+							</Label>
+						</GridLayout>
+					</gv:CollectionView.itemTemplate>
+				</gv:CollectionView>
+			</StackLayout>
+    </StackLayout>
+
+		<!-- BannerAd -->
+    <ui:BannerAd
+			height="70"
+			width="350"
+			unitId="ca-app-pub-1640120316722376/2423878232"
+			layoutChanged="bannerAdLoaded" row="2" class="mt-4" />
+
+		<!-- InterstitialAd -->
+		<StackLayout verticalAlignment="middle" padding="0 20" row="4">
+			<GridLayout rows="auto, auto" columns="*, auto, *"
+					visibility="{{ isWatchInterstitialAd ? 'visible' : 'collapsed' }}">
+					<StackLayout orientation="horizontal" horizontalAlignment="center" row="0" col="1">
+							<ActivityIndicator busy="true" width="20" height="20" />
+							<Label
+									textWrap="true"
+									class="text-center"
+									color="#90CAF9"
+									fontWeight="bold"
+							>
+									<FormattedString>
+											<Span text="&nbsp;&nbsp;" />
+											<Span class="popin-r" text="Menyiapkan iklan..." />
+									</FormattedString>
+							</Label>
+					</StackLayout>
+					<Label
+							text="Iklan akan muncul dalam beberapa detik."
+							textWrap="true"
+							class="text-center"
+							fontStyle="italic"
+							color="#757575"
+							row="1" col="1"
+					/>
+			</GridLayout>
+			<StackLayout 
+					tap="watchInterstitialAd" 
+					visibility="{{ !isWatchInterstitialAd ? 'visible' : 'collapsed' }}">
+					<Label
+							textWrap="true"
+							class="text-center"
+							color="#FBC02D"
+							fontWeight="bold"
+					>
+							<FormattedString>
+									<Span class="fas" text="&#xf641;" />
+									<Span text="&nbsp;&nbsp;" />
+									<Span class="popin-r" text="Tonton Iklan Sekarang" />
+							</FormattedString>
+					</Label>
+					<Label
+							text="Dukung kami dengan meluangkan waktu untuk menonton iklan."
+							textWrap="true"
+							class="text-center"
+							fontStyle="italic"
+							color="#757575"
+					/>
+			</StackLayout>
+		</StackLayout>
+  </GridLayout>
+
+
+	<!-- <GridLayout rows="auto, *, 0, auto, 0" class="p-5">
 		<ui:BannerAd
 			height="70"
 			width="350"
 			unitId="ca-app-pub-1640120316722376/2423878232"
 			layoutChanged="bannerAdLoaded" row="0" />
-		<!-- <StackLayout row="0">
-			<Label
-				text="syncronize progress"
-				textWrap="true"
-				class="text-center text-black text-[18px]"
-				/>
-			<Label
-				text="{{ syncronize }}"
-				textWrap="true"
-				class="text-center text-black bold text-[24px]"
-				/>
-			<Label text="Sinkronisasi sedang berlangsung..." />
-			<Progress id="progressBar" value="0" maxValue="100" />
-			<Label id="progressLabel" text="Progres: 0%" />
-		</StackLayout> -->
+		
 		<GridLayout 
 			verticalAlignment="middle" 
 			rows="auto, auto, 5, auto, 25, auto, 10, auto" 
 			columns="*, 5, auto, 5, auto" row="1">
-			<Label row="0" col="0" colSpan="3"
+			<Label row="0" col="0" colSpan="5"
 				text="&#xf5da;"
 				textWrap="true"
-				class="text-left text-black fas text-[36px]"
+				class="text-center text-black fas text-[36px]"
 				/>
-			<Label row="1" col="0" colSpan="3"
+			<Label row="1" col="0" colSpan="5"
 				text="Kamus Besar Bahasa Indonesia"
 				textWrap="true"
-				class="text-left text-black popin-r text-[42px]"
+				class="text-center text-black popin-r text-[28px]"
 				/>
+
+
 			<Button row="3" col="0"
 					textWrap="true"
 					tap="searchTap"
@@ -67,14 +165,7 @@
 				<Span text="&nbsp;&nbsp;" />
 				<Span text="Cari..." class="popin-r" />
 			</Button>
-			<!-- <Button row="3" col="2"
-				textWrap="true"
-				tap="bookmarkTap"
-				class="text-center text-white border-none rounded-full bg-black px-5 py-3 active:bg-gray-300 active:scale-95 transition duration-150"
-				width="50"
-			>
-				<Span text="&#xf02e;" class="fas" />
-			</Button> -->
+			
 			<Button row="3" col="4"
 				textWrap="true"
 				tap="aboutTap"
@@ -118,7 +209,6 @@
 									fontWeight="bold"
 							>
 									<FormattedString>
-											<!-- <Span class="fas" text="&#xf641;" /> -->
 											<Span text="&nbsp;&nbsp;" />
 											<Span class="popin-r" text="Menyiapkan iklan..." />
 									</FormattedString>
@@ -157,5 +247,5 @@
 					/>
 			</StackLayout>
 		</StackLayout>
-	</GridLayout>
+	</GridLayout> -->
 </Page>

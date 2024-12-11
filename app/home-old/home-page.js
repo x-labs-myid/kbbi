@@ -37,17 +37,6 @@ export function searchTap() {
     },
   });
 }
-export function historyTap() {
-  Frame.topmost().navigate({
-    moduleName: "history/history-page",
-    animated: true,
-    transition: {
-      name: "fade", // Tipe transisi (bisa juga pakai 'fade', 'flip', dll.)
-      duration: 100, // Durasi transisi dalam milidetik
-      curve: "easeIn", // Kurva animasi
-    },
-  });
-}
 
 export function bookmarkTap(args) {
   const mainView = args.object;
@@ -118,6 +107,14 @@ export function onTapWeeklyWord(args) {
   executeSearchFromExternal(itemTapData.word, page);
 }
 
+function _checkConnectivity() {
+  context.set("isConnected", internet().connected);
+  context.set(
+    "isLostConnectionMessage",
+    !context.isConnected && !context.loading
+  );
+}
+
 function _loadDataApps() {
   const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
   const lastFetchDate = ApplicationSettings.getString("lastFetchDate", "");
@@ -158,7 +155,7 @@ function _loadWeeklyWords() {
     context.set("dailyWordItems", data);
   } else {
     Http.request({
-      url: "https://x-labs.my.id/api/kbbi/top-entries/weekly/all/10",
+      url: "https://x-labs.my.id/api/kbbi/top-entries/weekly/all/6",
       method: "GET",
     }).then(
       (response) => {

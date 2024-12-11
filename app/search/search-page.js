@@ -166,7 +166,7 @@ export function executeSearchFromExternal(_keyword, _page) {
 }
 
 function loadRecentSearches() {
-  const query = `SELECT word FROM history ORDER BY id DESC LIMIT 100`;
+  const query = `SELECT word FROM history ORDER BY id DESC LIMIT 10`;
   SQL__selectRaw(query).then((res) => {
     context.set("viewMode", "SEARCH");
     context.set("recentSearches", res);
@@ -252,35 +252,6 @@ async function executeSearch(_keyword, _page = page) {
   }
 }
 
-// function executeSearch(_keyword) {
-//   if (!_keyword) return;
-
-//   context.set("viewMode", "RESULT");
-//   const keyword = _keyword.toLowerCase().trim();
-
-//   context.set("loadingExecute", true);
-//   KBBIDaring(_keyword).then(() => {
-//     SQL__select(
-//       "dictionary",
-//       "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
-//       "WHERE LOWER(TRIM(word))='" + keyword + "'"
-//     ).then((resWords) => {
-//       if (resWords && resWords.length) {
-//         const formattedResults = resWords.map((wordObj) => {
-//           return {
-//             ...wordObj,
-//             arti: decodeHtml(wordObj.arti),
-//           };
-//         });
-//         // context.set("localResultOfSearch", resWords);
-//         context.set("loadingExecute", false);
-//         directToResult(keyword, formattedResults);
-//         saveToHistory(formattedResults[0]);
-//       }
-//     });
-//   });
-// }
-
 function saveToHistory(_data) {
   const _word = _data.word.toLowerCase().trim();
   SQL__select("history", "word", "WHERE word='" + _word + "'").then(
@@ -304,7 +275,7 @@ function saveToHistory(_data) {
   );
 }
 
-function directToResult(_keyword, _data, _page) {
+function directToResult(_keyword, _data, _page = page) {
   const _dataLuring = _data
     .filter((e) => e.isServer === 0)
     .map((item, index) => {
@@ -327,8 +298,6 @@ function directToResult(_keyword, _data, _page) {
     dataDaring: _dataDaring,
   };
 
-  // console.log("bsContext >> ", bsContext);
-
   const fullscreen = true;
 
   mainView.showBottomSheet({
@@ -337,9 +306,7 @@ function directToResult(_keyword, _data, _page) {
     dismissOnBackButton: true,
     dismissOnBackgroundTap: false,
     dismissOnDraggingDownSheet: false,
-    closeCallback: (data) => {
-      // console.log("closeCallback >>> ", data);
-    },
+    closeCallback: (data) => {},
     fullscreen,
   });
 }

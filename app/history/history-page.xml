@@ -1,0 +1,63 @@
+<Page actionBarHidden="false"
+	navigatingTo="onNavigatingTo" 
+	xmlns="http://schemas.nativescript.org/tns.xsd"
+	xmlns:ui="@nativescript/firebase-admob">
+	
+	<ActionBar flat="true">
+		<GridLayout columns="*" width="100%">
+			<Label col="0">
+				<FormattedString>
+					<Span text="&#xf1da;" class="fas text-lg text-black" />
+					<Span text="&nbsp;&nbsp;" />
+					<Span text="Riwayat Pencarian" class="popin-br text-lg text-black" />
+				</FormattedString>
+			</Label>
+		</GridLayout>
+			
+	</ActionBar>
+	
+	<GridLayout rows="*, 0, auto">
+		<GridLayout rows="*" row="0">
+			<ListView 
+				items="{{ items }}" 
+				itemTap="onTapHistoryWord"
+				visibility="{{ (items.length) ? 'visible' : 'collapsed' }}" 
+				row="0">
+				<ListView.itemTemplate>
+					<GridLayout rows="auto, auto" columns="auto, 10, *"  class="px-5 py-1">
+						<Label row="0" textWrap="true" class="text-[12px] text-black">
+							<FormattedString>
+								<Span text="{{ word }}" class="popin-r" />
+							</FormattedString>
+						</Label>
+						<Label row="1" textWrap="true" class="text-[10px]">
+							<FormattedString>
+								<Span text="{{ created_at }}" class="popin-r" />
+							</FormattedString>
+						</Label>
+					</GridLayout>
+				</ListView.itemTemplate>
+			</ListView>
+			<StackLayout row="0" class="mt-5"
+				visibility="{{ (!items.length) ? 'visible' : 'collapsed' }}" >
+				<Label
+					textWrap="true"
+					text="&#xf5da;" class="fas text-center text-gray-500 text-[56px] mt-5"
+					/>
+				<Label
+					textWrap="true"
+					text="Tidak ada data." class="popin-l text-center text-gray-500 mt-3"
+					/>
+			</StackLayout>
+		</GridLayout>
+
+		<!-- Text Info -->
+		<StackLayout class="mt-2" row="2">
+			<ui:BannerAd
+				height="70"
+				width="350"
+				unitId="ca-app-pub-1640120316722376/2423878232"
+				layoutChanged="bannerAdLoaded" />
+		</StackLayout>
+	</GridLayout>
+</Page>
