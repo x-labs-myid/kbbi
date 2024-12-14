@@ -9,8 +9,13 @@ import { BannerAdSize } from "@nativescript/firebase-admob";
 import { loadInterstisialAd } from "~/admob";
 
 import { executeSearchFromExternal } from "~/search/search-page";
-import { internet, showToast, __createDirectories } from "~/global-helper";
-import { SQL__selectRaw } from "~/sqlite-helper";
+import {
+  internet,
+  showToast,
+  __createDirectories,
+  decodeHtml,
+} from "~/global-helper";
+import { SQL__selectRaw, SQL__select } from "~/sqlite-helper";
 
 const context = new Observable();
 let page;
@@ -20,6 +25,7 @@ export function onNavigatingTo(args) {
 
   __createDirectories();
   _loadDataApps();
+  _loadDailyWords();
   _loadWeeklyWords();
   context.set("isWatchInterstitialAd", false);
 
@@ -110,12 +116,37 @@ export function bannerAdLoaded(args) {
   banner.load();
 }
 
+export function onTapDailyWord(args) {
+  let itemIndex = args.index;
+  let itemTap = args.view;
+  let itemTapData = itemTap.bindingContext;
+
+  executeSearchFromExternal(itemTapData.word, page);
+}
+
 export function onTapWeeklyWord(args) {
   let itemIndex = args.index;
   let itemTap = args.view;
   let itemTapData = itemTap.bindingContext;
 
   executeSearchFromExternal(itemTapData.word, page);
+}
+
+async function findWord(word) {
+  const resWords = await SQL__select(
+    "dictionary",
+    "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
+    "WHERE LOWER(TRIM(word))='" + word + "'"
+  );
+
+  if (resWords && resWords.length) {
+    // Process the results
+    const formattedWords = resWords.map((wordObj) => decodeHtml(wordObj.arti));
+    // console.log("formattedWords >> ", formattedWords);
+    return formattedWords[0];
+  }
+
+  return null;
 }
 
 function _loadDataApps() {
@@ -145,6 +176,75 @@ function _loadDataApps() {
   }
 }
 
+function _loadDailyWords() {
+  const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+  const lastFetchDate = ApplicationSettings.getString(
+    "lastFetchDateDailyWord",
+    ""
+  );
+  const cachedData = ApplicationSettings.getString("cachedDataDailyWord", "");
+
+  if (lastFetchDate === today && cachedData) {
+    const data = JSON.parse(cachedData);
+    console.log(data);
+    context.set("dailyWordItems", data);
+  } else {
+    Http.request({
+      url: "https://x-labs.my.id/api/kbbi/top-entries/daily/all/5",
+      method: "GET",
+    }).then(
+      (response) => {
+        const res = response.content.toJSON();
+        if (res.data.length === 0) {
+          context.set("dailyWordItems", []);
+          return;
+        }
+
+        const dataX = res.data.map((entry, idx) => {
+          let arti = "";
+
+          if (entry.arti) {
+            // Parse JSON
+            const parsedArti = JSON.parse(entry.arti);
+            let currentArti = parsedArti
+              .slice(0, 2)
+              .map((item) => item.deskripsi)
+              .join("; "); // Awalnya ambil 2 item
+
+            // Tambah elemen jika panjang kurang dari 230 karakter
+            let i = 2;
+            while (currentArti.length < 200 && i < parsedArti.length) {
+              currentArti = parsedArti
+                .slice(0, i + 1) // Ambil hingga elemen ke-(i+1)
+                .map((item) => item.deskripsi)
+                .join("; ");
+              i++;
+            }
+
+            arti = currentArti; // Set hasil akhir
+          }
+
+          return {
+            ...entry,
+            id: idx + 1,
+            artiFontSize: entry.arti.length > 100 ? 11 : 16,
+            arti,
+          };
+        });
+
+        console.log(dataX);
+        context.set("dailyWordItems", dataX);
+        ApplicationSettings.setString("lastFetchDateDailyWord", today);
+        ApplicationSettings.setString(
+          "cachedDataDailyWord",
+          JSON.stringify(dataX)
+        );
+      },
+      (e) => {}
+    );
+  }
+}
+
 function _loadWeeklyWords() {
   const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
   const lastFetchDate = ApplicationSettings.getString(
@@ -155,7 +255,7 @@ function _loadWeeklyWords() {
 
   if (lastFetchDate === today && cachedData) {
     const data = JSON.parse(cachedData);
-    context.set("dailyWordItems", data);
+    context.set("weeklyWordItems", data);
   } else {
     Http.request({
       url: "https://x-labs.my.id/api/kbbi/top-entries/weekly/all/10",
@@ -164,17 +264,15 @@ function _loadWeeklyWords() {
       (response) => {
         const res = response.content.toJSON();
         if (res.data.length === 0) {
-          context.set("dailyWordItems", []);
+          context.set("weeklyWordItems", []);
           return;
         }
 
-        const dataX = res.data.map((item, index) => {
-          return {
-            ...item,
-            id: index + 1,
-          };
-        });
-        context.set("dailyWordItems", dataX);
+        const dataX = res.data.map((entry, idx) => ({
+          ...entry,
+          id: idx + 1,
+        }));
+        context.set("weeklyWordItems", dataX);
         ApplicationSettings.setString("lastFetchDateWeeklyWord", today);
         ApplicationSettings.setString(
           "cachedDataWeeklyWord",

@@ -25,12 +25,17 @@
 				row="0">
 				<ListView.itemTemplate>
 					<GridLayout rows="auto, auto" columns="auto, 10, *"  class="px-5 py-1">
-						<Label row="0" textWrap="true" class="text-[12px] text-black">
+						<Label row="0" rowSpan="2" col="0" textWrap="true" class="text-[12px] text-black">
+							<FormattedString>
+								<Span text="{{ seq + '.' }}" class="popin-r" />
+							</FormattedString>
+						</Label>
+						<Label row="0" col="2" textWrap="true" class="text-[12px] text-black">
 							<FormattedString>
 								<Span text="{{ word }}" class="popin-r" />
 							</FormattedString>
 						</Label>
-						<Label row="1" textWrap="true" class="text-[10px]">
+						<Label row="1" col="2" textWrap="true" class="text-[10px]">
 							<FormattedString>
 								<Span text="{{ created_at }}" class="popin-r" />
 							</FormattedString>

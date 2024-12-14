@@ -1,7 +1,7 @@
 import { Frame, ObservableArray } from "@nativescript/core";
 import { BannerAdSize } from "@nativescript/firebase-admob";
 
-import { getCurrentTime, decodeHtml, KBBIDaring } from "~/global-helper";
+import { getCurrentTime, decodeHtml, showToast } from "~/global-helper";
 import { SQL__select, SQL__insert, SQL__selectRaw } from "~/sqlite-helper";
 
 const context = new ObservableArray();
@@ -247,6 +247,7 @@ async function executeSearch(_keyword, _page = page) {
     directToResult(keyword, formattedResults, _page);
     saveToHistory(formattedResults[0]);
   } else {
+    showToast("Mohon maaf, rincian kata tidak ditemukan!", "long");
     context.set("loadingExecute", false);
     console.log("No results found in the dictionary.");
   }

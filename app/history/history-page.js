@@ -46,6 +46,12 @@ export function bannerAdLoaded(args) {
 
 function loadHistory() {
   SQL__select("history", "*", "ORDER BY id DESC").then((res) => {
-    context.set("items", res);
+    const _res = res.map((item, index) => {
+      return {
+        ...item,
+        seq: index + 1,
+      };
+    });
+    context.set("items", _res);
   });
 }
