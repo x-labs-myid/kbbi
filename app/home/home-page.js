@@ -25,6 +25,7 @@ export function onNavigatingTo(args) {
 
   __createDirectories();
   _loadDataApps();
+  _loadDailyProverb();
   _loadDailyWords();
   _loadWeeklyWords();
   context.set("isWatchInterstitialAd", false);
@@ -111,9 +112,22 @@ export function watchInterstitialAd() {
 
 export function bannerAdLoaded(args) {
   const banner = args.object;
-  const adSize = new BannerAdSize(350, 70);
-  banner.size = adSize;
+  // const adSize = new BannerAdSize(350, 70);
+  // banner.size = adSize;
+  if (!banner.size) {
+    // Hanya atur ukuran jika belum diatur
+    const adSize = new BannerAdSize(350, 70);
+    banner.size = adSize;
+  }
   banner.load();
+}
+
+export function onTapDailyProverb(args) {
+  let itemIndex = args.index;
+  let itemTap = args.view;
+  let itemTapData = itemTap.bindingContext;
+
+  executeSearchFromExternal(itemTapData.word, page);
 }
 
 export function onTapDailyWord(args) {
@@ -132,22 +146,22 @@ export function onTapWeeklyWord(args) {
   executeSearchFromExternal(itemTapData.word, page);
 }
 
-async function findWord(word) {
-  const resWords = await SQL__select(
-    "dictionary",
-    "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
-    "WHERE LOWER(TRIM(word))='" + word + "'"
-  );
+// async function findWord(word) {
+//   const resWords = await SQL__select(
+//     "dictionary",
+//     "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
+//     "WHERE LOWER(TRIM(word))='" + word + "'"
+//   );
 
-  if (resWords && resWords.length) {
-    // Process the results
-    const formattedWords = resWords.map((wordObj) => decodeHtml(wordObj.arti));
-    // console.log("formattedWords >> ", formattedWords);
-    return formattedWords[0];
-  }
+//   if (resWords && resWords.length) {
+//     // Process the results
+//     const formattedWords = resWords.map((wordObj) => decodeHtml(wordObj.arti));
+//     // console.log("formattedWords >> ", formattedWords);
+//     return formattedWords[0];
+//   }
 
-  return null;
-}
+//   return null;
+// }
 
 function _loadDataApps() {
   const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
@@ -176,6 +190,44 @@ function _loadDataApps() {
   }
 }
 
+function _loadDailyProverb() {
+  const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+  const lastFetchDate = ApplicationSettings.getString(
+    "lastFetchDateDailyProverb",
+    ""
+  );
+  const cachedData = ApplicationSettings.getString(
+    "cachedDataDailyProverb",
+    ""
+  );
+
+  if (lastFetchDate === today && cachedData) {
+    const data = JSON.parse(cachedData);
+    context.set("dailyProverbItems", data);
+  } else {
+    SQL__select(
+      "dictionary",
+      "*",
+      "WHERE LOWER(arti) LIKE 'peribahasa%' ORDER BY abs(random() + strftime('%j', 'now')) LIMIT 1"
+    ).then((res) => {
+      const dataX = res.map((entry, idx) => {
+        return {
+          id: idx + 1,
+          word: entry.word,
+          arti: decodeHtml(entry.arti),
+        };
+      });
+
+      context.set("dailyProverbItems", dataX);
+      ApplicationSettings.setString("lastFetchDateDailyProverb", today);
+      ApplicationSettings.setString(
+        "cachedDataDailyProverb",
+        JSON.stringify(dataX)
+      );
+    });
+  }
+}
+
 function _loadDailyWords() {
   const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
   const lastFetchDate = ApplicationSettings.getString(
@@ -186,7 +238,6 @@ function _loadDailyWords() {
 
   if (lastFetchDate === today && cachedData) {
     const data = JSON.parse(cachedData);
-    console.log(data);
     context.set("dailyWordItems", data);
   } else {
     Http.request({
@@ -232,7 +283,6 @@ function _loadDailyWords() {
           };
         });
 
-        console.log(dataX);
         context.set("dailyWordItems", dataX);
         ApplicationSettings.setString("lastFetchDateDailyWord", today);
         ApplicationSettings.setString(

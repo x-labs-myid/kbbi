@@ -211,8 +211,6 @@
 		<!-- Text Info -->
 		<StackLayout class="bg-gray-200" row="7">
 			<admob:BannerAd
-				height="70"
-				width="350"
 				unitId="ca-app-pub-1640120316722376/2423878232"
 				layoutChanged="{{ bannerAdLoaded }}" />
 		</StackLayout>

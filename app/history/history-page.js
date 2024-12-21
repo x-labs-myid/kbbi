@@ -39,8 +39,11 @@ export function onTapHistoryWord(args) {
 
 export function bannerAdLoaded(args) {
   const banner = args.object;
-  const adSize = new BannerAdSize(350, 70);
-  banner.size = adSize;
+  if (!banner.size) {
+    // Hanya atur ukuran jika belum diatur
+    const adSize = new BannerAdSize(350, 70);
+    banner.size = adSize;
+  }
   banner.load();
 }
 

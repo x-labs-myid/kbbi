@@ -149,8 +149,6 @@
 		<!-- Text Info -->
 		<StackLayout class="mt-2" row="3">
 			<ui:BannerAd
-				height="70"
-				width="350"
 				unitId="ca-app-pub-1640120316722376/2423878232"
 				layoutChanged="bannerAdLoaded" row="0" />
 			<Label 
