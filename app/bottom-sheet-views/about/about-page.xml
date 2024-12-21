@@ -41,7 +41,7 @@
             <Label text="Kamus Besar Bahasa Indonesia (KBBI) lengkap dalam genggaman Anda. Kamus luring kami berisi sekitar 100.000 data, baik kata maupun peribahasa." textWrap="true" class="text-[12px] text-gray-600" />
             
             <Label text="Version" textWrap="true" class="title text-[16px] text-gray-800 mt-4" />
-            <Label text="1.4.3" textWrap="true" class="text-[12px] text-gray-600" />
+            <Label text="1.4.4" textWrap="true" class="text-[12px] text-gray-600" />
 
             <Label text="Developer" textWrap="true" class="title text-[16px] text-gray-800 mt-4" />
 						<Image src="~/assets/x-labs.png" height="15" horizontalAlignment="left" class="mt-1" />
