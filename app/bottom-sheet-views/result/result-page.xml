@@ -36,7 +36,7 @@
 				</FormattedString>
 			</Label>
 
-			<GridLayout horizontalAlignment="center" columns="auto, auto, 5, auto, 5, auto, auto" row="3" class="border-4 rounded-full my-2 mx-3" borderColor="{{ switchChecked ? '#388E3C' : '#000000' }}">
+			<!-- <GridLayout horizontalAlignment="center" columns="auto, auto, 5, auto, 5, auto, auto" row="3" class="border-4 rounded-full my-2 mx-3" borderColor="{{ switchChecked ? '#388E3C' : '#000000' }}">
 				<Label tap="{{ switchToggle }}" checked="false"
 					class="text-center px-5 py-2"
 					color="{{ switchChecked ? '#BDBDBD' : '#000000' }}"
@@ -63,11 +63,11 @@
 					<Span text="&#xe55c;" class="fas  text-[16px]" />
 					</FormattedString>
 				</Label>
-			</GridLayout>
+			</GridLayout> -->
 		<!-- </GridLayout> -->
 		<GridLayout rows="auto, auto, *" row="5" class="bg-gray-200 pt-5" borderRadius="45 45 0 0">
 			<!-- KBBI LURING -->
-			<Label row="0"
+			<!-- <Label row="0"
 				visibility="{{ !switchChecked ? 'visible' : 'collapsed' }}"
 				class="text-center px-5 pt-2"
 				color="{{ switchChecked ? '#BDBDBD' : '#000000' }}"
@@ -87,9 +87,9 @@
 					<Span text="Untuk versi luring bersumber dari basis data lokal&nbsp;" class="popin-r" />
 					<Span text="KBBI III" class="popin-b" />
 				</FormattedString>
-			</Label>
+			</Label> -->
 			<!-- KBBI DARING -->
-			<Label row="0"
+			<!-- <Label row="0"
 			visibility="{{ switchChecked ? 'visible' : 'collapsed' }}"
 				class="text-center px-5 pt-2"
 				color="{{ switchChecked ? '#388E3C' : '#BDBDBD' }}"
@@ -109,7 +109,7 @@
 					<Span text="Untuk versi daring bersumber dari basis data&nbsp;" class="popin-r" />
 					<Span text="KBBI VI daring (kbbi.kemdikbud.go.id)" class="popin-b" />
 				</FormattedString>
-			</Label>
+			</Label> -->
 
 			<ListView 
 				class="mx-5 my-3"

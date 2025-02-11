@@ -6,7 +6,7 @@
 	class="bg-gray-100"
 	>
 	
-  <GridLayout rows="auto, auto, auto, auto, *, auto" columns="*" class="p-4">
+  <GridLayout rows="auto, auto, auto, *, auto" columns="*" class="p-4">
     <!-- Header -->
     <GridLayout row="0" rows="auto,auto" columns="auto, 20, *, auto" class="items-center">
       <!-- Ikon kiri -->
@@ -29,8 +29,8 @@
     </GridLayout>
 
     <!-- Search Bar -->
-    <StackLayout row="1" class="mt-5 bg-white rounded-2xl border-2 border-gray-200 py-5 px-6">
-      <GridLayout rows="auto" columns="auto, *, auto" class="items-center">
+    <StackLayout row="1" class="mt-5 bg-white rounded-2xl border-2 border-gray-200 py-3 px-5">
+      <GridLayout columns="auto, *, auto" class="items-center">
         <!-- Ikon Search -->
         <Label text="&#xf002;" class="text-black text-2xl fas" tap="searchTap" col="0" />
         <!-- Input Search -->
@@ -47,29 +47,6 @@
 					<Span text="&#xf1da;" class="fas" />
 				</Button>
       </GridLayout>
-
-			<StackLayout row="2" class="mt-5 ml-1">
-				<Label class="text-left text-gray-500 text-[12px]" textWrap="true">
-					<FormattedString>
-						<Span text="&#xe561;" class="fas" />
-						<Span text="&nbsp;&nbsp;" />
-						<Span text="Kata Populer Minggu Ini" />
-					</FormattedString>
-				</Label>
-				<gv:CollectionView items="{{ weeklyWordItems }}" itemTap="onTapWeeklyWord" orientation="horizontal" colWidth="40%" class="mt-3">
-					<gv:CollectionView.itemTemplate>
-						<GridLayout>
-							<Label  class="rounded border-2 border-gray-300 text-gray-700 text-center text-[10px] bg-gray-200 mr-3 mb-3 py-1 px-1" textWrap="true">
-								<FormattedString>
-									<Span text="{{ id }}" />
-									<Span text=".&nbsp;&nbsp;" />
-									<Span text="{{ word }}" />
-								</FormattedString>
-							</Label>
-						</GridLayout>
-					</gv:CollectionView.itemTemplate>
-				</gv:CollectionView>
-			</StackLayout>
     </StackLayout>
 
 		<!-- BannerAd -->
@@ -79,7 +56,7 @@
 
 		<!-- Daily Proverb -->
 		<GridLayout  row="3" rows="auto,*" class="mt-2 mb-3">
-			<Label row="0" class="text-center text-gray-700 text-[14px] mb-2" textWrap="true">
+			<Label row="0" class="text-center text-gray-700 text-[16px] mb-2" textWrap="true">
 				<FormattedString>
 					<Span text="&#xf5da;" class="fas" />
 					<Span text="&nbsp;&nbsp;" />
@@ -89,9 +66,9 @@
 			<gv:CollectionView items="{{ dailyProverbItems }}" itemTap="onTapDailyProverb" orientation="horizontal" colWidth="100%" row="1">
 				<gv:CollectionView.itemTemplate>
 					<GridLayout>
-						<GridLayout rows="auto,5,auto,*,auto,*,auto" class="rounded-2xl border-2 border-gray-400 bg-white pt-2 pb-4 pl-2 pr-2 ">
+						<GridLayout rows="auto,*,auto,10,auto,*,auto" class="rounded-2xl border-2 border-gray-400 bg-white pt-2 pb-4 pl-2 pr-2 ">
 							
-							<Label row="2" class="mx-2 text-center text-gray-500 rounded-full text-center text-[16px] " fontWeight="900" textWrap="true">
+							<Label row="2" class="mx-2 text-center text-gray-500 rounded-full text-center text-[14px] " fontWeight="900" textWrap="true">
 								<FormattedString>
 									<Span text="&#xf10d;" class="fas" />
 									<Span text="&nbsp;&nbsp;" />
@@ -100,7 +77,7 @@
 									<Span text="&#xf10e;" class="fas" />
 								</FormattedString>
 							</Label>
-							<Label row="4" class="text-gray-500 text-center italic" fontSize="12" textWrap="true">
+							<Label row="4" class="text-gray-500 text-center italic text-[22px]" textWrap="true">
 								<FormattedString>
 									<Span text="{{ arti }}" />
 								</FormattedString>
@@ -116,47 +93,8 @@
 			</gv:CollectionView>
 		</GridLayout>
 
-		<!-- Daily Word -->
-		<GridLayout  row="4" rows="auto,*" class="mt-2 mb-3">
-			<Label row="0" class="text-center text-gray-700 text-[14px] mb-2" textWrap="true">
-				<FormattedString>
-					<Span text="&#xf5da;" class="fas" />
-					<Span text="&nbsp;&nbsp;" />
-					<Span text="Kata Hari Ini" />
-				</FormattedString>
-			</Label>
-			<gv:CollectionView items="{{ dailyWordItems }}" itemTap="onTapDailyWord" orientation="horizontal" colWidth="75%" row="1">
-				<gv:CollectionView.itemTemplate>
-					<GridLayout>
-						<GridLayout rows="auto,5,auto,*,auto,*,auto" class="rounded-2xl border-2 border-gray-400 bg-white mr-3 p-2">
-							
-							<Label row="2" class="mx-2 text-center text-gray-500 rounded-full text-center text-[18px] " fontWeight="900" textWrap="true">
-								<FormattedString>
-									<Span text="&#xf10d;" class="fas" />
-									<Span text="&nbsp;&nbsp;" />
-									<Span text="{{ word }}" />
-									<Span text="&nbsp;&nbsp;" />
-									<Span text="&#xf10e;" class="fas" />
-								</FormattedString>
-							</Label>
-							<Label row="4" class="text-gray-500 text-center italic" fontSize="{{ artiFontSize }}" textWrap="true">
-								<FormattedString>
-									<Span text="{{ arti }}" />
-								</FormattedString>
-							</Label>
-							<Label row="6" class="text-center text-gray-600 text-center text-[14px]" textWrap="true">
-								<FormattedString>
-									<Span text="{{ id }}" />
-								</FormattedString>
-							</Label>
-						</GridLayout>
-					</GridLayout>
-				</gv:CollectionView.itemTemplate>
-			</gv:CollectionView>
-		</GridLayout>
-
 		<!-- InterstitialAd -->
-		<StackLayout verticalAlignment="middle" padding="0 20" row="5">
+		<StackLayout verticalAlignment="middle" padding="0 20" row="4">
 			<GridLayout rows="auto, auto" columns="*, auto, *"
 					visibility="{{ isWatchInterstitialAd ? 'visible' : 'collapsed' }}">
 					<StackLayout orientation="horizontal" horizontalAlignment="center" row="0" col="1">
