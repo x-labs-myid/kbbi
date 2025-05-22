@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/x-labs-86/hosting-assets/refs/heads/main/kbbi/icon.png" width="150" />
+<img src="https://raw.githubusercontent.com/x-labs-myid/app-info/refs/heads/main/icons/mykbbi.png" width="150" />
 
 # MyKBBI: Kamus Bahasa Indonesia
 
