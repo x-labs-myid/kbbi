@@ -23,6 +23,7 @@ tmp/
 typings/
 yarn.lock
 package.lock
+package-lock
 
 # Visual Studio Code
 .vscode/*
