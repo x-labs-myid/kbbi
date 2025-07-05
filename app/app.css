@@ -1,6 +1,4 @@
-﻿@tailwind base;
-@tailwind components;
-@tailwind utilities;
+﻿@import "tailwindcss";
 
 .fab {
   font-family: "Font Awesome 6 Brands", "fa-brands-400";
