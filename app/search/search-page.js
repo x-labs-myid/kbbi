@@ -1,5 +1,5 @@
 import { Frame, ObservableArray } from "@nativescript/core";
-import { BannerAdSize } from "@nativescript/firebase-admob";
+import { BannerAdSize } from "@nativescript/google-mobile-ads";
 
 import { getCurrentTime, decodeHtml, showToast } from "~/global-helper";
 import { SQL__select, SQL__insert, SQL__selectRaw } from "~/sqlite-helper";
@@ -102,7 +102,7 @@ export async function onTapRecentSearches(args) {
   const resWords = await SQL__select(
     "dictionary",
     "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
-    "WHERE LOWER(TRIM(word))='" + itemTapData.word + "'"
+    "WHERE LOWER(TRIM(word))='" + itemTapData.word + "'",
   );
 
   // console.log("Data fetched >> ", resWords, " >> ", resWords.length);
@@ -184,7 +184,7 @@ async function loadAutoComplete(keyword) {
 
     try {
       const resWords = await SQL__selectRaw(
-        `SELECT word FROM dictionary WHERE LOWER(TRIM(word)) LIKE '${lowerKeyword}%' GROUP BY TRIM(word) ORDER BY word ASC`
+        `SELECT word FROM dictionary WHERE LOWER(TRIM(word)) LIKE '${lowerKeyword}%' GROUP BY TRIM(word) ORDER BY word ASC`,
       );
 
       // Format results
@@ -235,7 +235,7 @@ async function executeSearch(_keyword, _page = page) {
   const resWords = await SQL__select(
     "dictionary",
     "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
-    "WHERE LOWER(TRIM(word))='" + keyword + "'"
+    "WHERE LOWER(TRIM(word))='" + keyword + "'",
   );
 
   if (resWords && resWords.length) {
@@ -272,10 +272,10 @@ function saveToHistory(_data) {
           "history",
           [{ field: "updated_at", value: getCurrentTime() }],
           null,
-          "WHERE id='" + resHistories[0].id + "'"
+          "WHERE id='" + resHistories[0].id + "'",
         );
       }
-    }
+    },
   );
 }
 

@@ -1,5 +1,5 @@
 import { Frame, ObservableArray } from "@nativescript/core";
-import { BannerAdSize } from "@nativescript/firebase-admob";
+import { BannerAdSize } from "@nativescript/google-mobile-ads";
 
 import { executeSearchFromExternal } from "~/search/search-page";
 import { SQL__select } from "~/sqlite-helper";

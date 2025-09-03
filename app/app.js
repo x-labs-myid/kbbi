@@ -1,6 +1,5 @@
 import { Application, Color, Utils } from "@nativescript/core";
-import { firebase } from "@nativescript/firebase-core";
-import { Admob } from "@nativescript/firebase-admob";
+import { MobileAds } from "@nativescript/google-mobile-ads";
 
 import { setInitialized } from "./admob";
 
@@ -27,12 +26,8 @@ if (Application.android) {
   });
 }
 
-const fb = firebase();
 Application.on(Application.launchEvent, function () {
-  fb.initializeApp().then(() => {
-    Admob.init();
-    setInitialized(true);
-  });
+  MobileAds.init();
 });
 
 Application.run({ moduleName: "app-root" });

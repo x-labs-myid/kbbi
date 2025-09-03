@@ -1,15 +1,15 @@
-import { InterstitialAd, RewardedAd } from "@nativescript/firebase-admob";
+import { InterstitialAd, RewardedAd } from "@nativescript/google-mobile-ads";
 
 let initialized = false;
 export function setInitialized(_initialized) {
   initialized = _initialized;
 }
 const interstitial = InterstitialAd.createForAdRequest(
-  "ca-app-pub-1640120316722376/8805453750"
+  "ca-app-pub-1640120316722376/8805453750",
 );
 
 const rewarded = RewardedAd.createForAdRequest(
-  "ca-app-pub-1640120316722376/6529109352"
+  "ca-app-pub-1640120316722376/6529109352",
 );
 
 export function loadInterstisialAd(_immersiveModeEnabled = true) {

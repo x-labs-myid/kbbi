@@ -5,7 +5,7 @@ import {
   ApplicationSettings,
 } from "@nativescript/core";
 import { Http } from "@klippa/nativescript-http";
-import { BannerAdSize } from "@nativescript/firebase-admob";
+import { BannerAdSize } from "@nativescript/google-mobile-ads";
 import { loadInterstisialAd } from "~/admob";
 
 import { executeSearchFromExternal } from "~/search/search-page";
@@ -166,7 +166,7 @@ function _loadDataApps() {
         ApplicationSettings.setString("lastFetchDate", today);
         ApplicationSettings.setString("cachedData", JSON.stringify(res.data));
       },
-      (e) => {}
+      (e) => {},
     );
   }
 }
@@ -175,11 +175,11 @@ function _loadDailyProverb() {
   const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
   const lastFetchDate = ApplicationSettings.getString(
     "lastFetchDateDailyProverb",
-    ""
+    "",
   );
   const cachedData = ApplicationSettings.getString(
     "cachedDataDailyProverb",
-    ""
+    "",
   );
 
   if (lastFetchDate === today && cachedData) {
@@ -189,7 +189,7 @@ function _loadDailyProverb() {
     SQL__select(
       "dictionary",
       "*",
-      "WHERE LOWER(arti) LIKE 'peribahasa%' ORDER BY abs(random() + strftime('%j', 'now')) LIMIT 1"
+      "WHERE LOWER(arti) LIKE 'peribahasa%' ORDER BY abs(random() + strftime('%j', 'now')) LIMIT 1",
     ).then((res) => {
       const dataX = res.map((entry, idx) => {
         return {
@@ -203,7 +203,7 @@ function _loadDailyProverb() {
       ApplicationSettings.setString("lastFetchDateDailyProverb", today);
       ApplicationSettings.setString(
         "cachedDataDailyProverb",
-        JSON.stringify(dataX)
+        JSON.stringify(dataX),
       );
     });
   }

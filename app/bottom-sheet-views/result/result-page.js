@@ -1,5 +1,5 @@
 import { fromObject, Observable, ObservableArray } from "@nativescript/core";
-import { BannerAdSize } from "@nativescript/firebase-admob";
+import { BannerAdSize } from "@nativescript/google-mobile-ads";
 
 import { decodeHtml, KBBIDaring, showToast } from "~/global-helper";
 import { SQL__select } from "~/sqlite-helper";
@@ -51,7 +51,7 @@ function setupContext(openContext) {
         "TRIM(word) as word, lema, arti, tesaurusLink, isServer",
         "WHERE LOWER(TRIM(word))='" +
           bindingContext.keyword +
-          "' AND isServer=1"
+          "' AND isServer=1",
       );
 
       if (resWords && resWords.length) {

@@ -1,8 +1,8 @@
 <Page actionBarHidden="false"
-	navigatingTo="onNavigatingTo" 
+	navigatingTo="onNavigatingTo"
 	xmlns="http://schemas.nativescript.org/tns.xsd"
-	xmlns:ui="@nativescript/firebase-admob">
-	
+	xmlns:ui="@nativescript/google-mobile-ads">
+
 	<ActionBar flat="true">
 		<GridLayout columns="*" width="100%">
 			<Label col="0">
@@ -13,15 +13,15 @@
 				</FormattedString>
 			</Label>
 		</GridLayout>
-			
+
 	</ActionBar>
-	
+
 	<GridLayout rows="*, 0, auto">
 		<GridLayout rows="*" row="0">
-			<ListView 
-				items="{{ items }}" 
+			<ListView
+				items="{{ items }}"
 				itemTap="onTapHistoryWord"
-				visibility="{{ (items.length) ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (items.length) ? 'visible' : 'collapsed' }}"
 				row="0">
 				<ListView.itemTemplate>
 					<GridLayout rows="auto, auto" columns="auto, 10, *"  class="px-5 py-1">
@@ -58,7 +58,7 @@
 
 		<!-- Text Info -->
 		<StackLayout class="mt-2" row="2">
-			<ui:BannerAd 
+			<ui:BannerAd
 				unitId="ca-app-pub-1640120316722376/2423878232"
 				layoutChanged="bannerAdLoaded" />
 		</StackLayout>

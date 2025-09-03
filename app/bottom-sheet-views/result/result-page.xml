@@ -1,13 +1,13 @@
 <Page actionBarHidden="false"
-	loaded="onLoaded" 
+	loaded="onLoaded"
 	xmlns="http://schemas.nativescript.org/tns.xsd"
-	xmlns:admob="@nativescript/firebase-admob">
-	
+	xmlns:admob="@nativescript/google-mobile-ads">
+
 	<ActionBar flat="true">
-		<GridLayout 
+		<GridLayout
 			columns="*, 5, auto, 15">
-			<Label 
-				text="Rincian Kata" 
+			<Label
+				text="Rincian Kata"
 				class="popin-br text-left text-black"
 				textWrap="true"
 				col="0" />
@@ -21,7 +21,7 @@
 				/>
 		</GridLayout>
 	</ActionBar>
-	
+
 	<GridLayout rows="10, auto, 10, auto, 15, *, 0, auto">
 		<!-- <GridLayout rows="auto, auto" columns="*, auto, *" row="1"> -->
 			<Label
@@ -111,7 +111,7 @@
 				</FormattedString>
 			</Label> -->
 
-			<ListView 
+			<ListView
 				class="mx-5 my-3"
 				separatorColor="#f5f5f5"
 				items="{{ data }}"
@@ -151,7 +151,7 @@
 				<Label text="Mohon maaf terjadi kesalahan yang menyebabkan gagal memuat data." textWrap="true" class="popin-r text-center" />
 			</GridLayout>
 
-			<ListView 
+			<ListView
 				id="daring-list"
 				class="mx-5 my-3"
 				separatorColor="#f5f5f5"
@@ -205,7 +205,7 @@
 					</FormattedString>
 				</Label>
 			</GridLayout>
-			
+
 		</GridLayout>
 
 		<!-- Text Info -->

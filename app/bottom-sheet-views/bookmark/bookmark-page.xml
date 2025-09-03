@@ -1,12 +1,12 @@
 <Page
-    loaded="onLoaded" 
-    xmlns:ui="@nativescript/firebase-admob">
+    loaded="onLoaded"
+    xmlns:ui="@nativescript/google-mobile-ads">
 
     <ActionBar>
-        <GridLayout 
+        <GridLayout
             columns="*, 5, auto, 15">
-            <Label 
-                text="Penanda Buku" 
+            <Label
+                text="Penanda Buku"
                 class="popin-br text-left text-black"
                 textWrap="true"
                 col="0" />
@@ -18,7 +18,7 @@
                 width="50"
                 col="2"
                 />
-			
+
 		</GridLayout>
     </ActionBar>
 

@@ -1,10 +1,10 @@
 <Page actionBarHidden="false"
-	navigatingTo="onNavigatingTo" 
+	navigatingTo="onNavigatingTo"
 	xmlns="http://schemas.nativescript.org/tns.xsd"
-	xmlns:ui="@nativescript/firebase-admob">
-	
+	xmlns:ui="@nativescript/google-mobile-ads">
+
 	<ActionBar flat="true">
-		<GridLayout 
+		<GridLayout
 			columns="auto, 5, *, 15"
 			class="py-2">
 			<Button
@@ -16,27 +16,27 @@
 				width="50"
 				col="0"
 				/>
-			<GridLayout 
-				col="2" 
-				columns="10, *, 5, 50" 
+			<GridLayout
+				col="2"
+				columns="10, *, 5, 50"
 				class="border-none bg-gray-200 rounded-full">
-				<TextField 
+				<TextField
 					text="{{ searchText }}"
-					hint="Ketikan sesuatu untuk mencari..." 
+					hint="Ketikan sesuatu untuk mencari..."
 					class="bg-gray-200 text-black mt-1"
 					fontSize="14"
 					textChange="onTextChangeSearch"
-					returnKeyType="search" 
+					returnKeyType="search"
 					returnPress="onSubmitSearch"
 					id="searchInput"
 					col="1" />
-				
-				<ActivityIndicator 
+
+				<ActivityIndicator
 					visibility="{{ loadingExecute ? 'visible' : 'collapsed' }}"
-					color="#000000" 
+					color="#000000"
 					width="30"
-					height="30" 
-					busy="true" 
+					height="30"
+					busy="true"
 					col="3" />
 				<Button
 					visibility="{{ searchText &amp;&amp; !loadingExecute ? 'visible' : 'collapsed' }}"
@@ -50,22 +50,22 @@
 			</GridLayout>
 		</GridLayout>
 	</ActionBar>
-	
+
 	<GridLayout rows="10, *, 0, auto" class="px-5 pb-5">
 		<GridLayout rows="auto, 0, *" row="1">
 			<Label
 				textWrap="true"
-				visibility="{{ (!searchText &amp;&amp; !loadingExecute &amp;&amp; recentSearches.length) ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (!searchText &amp;&amp; !loadingExecute &amp;&amp; recentSearches.length) ? 'visible' : 'collapsed' }}"
 				class="text-left text-[10px] my-3"
 				col="0">
 				<FormattedString>
 					<Span text="PENCARIAN TERKINI" class="popin-br text-gray-600" />
 				</FormattedString>
 			</Label>
-			<ListView 
-				items="{{ recentSearches }}" 
+			<ListView
+				items="{{ recentSearches }}"
 				itemTap="onTapRecentSearches"
-				visibility="{{ (!searchText &amp;&amp; !loadingExecute &amp;&amp; recentSearches.length) ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (!searchText &amp;&amp; !loadingExecute &amp;&amp; recentSearches.length) ? 'visible' : 'collapsed' }}"
 				row="2">
 				<ListView.itemTemplate>
 					<GridLayout columns="auto, 10, *">
@@ -96,15 +96,15 @@
 
 			<Label
 				textWrap="true"
-				visibility="{{ (searchText &amp;&amp; !loadingExecute &amp;&amp; autoComplete.length) ? 'visible' : 'collapsed' }}" 
+				visibility="{{ (searchText &amp;&amp; !loadingExecute &amp;&amp; autoComplete.length) ? 'visible' : 'collapsed' }}"
 				class="text-left text-[10px] my-3"
 				col="0">
 				<FormattedString>
 					<Span text="HASIL PENCARIAN" class="popin-br text-gray-600" />
 				</FormattedString>
 			</Label>
-			<ListView 
-				items="{{ autoComplete }}" 
+			<ListView
+				items="{{ autoComplete }}"
 				itemTap="onTapAutoComplete"
 				visibility="{{ searchText &amp;&amp; !loadingExecute &amp;&amp; autoComplete.length ? 'visible' : 'collapsed' }}"
 				row="2">
@@ -151,8 +151,8 @@
 			<ui:BannerAd
 				unitId="ca-app-pub-1640120316722376/2423878232"
 				layoutChanged="bannerAdLoaded" row="0" />
-			<Label 
-				class="text-center text-orange-400 text-[12px] mt-5" 
+			<Label
+				class="text-center text-orange-400 text-[12px] mt-5"
 				visibility="{{ viewMode === 'SEARCH' &amp;&amp; recentSearches.length ? 'visible' : 'collapsed' }}"
 				>
 				<FormattedString>

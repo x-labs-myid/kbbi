@@ -1,11 +1,11 @@
 <Page actionBarHidden="true"
-	navigatingTo="onNavigatingTo" 
+	navigatingTo="onNavigatingTo"
 	xmlns="http://schemas.nativescript.org/tns.xsd"
-	xmlns:ui="@nativescript/firebase-admob"
+	xmlns:ui="@nativescript/google-mobile-ads"
 	xmlns:gv="@nativescript-community/ui-collectionview"
 	class="bg-gray-100"
 	>
-	
+
   <GridLayout rows="auto, auto, auto, *, auto" columns="*" class="p-4">
     <!-- Header -->
     <GridLayout row="0" rows="auto,auto" columns="auto, 20, *, auto" class="items-center">
@@ -67,7 +67,7 @@
 				<gv:CollectionView.itemTemplate>
 					<GridLayout>
 						<GridLayout rows="auto,*,auto,10,auto,*,auto" class="rounded-2xl border-2 border-gray-400 bg-white pt-2 pb-4 pl-2 pr-2 ">
-							
+
 							<Label row="2" class="mx-2 text-center text-gray-500 rounded-full text-center text-[14px] " fontWeight="900" textWrap="true">
 								<FormattedString>
 									<Span text="&#xf10d;" class="fas" />
@@ -120,8 +120,8 @@
 							row="1" col="1"
 					/>
 			</GridLayout>
-			<StackLayout 
-					tap="watchInterstitialAd" 
+			<StackLayout
+					tap="watchInterstitialAd"
 					visibility="{{ !isWatchInterstitialAd ? 'visible' : 'collapsed' }}">
 					<Label
 							textWrap="true"
