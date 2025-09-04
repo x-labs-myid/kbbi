@@ -1,8 +1,6 @@
 import { Application, Color, Utils } from "@nativescript/core";
 import { MobileAds } from "@nativescript/google-mobile-ads";
 
-import { setInitialized } from "./admob";
-
 import { install } from "@nativescript-community/ui-material-bottomsheet";
 install();
 
