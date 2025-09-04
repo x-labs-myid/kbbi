@@ -14,7 +14,7 @@
     "tailwindcss": "^4.1.4"
   },
   "devDependencies": {
-    "@nativescript/android": "8.9.1",
+    "@nativescript/android": "9.0.0-alpha.2",
     "@nativescript/core": "9.0.0-alpha.14",
     "@nativescript/webpack": "5.0.25-alpha.2"
   }
